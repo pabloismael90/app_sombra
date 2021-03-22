@@ -8,6 +8,7 @@ import 'package:app_sombra/src/bloc/fincas_bloc.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:app_sombra/src/utils/validaciones.dart' as utils;
 
 class AgregarTest extends StatefulWidget {
 
@@ -22,7 +23,7 @@ class _AgregarTestState extends State<AgregarTest> {
 
 
 
-    TestSombra plaga = new TestSombra();
+    TestSombra sombra = new TestSombra();
     final fincasBloc = new FincasBloc();
 
     bool _guardando = false;
@@ -35,7 +36,7 @@ class _AgregarTestState extends State<AgregarTest> {
     String _fecha = '';
     TextEditingController _inputfecha = new TextEditingController();
 
-    List<TestSombra> mainlistplagas ;
+    List<TestSombra> mainlistsombras ;
 
     List mainparcela;
     TextEditingController _control;
@@ -78,23 +79,23 @@ class _AgregarTestState extends State<AgregarTest> {
                                     TitulosPages(titulo: 'Toma de datos'),
                                     Divider(),
                                     Container(
-                                        child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-
                                                 Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                                                     child:Text(
-                                                        '3 Estaciones',
+                                                        'Plantas por estaciones: 100 plantas 10x 10',
                                                         style: Theme.of(context).textTheme
                                                             .headline6
                                                             .copyWith(fontSize: 16)
                                                     ),
                                                 ),
+                                                Divider(),
                                                 Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                                                     child:Text(
-                                                        '10 Plantas por estaciones',
+                                                        '3 Estaciones',
                                                         style: Theme.of(context).textTheme
                                                             .headline6
                                                             .copyWith(fontSize: 16)
@@ -112,9 +113,13 @@ class _AgregarTestState extends State<AgregarTest> {
                                                 children: <Widget>[
 
                                                     _selectfinca(_listitem),
-                                                    SizedBox(height: 40.0),
+                                                    SizedBox(height: 30.0),
                                                     _selectParcela(),
-                                                    SizedBox(height: 40.0),
+                                                    SizedBox(height: 30.0),
+                                                    _distanciaSurco(),
+                                                    SizedBox(height: 30.0),
+                                                    _distanciaPlanta(),
+                                                    SizedBox(height: 30.0),
                                                     _date(context),
                                                     SizedBox(height: 60.0),
 
@@ -151,7 +156,7 @@ class _AgregarTestState extends State<AgregarTest> {
             onChanged: (val){
                 fincasBloc.selectParcela(val);
             },
-            onSaved: (value) => plaga.idFinca = value,
+            onSaved: (value) => sombra.idFinca = value,
         );
     }
 
@@ -185,13 +190,66 @@ class _AgregarTestState extends State<AgregarTest> {
                     },
 
                     //onChanged: (val) => print(val),
-                    onSaved: (value) => plaga.idLote = value,
+                    onSaved: (value) => sombra.idLote = value,
                 );
             },
         );
 
     }
 
+    Widget _distanciaSurco(){
+
+        return TextFormField(
+            initialValue: sombra.surcoDistancia.toString(),
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+                labelText: 'Distancia entre surco mt',
+                hintText: 'ejem: 3',
+                
+            ),
+            validator: (value) {
+                
+                if (utils.isNumeric(value)){
+                    if (double.parse(value) > 0) {
+                        return null;
+                    } else {
+                        return 'Área mayor a cero';
+                    }
+                }else{
+                    return 'Solo números';
+                }
+            },
+            onSaved: (value) => sombra.surcoDistancia = double.parse(value),
+        );
+
+    }
+
+    Widget _distanciaPlanta(){
+
+        return TextFormField(
+            initialValue: sombra.plantaDistancia.toString(),
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+                labelText: 'Distancia entre planta mt',
+                hintText: 'ejem: 3',
+                
+            ),
+            validator: (value) {
+                
+                if (utils.isNumeric(value)){
+                    if (double.parse(value) > 0) {
+                        return null;
+                    } else {
+                        return 'Área mayor a cero';
+                    }
+                }else{
+                    return 'Solo números';
+                }
+            },
+            onSaved: (value) => sombra.plantaDistancia = double.parse(value),
+        );
+
+    }
 
     Widget _date(BuildContext context){
         return TextFormField(
@@ -209,7 +267,7 @@ class _AgregarTestState extends State<AgregarTest> {
             //onChanged: (value) => print('hola: $value'),
             //validator: (value){},
             onSaved: (value){
-                plaga.fechaTest = value;
+                sombra.fechaTest = value;
             }
         );
     }
@@ -237,14 +295,14 @@ class _AgregarTestState extends State<AgregarTest> {
 
 
     Widget  _botonsubmit(){
-        fincasBloc.obtenerPodas();
+        fincasBloc.obtenerSombra();
         return StreamBuilder(
             stream: fincasBloc.podaStream ,
             builder: (BuildContext context, AsyncSnapshot snapshot){
                 if (!snapshot.hasData) {
                     return Container();
                 }
-                mainlistplagas = snapshot.data;
+                mainlistsombras = snapshot.data;
 
                 return RaisedButton.icon(
                     icon:Icon(Icons.save, color: Colors.white,),
@@ -271,7 +329,7 @@ class _AgregarTestState extends State<AgregarTest> {
     void _submit(){
         bool checkRepetido = false;
 
-        plaga.estaciones = 3;
+        sombra.estaciones = 3;
 
         if  ( !formKey.currentState.validate() ){
             //Cuendo el form no es valido
@@ -279,10 +337,10 @@ class _AgregarTestState extends State<AgregarTest> {
         }
         formKey.currentState.save();
 
-        mainlistplagas.forEach((e) {
-            //print(plaga.fechaTest);
+        mainlistsombras.forEach((e) {
+            //print(sombra.fechaTest);
             //print(e.fechaTest);
-            if (plaga.idFinca == e.idFinca && plaga.idLote == e.idLote && plaga.fechaTest == e.fechaTest) {
+            if (sombra.idFinca == e.idFinca && sombra.idLote == e.idLote && sombra.fechaTest == e.fechaTest) {
                 checkRepetido = true;
             }
         });
@@ -294,7 +352,7 @@ class _AgregarTestState extends State<AgregarTest> {
             return null;
         }
 
-        String checkParcela = mainparcela.firstWhere((e) => e['value'] == '${plaga.idLote}', orElse: () => {"value": "1","label": "No data"})['value'];
+        String checkParcela = mainparcela.firstWhere((e) => e['value'] == '${sombra.idLote}', orElse: () => {"value": "1","label": "No data"})['value'];
 
 
 
@@ -307,14 +365,14 @@ class _AgregarTestState extends State<AgregarTest> {
 
         setState(() {_guardando = true;});
 
-        // print(plaga.id);
-        // print(plaga.idFinca);
-        // print(plaga.idLote);
-        // print(plaga.estaciones);
-        // print(plaga.fechaTest);
-        if(plaga.id == null){
-            plaga.id =  uuid.v1();
-            fincasBloc.addPlaga(plaga);
+        // print(sombra.id);
+        // print(sombra.idFinca);
+        // print(sombra.idLote);
+        // print(sombra.estaciones);
+        // print(sombra.fechaTest);
+        if(sombra.id == null){
+            sombra.id =  uuid.v1();
+            fincasBloc.addTestSombra(sombra);
         }
 
         setState(() {_guardando = false;});

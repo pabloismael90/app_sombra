@@ -92,18 +92,18 @@ class FincasBloc {
     }
 
     //Poda
-    obtenerPodas() async {
+    obtenerSombra() async {
         _podaController.sink.add( await DBProvider.db.getTodasTestSombra() );
     }
     
-    addPlaga( TestSombra nuevaPlaga) async{
-        await DBProvider.db.nuevoTestSombra(nuevaPlaga);
-        obtenerPodas();
+    addTestSombra( TestSombra nuevoTest) async{
+        await DBProvider.db.nuevoTestSombra(nuevoTest);
+        obtenerSombra();
     }
 
     borrarTestSombra( String idTest) async{
         await DBProvider.db.deleteTestSombra(idTest);
-        obtenerPodas();
+        obtenerSombra();
     }
 
 

@@ -6,7 +6,6 @@ import 'package:app_sombra/src/providers/db_provider.dart';
 import 'package:app_sombra/src/utils/constants.dart';
 import 'package:app_sombra/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class EstacionesPage extends StatefulWidget {
     const EstacionesPage({Key key}) : super(key: key);
@@ -29,12 +28,29 @@ class _EstacionesPageState extends State<EstacionesPage> {
     @override
     Widget build(BuildContext context) {
         
-        TestSombra poda = ModalRoute.of(context).settings.arguments;
+        TestSombra sombra = ModalRoute.of(context).settings.arguments;
         //fincasBloc.obtenerPlantas(poda.id);
-        
+        int estacion1 = 0;
+        int estacion2 = 0;
+        int estacion3 = 0;
+        List countEstaciones = [estacion1,estacion2,estacion3];
         return Scaffold(
             appBar: AppBar(),
-            body: Center(child: Text('Estaciones'),),
+            body: Column(
+                children: [
+                    escabezadoEstacion( context, sombra ),
+                    TitulosPages(titulo: 'Estaciones'),
+                    Divider(),
+                    Expanded(
+                        child: SingleChildScrollView(
+                            child: _listaDeEstaciones( context, sombra),
+                        ),
+                    ),
+                ],
+            ),
+            bottomNavigationBar: BottomAppBar(
+                child: _tomarDecisiones(countEstaciones, sombra)
+            ),
         );
 
     //    return StreamBuilder<List<Planta>>(
@@ -86,11 +102,11 @@ class _EstacionesPageState extends State<EstacionesPage> {
 
 
 
-    Widget escabezadoEstacion( BuildContext context, TestSombra poda ){
+    Widget escabezadoEstacion( BuildContext context, TestSombra sombra ){
 
 
         return FutureBuilder(
-            future: _getdataFinca(poda),
+            future: _getdataFinca(sombra),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (!snapshot.hasData) {
                     return Center(child: CircularProgressIndicator());
@@ -150,19 +166,13 @@ class _EstacionesPageState extends State<EstacionesPage> {
         );        
     }
 
-    Widget  _listaDeEstaciones( BuildContext context, TestSombra poda, List countEstaciones){
+    Widget  _listaDeEstaciones( BuildContext context, TestSombra poda){
         return ListView.builder(
             itemBuilder: (context, index) {
-                String estadoConteo;
-                if (countEstaciones[index] >= 10){
-                    estadoConteo =  'Completo';
-                }else{
-                   estadoConteo =  'Incompleto'; 
-                }
+                
                 return GestureDetector(
-                    
-                    child: _cardTest(index+1,countEstaciones[index], estadoConteo),
-                    onTap: () => Navigator.pushNamed(context, 'plantas', arguments: [poda, index]),
+                    child: _cardTest(index+1),
+                    onTap: () => Navigator.pushNamed(context, 'inventario', arguments: [poda, index]),
                 );
                 
                
@@ -175,7 +185,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
 
     }
 
-    Widget _cardTest(int estacion, int numeroPlantas, String estado){
+    Widget _cardTest(int estacion){
         return Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             width: double.infinity,
@@ -212,29 +222,9 @@ class _EstacionesPageState extends State<EstacionesPage> {
                                         ),
                                     ),
                                     
-                                    
-                                    Padding(
-                                        padding: EdgeInsets.only( bottom: 10.0),
-                                        child: Text(
-                                            '$estado',
-                                            style: TextStyle(color: kLightBlackColor),
-                                        ),
-                                    ),
                                 ],  
                             ),
-                        ),
-                        Container(
-                            child: CircularPercentIndicator(
-                                radius: 70.0,
-                                lineWidth: 5.0,
-                                animation: true,
-                                percent: numeroPlantas/10,
-                                center: new Text("${(numeroPlantas/10)*100}%"),
-                                progressColor: Color(0xFF498C37),
-                            ),
-                        )
-                        
-                        
+                        ),    
                         
                     ],
                 ),

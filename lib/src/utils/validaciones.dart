@@ -3,7 +3,7 @@
 bool isNumeric(String value){
 
     if (value.isEmpty){
-        //print(value);
+        print(value);
         return false;
     } 
 

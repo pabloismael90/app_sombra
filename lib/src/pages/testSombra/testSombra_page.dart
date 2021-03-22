@@ -22,16 +22,16 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
 
     
-    Future _getdataFinca(TestSombra textPlaga) async{
-        Finca finca = await DBProvider.db.getFincaId(textPlaga.idFinca);
-        Parcela parcela = await DBProvider.db.getParcelaId(textPlaga.idLote);
+    Future _getdataFinca(TestSombra textSombra) async{
+        Finca finca = await DBProvider.db.getFincaId(textSombra.idFinca);
+        Parcela parcela = await DBProvider.db.getParcelaId(textSombra.idLote);
         return [finca, parcela];
     }
 
     @override
     Widget build(BuildContext context) {
         var size = MediaQuery.of(context).size;
-        fincasBloc.obtenerPodas();
+        fincasBloc.obtenerSombra();
 
         return Scaffold(
                 appBar: AppBar(),
@@ -45,8 +45,8 @@ class _TestPageState extends State<TestPage> {
 
                         }
 
-                        List<TestSombra> textPlagas= snapshot.data;
-                        if (textPlagas.length == 0) {
+                        List<TestSombra> textSombras= snapshot.data;
+                        if (textSombras.length == 0) {
                             return Column(
                                 children: [
                                     TitulosPages(titulo: 'Parcelas'),
@@ -66,7 +66,7 @@ class _TestPageState extends State<TestPage> {
 
                                 TitulosPages(titulo: 'Parcelas'),
                                 Divider(),
-                                Expanded(child: SingleChildScrollView(child: _listaDePlagas(textPlagas, size, context)))
+                                Expanded(child: SingleChildScrollView(child: _listaDePlagas(textSombras, size, context)))
                             ],
                         );
                         
@@ -100,14 +100,14 @@ class _TestPageState extends State<TestPage> {
         );
     }
 
-    Widget  _listaDePlagas(List textPlagas, Size size, BuildContext context){
+    Widget  _listaDePlagas(List textSombra, Size size, BuildContext context){
         return ListView.builder(
             itemBuilder: (context, index) {
                 return Dismissible(
                     key: UniqueKey(),
                     child: GestureDetector(
                         child: FutureBuilder(
-                            future: _getdataFinca(textPlagas[index]),
+                            future: _getdataFinca(textSombra[index]),
                             builder: (BuildContext context, AsyncSnapshot snapshot) {
                                 if (!snapshot.hasData) {
                                     return Center(child: CircularProgressIndicator());
@@ -115,28 +115,28 @@ class _TestPageState extends State<TestPage> {
                                 Finca finca = snapshot.data[0];
                                 Parcela parcela = snapshot.data[1];
 
-                                return _cardTest(size, textPlagas[index], finca, parcela);
+                                return _cardTest(size, textSombra[index], finca, parcela);
                             },
                         ),
-                        onTap: () => Navigator.pushNamed(context, 'estaciones', arguments: textPlagas[index]),
+                        onTap: () => Navigator.pushNamed(context, 'estaciones', arguments: textSombra[index]),
                     ),
                     confirmDismiss: (direction) => confirmacionUser(direction, context),
                     direction: DismissDirection.endToStart,
                     background: backgroundTrash(context),
                     movementDuration: Duration(milliseconds: 500),
-                    //onDismissed: (direction) => fincasBloc.borrarTestPoda(textPlagas[index].id),
+                    onDismissed: (direction) => fincasBloc.borrarTestSombra(textSombra[index].id),
                 );
                
             },
             shrinkWrap: true,
-            itemCount: textPlagas.length,
+            itemCount: textSombra.length,
             padding: EdgeInsets.only(bottom: 30.0),
             controller: ScrollController(keepScrollOffset: false),
         );
 
     }
 
-    Widget _cardTest(Size size, TestSombra textPlaga, Finca finca, Parcela parcela){
+    Widget _cardTest(Size size, TestSombra textSombra, Finca finca, Parcela parcela){
         
         return Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -191,7 +191,7 @@ class _TestPageState extends State<TestPage> {
                                             Padding(
                                                 padding: EdgeInsets.only( bottom: 10.0),
                                                 child: Text(
-                                                    'Fecha: ${textPlaga.fechaTest}',
+                                                    'Fecha: ${textSombra.fechaTest}',
                                                     style: TextStyle(color: kLightBlackColor),
                                                 ),
                                             ),

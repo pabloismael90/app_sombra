@@ -1,14 +1,16 @@
 import 'package:app_sombra/src/pages/PDFView.dart';
 
 import 'package:app_sombra/src/pages/estaciones/estaciones_page.dart';
+import 'package:app_sombra/src/pages/estaciones/invetarioPlanta_page.dart';
+import 'package:app_sombra/src/pages/estaciones/plantaForm_page.dart';
 import 'package:app_sombra/src/pages/finca/finca_form.dart';
 import 'package:app_sombra/src/pages/finca/finca_page.dart';
 import 'package:app_sombra/src/pages/galeria/image.dart';
 import 'package:app_sombra/src/pages/galeria/list_galeria.dart';
 import 'package:app_sombra/src/pages/parcelas/parcela_form.dart';
 import 'package:app_sombra/src/pages/parcelas/parcelas_page.dart';
-import 'package:app_sombra/src/pages/testPoda/testpoda_form.dart';
-import 'package:app_sombra/src/pages/testPoda/testpoda_page.dart';
+import 'package:app_sombra/src/pages/testSombra/testSombra_form.dart';
+import 'package:app_sombra/src/pages/testSombra/testSombra_page.dart';
 import 'package:app_sombra/src/utils/constants.dart';
 import 'package:flutter/material.dart';
  
@@ -58,6 +60,8 @@ class MyApp extends StatelessWidget {
                 'addTest' : ( BuildContext context ) => AgregarTest(),
                 //estaciones
                 'estaciones' : ( BuildContext context ) => EstacionesPage(),
+                'inventario' : ( BuildContext context ) => InventarioPage(),
+                'addPlanta' : ( BuildContext context ) => PlantaForm(),
                 
                 //Decisiones
                 

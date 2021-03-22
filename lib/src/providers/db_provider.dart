@@ -71,11 +71,38 @@ class DBProvider {
                     ' idFinca TEXT,'
                     ' idLote TEXT,'
                     ' estaciones INTEGER,'
+                    ' surcoDistancia REAL,'
+                    ' plantaDistancia REAL,'
                     ' fechaTest TEXT,'
                     ' CONSTRAINT fk_fincaTest FOREIGN KEY(idFinca) REFERENCES Finca(id) ON DELETE CASCADE,'
                     ' CONSTRAINT fk_parcelaTest FOREIGN KEY(idLote) REFERENCES Parcela(id) ON DELETE CASCADE'
                     ')'
                 );
+
+                await db.execute(
+                    'CREATE TABLE Estacion ('
+                    ' id TEXT PRIMARY KEY,'
+                    ' idTestSombra TEXT,'
+                    ' Nestacion INTEGER,'
+                    ' cobertura REAL,'
+                    ' CONSTRAINT fk_TestSombra FOREIGN KEY(idTestSombra) REFERENCES TestSombra(id) ON DELETE CASCADE'
+                    ')'
+                );
+
+                await db.execute(
+                    'CREATE TABLE InventacioPlanta ('
+                    ' id TEXT PRIMARY KEY,'
+                    ' idEstacion TEXT,'
+                    ' idPlanta INTEGER,'
+                    ' pequeno INTEGER,'
+                    ' mediano INTEGER,'
+                    ' grande INTEGER,'
+                    ' uso INTEGER,'
+                    ' CONSTRAINT fk_Estacion FOREIGN KEY(idEstacion) REFERENCES Estacion(id) ON DELETE CASCADE'
+                    ')'
+                );
+
+
 
                    
             }
@@ -259,6 +286,7 @@ class DBProvider {
 
         final db  = await database;
         final res = await db.delete('TestSombra', where: 'id = ?', whereArgs: [idTest]);
+        print('eliminando');
         return res;
     }
 

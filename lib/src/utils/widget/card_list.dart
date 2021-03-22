@@ -43,42 +43,56 @@ class CardList extends StatelessWidget {
                                 blurRadius: 17.0),
                         ],
                 ),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                child: Column(
                     children: [
-                        Padding(
-                            padding: EdgeInsets.only(right: 20),
-                            child: SvgPicture.asset('assets/icons/finca.svg', height:60,),
-                        ),
-                        Flexible(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                                Padding(
+                                    padding: EdgeInsets.only(right: 20),
+                                    child: SvgPicture.asset('assets/icons/finca.svg', height:60,),
+                                ),
+                                Flexible(
+                                    child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                        
+                                            Padding(
+                                                padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                                                child: Text(
+                                                    "${finca.nombreFinca}",
+                                                    style: Theme.of(context).textTheme.headline6,
+                                                ),
+                                            ),
+                                            Text(
+                                                "${finca.nombreProductor}",
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(color: kLightBlackColor),
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                                                child: Text(
+                                                    "${finca.areaFinca} $labelMedida",
+                                                    style: TextStyle(color: kLightBlackColor),
+                                                ),
+                                            ),
+                                        ],
+                                    ),
+                                ),
                                 
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                        child: Text(
-                                            "${finca.nombreFinca}",
-                                            style: Theme.of(context).textTheme.headline6,
-                                        ),
-                                    ),
-                                    Text(
-                                        "${finca.nombreProductor}",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: kLightBlackColor),
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                        child: Text(
-                                            "${finca.areaFinca} $labelMedida",
-                                            style: TextStyle(color: kLightBlackColor),
-                                        ),
-                                    ),
-                                ],
-                            ),
+                                
+                            ],
                         ),
-                        
+                        Divider(),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                                Icon(Icons.touch_app, color: kRedColor,),
+                                Text(' Tocar para agregar parcelas', style: TextStyle(color: kRedColor),)
+                            ],
+                        )
                     ],
                 ),
         );
