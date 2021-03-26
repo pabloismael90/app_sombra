@@ -1,6 +1,7 @@
 import 'dart:io';
 
 
+import 'package:app_sombra/src/models/estacion_model.dart';
 import 'package:app_sombra/src/models/testsombra_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -136,6 +137,12 @@ class DBProvider {
         return res;
     }
 
+    nuevoEstacion( Estacion nuevaEstacion ) async {
+        final db  = await database;
+        final res = await db.insert('Estacion',  nuevaEstacion.toJson() );
+        return res;
+    }
+
     
 
 
@@ -208,6 +215,14 @@ class DBProvider {
                     : [];
         
         return list;            
+    }
+
+    Future<Estacion> getEstacionIdSombra(String idTestSombra, int nEstacion) async{
+        Estacion errorEstacion = Estacion();
+        final db = await database;
+        final res = await db.query('Estacion', where: 'idTestSombra = ? and Nestacion = ?', whereArgs: [idTestSombra, nEstacion]);
+
+        return res.isNotEmpty ? Estacion.fromJson(res.first) : errorEstacion;            
     }
 
 

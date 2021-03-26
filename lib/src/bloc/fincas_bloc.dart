@@ -2,6 +2,7 @@
 import 'dart:async';
 
 
+import 'package:app_sombra/src/models/estacion_model.dart';
 import 'package:app_sombra/src/models/testsombra_model.dart';
 import 'package:app_sombra/src/providers/db_provider.dart';
 
@@ -22,6 +23,7 @@ class FincasBloc {
     final _fincasController = StreamController<List<Finca>>.broadcast();
     final _parcelasController = StreamController<List<Parcela>>.broadcast();
     final _podaController = StreamController<List<TestSombra>>.broadcast();
+    final _estacionController = StreamController<Estacion>.broadcast();
 
     
 
@@ -31,6 +33,7 @@ class FincasBloc {
     Stream<List<Finca>> get fincaStream => _fincasController.stream;
     Stream<List<Parcela>> get parcelaStream => _parcelasController.stream;
     Stream<List<TestSombra>> get podaStream => _podaController.stream;
+    Stream<Estacion> get estacionStream => _estacionController.stream;
 
 
 
@@ -91,7 +94,7 @@ class FincasBloc {
         _parcelaSelectControl.sink.add( await DBProvider.db.getSelectParcelasIdFinca(idFinca));
     }
 
-    //Poda
+    //Sombra
     obtenerSombra() async {
         _podaController.sink.add( await DBProvider.db.getTodasTestSombra() );
     }
@@ -104,6 +107,16 @@ class FincasBloc {
     borrarTestSombra( String idTest) async{
         await DBProvider.db.deleteTestSombra(idTest);
         obtenerSombra();
+    }
+
+    //Estacion
+    obtenerEstacion(String idTestSombra, int nEstacion) async {
+        _estacionController.sink.add( await DBProvider.db.getEstacionIdSombra(idTestSombra, nEstacion) );
+    }
+
+    addEstacion( Estacion nuevoEstacion, String idTestSombra, int nEstacion) async{
+        await DBProvider.db.nuevoEstacion(nuevoEstacion);
+        obtenerEstacion(idTestSombra, nEstacion);
     }
 
 
@@ -123,6 +136,8 @@ class FincasBloc {
         _fincasController?.close();
         _parcelasController?.close();
         _fincasSelectControl?.close();
+        _estacionController?.close();
+
         _parcelaSelectControl?.close();
         _podaController?.close();
 
