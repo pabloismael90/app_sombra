@@ -35,20 +35,7 @@ class _InventarioPageState extends State<InventarioPage> {
         testSombra = dataSombra[0];
         numeroEstacion = dataSombra[1]+1;
 
-        return Scaffold(
-            appBar: AppBar(),
-            body: _body(context, testSombra, numeroEstacion),
-            bottomNavigationBar: BottomAppBar(
-                child: Container(
-                    color: kBackgroundColor,
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Text('knasd'),
-                    ),
-                ),
-            ),
-
-        );
+        return _body(context, testSombra, numeroEstacion);
     }
 
     Widget _body( BuildContext context, TestSombra sombra, int nEstacion){
@@ -64,13 +51,21 @@ class _InventarioPageState extends State<InventarioPage> {
 
                 estacion = snapshot.data;
                 if (snapshot.data.id == null) {
-                    return _coberturaForm();
+
+                    return Scaffold(
+                        appBar: AppBar(),
+                        body: _coberturaForm(),
+                    );
                 }
 
-                return Column(
-                    children: [
-                        _dataEstacion(sombra),
-                    ],
+                return Scaffold(
+                    appBar: AppBar(),
+                    body: Column(
+                        children: [
+                            _dataEstacion(sombra),
+                        ],
+                    ),
+                    bottomNavigationBar: _addPlanta(estacion),
                 );
             },
         );        
@@ -171,6 +166,27 @@ class _InventarioPageState extends State<InventarioPage> {
         );
     }
 
+    Widget _addPlanta(Estacion estacion){
+        return BottomAppBar(
+            child: Container(
+                color: kBackgroundColor,
+                child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                    child: RaisedButton.icon(
+                        icon:Icon(Icons.add_circle_outline_outlined),
+                        
+                        label: Text('Agregar Planta',
+                            style: Theme.of(context).textTheme
+                                .headline6
+                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
+                        ),
+                        padding:EdgeInsets.all(13),
+                        onPressed:() => Navigator.pushNamed(context, 'addPlanta', arguments: estacion),
+                    ),
+                ),
+            ),
+        );
+}
 
     void _submit( ){
 

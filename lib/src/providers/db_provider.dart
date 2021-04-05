@@ -301,7 +301,6 @@ class DBProvider {
 
         final db  = await database;
         final res = await db.delete('TestSombra', where: 'id = ?', whereArgs: [idTest]);
-        print('eliminando');
         return res;
     }
 

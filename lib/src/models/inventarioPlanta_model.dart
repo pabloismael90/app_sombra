@@ -3,9 +3,9 @@ class InventacioPlanta {
         this.id,
         this.idEstacion,
         this.idPlanta,
-        this.pequeno,
-        this.mediano,
-        this.grande,
+        this.pequeno = 0,
+        this.mediano = 0,
+        this.grande = 0,
         this.uso,
     });
 
