@@ -464,8 +464,8 @@ List<Map<String, dynamic>> especies(){
     return especies;
 }
 
-List<Map<String, dynamic>> listUso(){
-    final List<Map<String, dynamic>>  listUso = [
+List<Map<String, dynamic>> listaUso(){
+    final List<Map<String, dynamic>>  listaUso = [
             {
                 'value':'1',
                 'label':'Leña'
@@ -488,7 +488,7 @@ List<Map<String, dynamic>> listUso(){
             }
         ];
 
-    return listUso;
+    return listaUso;
 }
 
 

@@ -1,9 +1,12 @@
 import 'package:app_sombra/src/bloc/fincas_bloc.dart';
 import 'package:app_sombra/src/models/estacion_model.dart';
+import 'package:app_sombra/src/models/inventarioPlanta_model.dart';
 import 'package:app_sombra/src/models/testsombra_model.dart';
 import 'package:app_sombra/src/utils/constants.dart';
+import 'package:app_sombra/src/utils/widget/dialogDelete.dart';
 import 'package:uuid/uuid.dart';
 import 'package:app_sombra/src/utils/validaciones.dart' as utils;
+import 'package:app_sombra/src/models/selectValue.dart' as selectMap;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -34,7 +37,7 @@ class _InventarioPageState extends State<InventarioPage> {
         List dataSombra = ModalRoute.of(context).settings.arguments;
         testSombra = dataSombra[0];
         numeroEstacion = dataSombra[1]+1;
-
+        
         return _body(context, testSombra, numeroEstacion);
     }
 
@@ -50,6 +53,7 @@ class _InventarioPageState extends State<InventarioPage> {
                 }
 
                 estacion = snapshot.data;
+                
                 if (snapshot.data.id == null) {
 
                     return Scaffold(
@@ -63,6 +67,7 @@ class _InventarioPageState extends State<InventarioPage> {
                     body: Column(
                         children: [
                             _dataEstacion(sombra),
+                            _listaPlanta(estacion.id)
                         ],
                     ),
                     bottomNavigationBar: _addPlanta(estacion),
@@ -166,6 +171,137 @@ class _InventarioPageState extends State<InventarioPage> {
         );
     }
 
+    Widget _listaPlanta(String idEstacion){
+
+        fincasBloc.obtenerInventario(idEstacion);
+
+        return StreamBuilder(
+            stream: fincasBloc.inventarioStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+                List<InventacioPlanta> plantas = snapshot.data;
+
+                if (plantas.length == 0) {
+                    return Expanded(child: Center(
+                        child: Text('No hay datos: \nIngrese datos de parcela en la finca', 
+                        textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline6,
+                            )
+                        )
+                    );
+                }
+
+                return Expanded(
+                    child: SingleChildScrollView(
+                        child: ListView.builder(
+                            itemBuilder: (context, index) {
+                                
+                                // labelMedida  = item['label'];
+                                // final item2 = selectMap.variedadCacao().firstWhere((e) => e['value'] == '${parcelas[index].variedadCacao}');
+                                // labelVariedad  = item2['label'];
+
+                                return Dismissible(
+                                    key: UniqueKey(),
+                                    child: GestureDetector(
+                                        child: _cardEspecie(plantas[index]),
+                                       // onTap: () => Navigator.pushNamed(context, 'addParcela', arguments: parcelas[index]),
+                                    ),
+                                    confirmDismiss: (direction) => confirmacionUser(direction, context),
+                                    direction: DismissDirection.endToStart,
+                                    background: backgroundTrash(context),
+                                    movementDuration: Duration(milliseconds: 500),
+                                    //onDismissed: (direction) => fincasBloc.borrarParcela(parcelas[index].id),
+                                );
+                            
+                            },
+                            shrinkWrap: true,
+                            itemCount: plantas.length,
+                            padding: EdgeInsets.only(bottom: 30.0),
+                            controller: ScrollController(keepScrollOffset: false),
+                        )
+                    )
+                );
+            },
+        );
+    }
+
+    Widget _cardEspecie(InventacioPlanta planta, ){
+        final nombrePlanta = selectMap.especies().firstWhere((e) => e['value'] == '${planta.idPlanta}')['label'];
+        return Container(
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(13),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                        
+                        Flexible(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                
+                                    Padding(
+                                        padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                                        child: Text(
+                                            "$nombrePlanta",
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: Theme.of(context).textTheme.headline6,
+                                        ),
+                                    ),
+                                    Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                            Text(
+                                                'Pequeño: ${planta.pequeno}',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(color: kLightBlackColor),
+                                            ),
+                                            Text(
+                                                'Mediano: ${planta.mediano}',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(color: kLightBlackColor),
+                                            ),
+                                            Text(
+                                                'Grande: ${planta.grande}',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(color: kLightBlackColor),
+                                            ),
+                                        ],
+                                    )
+                                    
+                                ],  
+                            ),
+                        ),
+                        
+                        
+                        
+                    ],
+                ),
+        );
+    }
+   
+
+
+
     Widget _addPlanta(Estacion estacion){
         return BottomAppBar(
             child: Container(
@@ -207,15 +343,11 @@ class _InventarioPageState extends State<InventarioPage> {
         print(estacion.cobertura);
         print(estacion.nestacion);
        
-       fincasBloc.addEstacion(estacion, estacion.idTestSombra, estacion.nestacion);
+        fincasBloc.addEstacion(estacion, estacion.idTestSombra, estacion.nestacion);
         
 
 
         setState(() {_guardando = false;});
-        
-
-
-        //Navigator.pop(context, 'fincas');
        
         
     }

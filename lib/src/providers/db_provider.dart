@@ -2,6 +2,7 @@ import 'dart:io';
 
 
 import 'package:app_sombra/src/models/estacion_model.dart';
+import 'package:app_sombra/src/models/inventarioPlanta_model.dart';
 import 'package:app_sombra/src/models/testsombra_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -143,6 +144,12 @@ class DBProvider {
         return res;
     }
 
+    nuevoInventario( InventacioPlanta nuevoInventario ) async {
+        final db  = await database;
+        final res = await db.insert('InventacioPlanta',  nuevoInventario.toJson() );
+        return res;
+    }
+
     
 
 
@@ -225,6 +232,16 @@ class DBProvider {
         return res.isNotEmpty ? Estacion.fromJson(res.first) : errorEstacion;            
     }
 
+    Future<List<InventacioPlanta>> getInventarioIdEstacion(String idEstacion) async{
+        final db = await database;
+        final res = await db.query('InventacioPlanta', where: 'idEstacion = ?', whereArgs: [idEstacion]);
+        List<InventacioPlanta> list = res.isNotEmpty 
+                    ? res.map( (c) => InventacioPlanta.fromJson(c) ).toList() 
+                    : [];
+        
+        return list;          
+    }
+
 
 
 
@@ -271,13 +288,7 @@ class DBProvider {
 
     }
 
-    Future<int> updateTestSombra( TestSombra nuevaPlaga ) async {
-
-        final db  = await database;
-        final res = await db.update('TestSombra', nuevaPlaga.toJson(), where: 'id = ?', whereArgs: [nuevaPlaga.id] );
-        return res;
-
-    }
+  
 
 
     //Conteos analisis

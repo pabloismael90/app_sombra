@@ -20,11 +20,12 @@ class PlantaForm extends StatefulWidget {
 class _PlantaFormState extends State<PlantaForm> {
 
     Estacion estacion;
-    InventacioPlanta planta = InventacioPlanta();
+    InventacioPlanta inventarioPlanta = InventacioPlanta();
     final formKey = GlobalKey<FormState>();
     final fincasBloc = new FincasBloc();
 
     List<Map<String, dynamic>>  _especies = selectMap.especies();
+    List<Map<String, dynamic>>  _uso = selectMap.listaUso();
     bool _guardando = false;
     var uuid = Uuid();
 
@@ -40,6 +41,8 @@ class _PlantaFormState extends State<PlantaForm> {
     @override
     Widget build(BuildContext context) {
         estacion = ModalRoute.of(context).settings.arguments;
+        inventarioPlanta.idEstacion = estacion.id;
+    
         
         return Scaffold(
             appBar: AppBar(),
@@ -75,11 +78,12 @@ class _PlantaFormState extends State<PlantaForm> {
                                                 ),
                                                 SizedBox(width: 20.0,),
                                                 Flexible(
-                                                    child: Container(),
+                                                    child: _selectUso(),
                                                 ),
                                             ],
                                         ),
-                                        // _botonsubmit(tituloBtn)
+                                        SizedBox(height: 60.0),
+                                        _botonsubmit(),
                                     ],
                                 ),
                             ),
@@ -107,14 +111,14 @@ class _PlantaFormState extends State<PlantaForm> {
                     return null;
                 }
             },          
-            onSaved: (value) => planta.idPlanta = int.parse(value),
+            onSaved: (value) => inventarioPlanta.idPlanta = int.parse(value),
         );
     }
 
     Widget _plantaPequeno(){
 
         return TextFormField(
-            initialValue: planta.pequeno.toString(),
+            initialValue: inventarioPlanta.pequeno.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Pequeño',
@@ -124,16 +128,16 @@ class _PlantaFormState extends State<PlantaForm> {
             validator: (value) {
                 
                 if (utils.isNumeric(value)){
-                    if (int.parse(value) > 0) {
+                    if (int.parse(value) >= 0) {
                         return null;
                     } else {
-                        return 'Área mayor a cero';
+                        return 'Número invalido';
                     }
                 }else{
                     return 'Solo números';
                 }
             },
-            onSaved: (value) => planta.pequeno = int.parse(value),
+            onSaved: (value) => inventarioPlanta.pequeno = int.parse(value),
         );
 
     }
@@ -141,7 +145,7 @@ class _PlantaFormState extends State<PlantaForm> {
     Widget _plantaMediano(){
         
         return TextFormField(
-            initialValue: planta.mediano.toString(),
+            initialValue: inventarioPlanta.mediano.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Mediano',
@@ -151,16 +155,16 @@ class _PlantaFormState extends State<PlantaForm> {
             validator: (value) {
                 
                 if (utils.isNumeric(value)){
-                    if (int.parse(value) > 0) {
+                    if (int.parse(value) >= 0) {
                         return null;
                     } else {
-                        return 'Área mayor a cero';
+                        return 'Número invalido';
                     }
                 }else{
                     return 'Solo números';
                 }
             },
-            onSaved: (value) => planta.mediano = int.parse(value),
+            onSaved: (value) => inventarioPlanta.mediano = int.parse(value),
         );
 
     }
@@ -168,7 +172,7 @@ class _PlantaFormState extends State<PlantaForm> {
     Widget _plantaGrande(){
         
         return TextFormField(
-            initialValue: planta.grande.toString(),
+            initialValue: inventarioPlanta.grande.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Grande',
@@ -178,22 +182,83 @@ class _PlantaFormState extends State<PlantaForm> {
             validator: (value) {
                 
                 if (utils.isNumeric(value)){
-                    if (int.parse(value) > 0) {
+                    if (int.parse(value) >= 0) {
                         return null;
                     } else {
-                        return 'Área mayor a cero';
+                        return 'Número invalido';
                     }
                 }else{
                     return 'Solo números';
                 }
             },
-            onSaved: (value) => planta.grande = int.parse(value),
+            onSaved: (value) => inventarioPlanta.grande = int.parse(value),
         );
 
     }
 
+    Widget _selectUso(){
+
+        return SelectFormField(
+            type: SelectFormFieldType.dropdown,
+            labelText: 'Uso',
+            dialogTitle: '',
+            items: _uso,
+            validator: (value) {
+                if(value.length < 1){
+                    return 'No se selecciono uso';
+                }else{
+                    return null;
+                }
+            },          
+            onSaved: (value) => inventarioPlanta.uso = int.parse(value),
+        );
+    }
+
+    Widget  _botonsubmit(){
+        return RaisedButton.icon(
+            icon:Icon(Icons.save, color: Colors.white,),
+
+            label: Text('Guardar',
+                style: Theme.of(context).textTheme
+                    .headline6
+                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
+            ),
+            padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
+            onPressed:(_guardando) ? null : _submit,
+        );
 
 
+    }
 
+    void _submit(){
+
+        if  ( !formKey.currentState.validate() ){
+            return null;
+        }
+        formKey.currentState.save();
+
+        setState(() {_guardando = true;});
+
+        
+
+        
+        print(inventarioPlanta.id);
+        print(inventarioPlanta.idPlanta);
+        print(inventarioPlanta.idEstacion);
+        print(inventarioPlanta.pequeno);
+        print(inventarioPlanta.mediano);
+        print(inventarioPlanta.grande);
+        print(inventarioPlanta.uso);
+        inventarioPlanta.id =  uuid.v1();
+        fincasBloc.addInventario(inventarioPlanta, estacion.id);
+
+        setState(() {_guardando = false;});
+        // mostrarSnackbar('Registro Guardado');
+
+
+        Navigator.pop(context, 'inventario');
+
+
+    }
 
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 
 
 import 'package:app_sombra/src/models/estacion_model.dart';
+import 'package:app_sombra/src/models/inventarioPlanta_model.dart';
 import 'package:app_sombra/src/models/testsombra_model.dart';
 import 'package:app_sombra/src/providers/db_provider.dart';
 
@@ -24,6 +25,7 @@ class FincasBloc {
     final _parcelasController = StreamController<List<Parcela>>.broadcast();
     final _podaController = StreamController<List<TestSombra>>.broadcast();
     final _estacionController = StreamController<Estacion>.broadcast();
+    final _inventarioController = StreamController<List<InventacioPlanta>>.broadcast();
 
     
 
@@ -34,6 +36,7 @@ class FincasBloc {
     Stream<List<Parcela>> get parcelaStream => _parcelasController.stream;
     Stream<List<TestSombra>> get podaStream => _podaController.stream;
     Stream<Estacion> get estacionStream => _estacionController.stream;
+    Stream<List<InventacioPlanta>> get inventarioStream => _inventarioController.stream;
 
 
 
@@ -120,8 +123,15 @@ class FincasBloc {
     }
 
 
-    //Plantas
-    
+    //Inventario Plantas
+    obtenerInventario( String idEstacion) async {
+        _inventarioController.sink.add( await DBProvider.db.getInventarioIdEstacion(idEstacion) );
+    }
+
+    addInventario( InventacioPlanta nuevoInventario, String idEstacion) async{
+        await DBProvider.db.nuevoInventario(nuevoInventario);
+        obtenerInventario(idEstacion);
+    }
 
 
     //deciones
@@ -137,6 +147,7 @@ class FincasBloc {
         _parcelasController?.close();
         _fincasSelectControl?.close();
         _estacionController?.close();
+        _inventarioController?.close();
 
         _parcelaSelectControl?.close();
         _podaController?.close();
