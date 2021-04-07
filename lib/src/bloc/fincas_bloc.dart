@@ -133,6 +133,11 @@ class FincasBloc {
         obtenerInventario(idEstacion);
     }
 
+    borrarEspecie( int idPlanta, String idEstacion) async{
+        await DBProvider.db.deleteEspecie(idPlanta, idEstacion);
+        obtenerInventario(idEstacion);
+    }
+
 
     //deciones
     

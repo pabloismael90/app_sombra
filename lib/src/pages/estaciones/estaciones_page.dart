@@ -166,19 +166,19 @@ class _EstacionesPageState extends State<EstacionesPage> {
         );        
     }
 
-    Widget  _listaDeEstaciones( BuildContext context, TestSombra poda){
+    Widget  _listaDeEstaciones( BuildContext context, TestSombra sombra){
         return ListView.builder(
             itemBuilder: (context, index) {
                 
                 return GestureDetector(
                     child: _cardTest(index+1),
-                    onTap: () => Navigator.pushNamed(context, 'inventario', arguments: [poda, index]),
+                    onTap: () => Navigator.pushNamed(context, 'inventario', arguments: [sombra, index]),
                 );
                 
                
             },
             shrinkWrap: true,
-            itemCount:  poda.estaciones,
+            itemCount:  sombra.estaciones,
             padding: EdgeInsets.only(bottom: 30.0),
             controller: ScrollController(keepScrollOffset: false),
         );

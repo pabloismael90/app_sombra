@@ -21,7 +21,9 @@ class _PlantaFormState extends State<PlantaForm> {
 
     Estacion estacion;
     InventacioPlanta inventarioPlanta = InventacioPlanta();
+    List<InventacioPlanta> plantas;
     final formKey = GlobalKey<FormState>();
+    final scaffoldKey = GlobalKey<ScaffoldState>();
     final fincasBloc = new FincasBloc();
 
     List<Map<String, dynamic>>  _especies = selectMap.especies();
@@ -40,11 +42,16 @@ class _PlantaFormState extends State<PlantaForm> {
 
     @override
     Widget build(BuildContext context) {
-        estacion = ModalRoute.of(context).settings.arguments;
+        final List dataRoute = ModalRoute.of(context).settings.arguments;
+        estacion = dataRoute[0];
+        plantas = dataRoute[1];
         inventarioPlanta.idEstacion = estacion.id;
+
+        
     
         
         return Scaffold(
+            key: scaffoldKey,
             appBar: AppBar(),
             body: SingleChildScrollView(
                 child: Column(
@@ -232,33 +239,46 @@ class _PlantaFormState extends State<PlantaForm> {
 
     void _submit(){
 
+        
         if  ( !formKey.currentState.validate() ){
             return null;
         }
+
         formKey.currentState.save();
 
+        for (var item in plantas) {
+            if (item.idPlanta == inventarioPlanta.idPlanta) {
+                mostrarSnackbar('Especie ya registrada');
+                return null;
+            }
+        }
+
+        if (inventarioPlanta.pequeno == 0 && inventarioPlanta.mediano == 0 && inventarioPlanta.grande == 0) {
+            mostrarSnackbar('Especie vacia');
+            return null;
+        }
+
         setState(() {_guardando = true;});
-
         
 
-        
-        print(inventarioPlanta.id);
-        print(inventarioPlanta.idPlanta);
-        print(inventarioPlanta.idEstacion);
-        print(inventarioPlanta.pequeno);
-        print(inventarioPlanta.mediano);
-        print(inventarioPlanta.grande);
-        print(inventarioPlanta.uso);
         inventarioPlanta.id =  uuid.v1();
         fincasBloc.addInventario(inventarioPlanta, estacion.id);
 
         setState(() {_guardando = false;});
-        // mostrarSnackbar('Registro Guardado');
 
 
         Navigator.pop(context, 'inventario');
 
 
+    }
+
+    void mostrarSnackbar(String mensaje){
+        final snackbar = SnackBar(
+            content: Text(mensaje),
+            duration: Duration(seconds: 2),
+        );
+
+        scaffoldKey.currentState.showSnackBar(snackbar);
     }
 
 }

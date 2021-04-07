@@ -31,6 +31,7 @@ class _InventarioPageState extends State<InventarioPage> {
     int numeroEstacion;
 
     Estacion estacion = Estacion();
+    List<InventacioPlanta> plantas;
 
     @override
     Widget build(BuildContext context) {
@@ -181,11 +182,11 @@ class _InventarioPageState extends State<InventarioPage> {
                 if (!snapshot.hasData) {
                     return CircularProgressIndicator();
                 }
-                List<InventacioPlanta> plantas = snapshot.data;
+                plantas = snapshot.data;
 
                 if (plantas.length == 0) {
                     return Expanded(child: Center(
-                        child: Text('No hay datos: \nIngrese datos de parcela en la finca', 
+                        child: Text('Ingrese datos de especies', 
                         textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.headline6,
                             )
@@ -198,21 +199,16 @@ class _InventarioPageState extends State<InventarioPage> {
                         child: ListView.builder(
                             itemBuilder: (context, index) {
                                 
-                                // labelMedida  = item['label'];
-                                // final item2 = selectMap.variedadCacao().firstWhere((e) => e['value'] == '${parcelas[index].variedadCacao}');
-                                // labelVariedad  = item2['label'];
-
                                 return Dismissible(
                                     key: UniqueKey(),
                                     child: GestureDetector(
                                         child: _cardEspecie(plantas[index]),
-                                       // onTap: () => Navigator.pushNamed(context, 'addParcela', arguments: parcelas[index]),
                                     ),
                                     confirmDismiss: (direction) => confirmacionUser(direction, context),
                                     direction: DismissDirection.endToStart,
                                     background: backgroundTrash(context),
                                     movementDuration: Duration(milliseconds: 500),
-                                    //onDismissed: (direction) => fincasBloc.borrarParcela(parcelas[index].id),
+                                    onDismissed: (direction) => fincasBloc.borrarEspecie(plantas[index].idPlanta, plantas[index].idEstacion),
                                 );
                             
                             },
@@ -227,7 +223,7 @@ class _InventarioPageState extends State<InventarioPage> {
         );
     }
 
-    Widget _cardEspecie(InventacioPlanta planta, ){
+    Widget _cardEspecie(InventacioPlanta planta){
         final nombrePlanta = selectMap.especies().firstWhere((e) => e['value'] == '${planta.idPlanta}')['label'];
         return Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -311,13 +307,13 @@ class _InventarioPageState extends State<InventarioPage> {
                     child: RaisedButton.icon(
                         icon:Icon(Icons.add_circle_outline_outlined),
                         
-                        label: Text('Agregar Planta',
+                        label: Text('Agregar planta',
                             style: Theme.of(context).textTheme
                                 .headline6
                                 .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
                         ),
                         padding:EdgeInsets.all(13),
-                        onPressed:() => Navigator.pushNamed(context, 'addPlanta', arguments: estacion),
+                        onPressed:() => Navigator.pushNamed(context, 'addPlanta', arguments:[estacion, plantas]),
                     ),
                 ),
             ),
@@ -337,11 +333,6 @@ class _InventarioPageState extends State<InventarioPage> {
         estacion.id = uuid.v1();
         estacion.idTestSombra = testSombra.id;
         estacion.nestacion = numeroEstacion;
-        
-        print(estacion.id);
-        print(estacion.idTestSombra);
-        print(estacion.cobertura);
-        print(estacion.nestacion);
        
         fincasBloc.addEstacion(estacion, estacion.idTestSombra, estacion.nestacion);
         

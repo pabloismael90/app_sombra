@@ -315,10 +315,10 @@ class DBProvider {
         return res;
     }
 
-    Future<int> deletePlanta( String idPlanta ) async {
+    Future<int> deleteEspecie( int idPlanta, String  idEstacion) async {
 
         final db  = await database;
-        final res = await db.delete('Planta', where: 'id = ?', whereArgs: [idPlanta]);
+        final res = await db.delete('InventacioPlanta', where: 'idPlanta = ? and idEstacion = ?', whereArgs: [idPlanta, idEstacion]);
         return res;
     }
 
