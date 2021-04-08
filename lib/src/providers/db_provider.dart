@@ -224,6 +224,17 @@ class DBProvider {
         return list;            
     }
 
+    Future<List<Estacion>>allEstacionesIdSombra(String idTestSombra) async{
+        final db = await database;
+        final res = await db.query('Estacion', where: 'idTestSombra = ?', whereArgs: [idTestSombra]);
+        List<Estacion> list  = res.isNotEmpty 
+                    ? res.map( (c) => Estacion.fromJson(c) ).toList() 
+                    : [];
+
+        return list;
+
+    }
+
     Future<Estacion> getEstacionIdSombra(String idTestSombra, int nEstacion) async{
         Estacion errorEstacion = Estacion();
         final db = await database;
@@ -239,6 +250,17 @@ class DBProvider {
                     ? res.map( (c) => InventacioPlanta.fromJson(c) ).toList() 
                     : [];
         
+        return list;          
+    }
+
+    Future<List<InventacioPlanta>> getPrueba(String idTestSombra, int nEstacion) async{
+        final db = await database;
+        Estacion estacion = await getEstacionIdSombra(idTestSombra, nEstacion);
+        final res = await db.query('InventacioPlanta', where: 'idEstacion = ?', whereArgs: [estacion.id]);
+        List<InventacioPlanta> list = res.isNotEmpty 
+                    ? res.map( (c) => InventacioPlanta.fromJson(c) ).toList() 
+                    : [];
+        //print(res);
         return list;          
     }
 

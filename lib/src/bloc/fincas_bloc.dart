@@ -25,7 +25,9 @@ class FincasBloc {
     final _parcelasController = StreamController<List<Parcela>>.broadcast();
     final _podaController = StreamController<List<TestSombra>>.broadcast();
     final _estacionController = StreamController<Estacion>.broadcast();
+    final _allestacionController = StreamController<List<Estacion>> .broadcast();
     final _inventarioController = StreamController<List<InventacioPlanta>>.broadcast();
+    final _comprobarController = StreamController<List<InventacioPlanta>>.broadcast();
 
     
 
@@ -36,7 +38,9 @@ class FincasBloc {
     Stream<List<Parcela>> get parcelaStream => _parcelasController.stream;
     Stream<List<TestSombra>> get podaStream => _podaController.stream;
     Stream<Estacion> get estacionStream => _estacionController.stream;
+    Stream<List<Estacion>> get allestacionesStream => _allestacionController.stream;
     Stream<List<InventacioPlanta>> get inventarioStream => _inventarioController.stream;
+    Stream<List<InventacioPlanta>> get comprobarStream => _comprobarController.stream;
 
 
 
@@ -112,7 +116,11 @@ class FincasBloc {
         obtenerSombra();
     }
 
-    //Estacion
+    //Estacion y estaciones
+    allEstacionsByTest(String idTestSombra) async {
+        _allestacionController.sink.add( await DBProvider.db.allEstacionesIdSombra(idTestSombra) );
+    }
+    
     obtenerEstacion(String idTestSombra, int nEstacion) async {
         _estacionController.sink.add( await DBProvider.db.getEstacionIdSombra(idTestSombra, nEstacion) );
     }
@@ -120,6 +128,7 @@ class FincasBloc {
     addEstacion( Estacion nuevoEstacion, String idTestSombra, int nEstacion) async{
         await DBProvider.db.nuevoEstacion(nuevoEstacion);
         obtenerEstacion(idTestSombra, nEstacion);
+        allEstacionsByTest(idTestSombra);
     }
 
 
@@ -128,9 +137,14 @@ class FincasBloc {
         _inventarioController.sink.add( await DBProvider.db.getInventarioIdEstacion(idEstacion) );
     }
 
-    addInventario( InventacioPlanta nuevoInventario, String idEstacion) async{
+    comprobarInventario( String idTestSombra, int nEstacion ) async {
+        _comprobarController.sink.add( await DBProvider.db.getPrueba(idTestSombra, nEstacion) );
+    }
+
+    addInventario( InventacioPlanta nuevoInventario, String idEstacion, String idTestSombra, int nEstacion) async{
         await DBProvider.db.nuevoInventario(nuevoInventario);
         obtenerInventario(idEstacion);
+        comprobarInventario( idTestSombra, nEstacion );
     }
 
     borrarEspecie( int idPlanta, String idEstacion) async{
@@ -152,7 +166,9 @@ class FincasBloc {
         _parcelasController?.close();
         _fincasSelectControl?.close();
         _estacionController?.close();
+        _allestacionController?.close();
         _inventarioController?.close();
+        _comprobarController?.close();
 
         _parcelaSelectControl?.close();
         _podaController?.close();

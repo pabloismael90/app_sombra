@@ -262,7 +262,7 @@ class _PlantaFormState extends State<PlantaForm> {
         
 
         inventarioPlanta.id =  uuid.v1();
-        fincasBloc.addInventario(inventarioPlanta, estacion.id);
+        fincasBloc.addInventario(inventarioPlanta, estacion.id, estacion.idTestSombra, estacion.nestacion);
 
         setState(() {_guardando = false;});
 

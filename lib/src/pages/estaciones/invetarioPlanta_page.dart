@@ -336,6 +336,7 @@ class _InventarioPageState extends State<InventarioPage> {
        
         fincasBloc.addEstacion(estacion, estacion.idTestSombra, estacion.nestacion);
         
+        
 
 
         setState(() {_guardando = false;});
