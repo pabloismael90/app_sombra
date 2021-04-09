@@ -253,15 +253,18 @@ class DBProvider {
         return list;          
     }
 
-    Future<List<InventacioPlanta>> getPrueba(String idTestSombra, int nEstacion) async{
+    Future<List<int>> getPrueba(String idTestSombra) async{
         final db = await database;
-        Estacion estacion = await getEstacionIdSombra(idTestSombra, nEstacion);
-        final res = await db.query('InventacioPlanta', where: 'idEstacion = ?', whereArgs: [estacion.id]);
-        List<InventacioPlanta> list = res.isNotEmpty 
-                    ? res.map( (c) => InventacioPlanta.fromJson(c) ).toList() 
-                    : [];
-        //print(res);
-        return list;          
+        List<int> countEspecie = [];
+        for (var i = 0; i < 3; i++) {
+            int res = Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT(*) FROM Estacion "+
+                        "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
+                        "WHERE idTestSombra = '$idTestSombra' AND Nestacion = '${i+1}'"));
+
+            countEspecie.add(res);
+        }
+        
+        return countEspecie;          
     }
 
 

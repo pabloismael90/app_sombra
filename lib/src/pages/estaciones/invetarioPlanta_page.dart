@@ -68,7 +68,7 @@ class _InventarioPageState extends State<InventarioPage> {
                     body: Column(
                         children: [
                             _dataEstacion(sombra),
-                            _listaPlanta(estacion.id)
+                            _listaPlanta(estacion.id, sombra.id)
                         ],
                     ),
                     bottomNavigationBar: _addPlanta(estacion),
@@ -172,7 +172,7 @@ class _InventarioPageState extends State<InventarioPage> {
         );
     }
 
-    Widget _listaPlanta(String idEstacion){
+    Widget _listaPlanta(String idEstacion, String idTestSombra){
 
         fincasBloc.obtenerInventario(idEstacion);
 
@@ -208,7 +208,7 @@ class _InventarioPageState extends State<InventarioPage> {
                                     direction: DismissDirection.endToStart,
                                     background: backgroundTrash(context),
                                     movementDuration: Duration(milliseconds: 500),
-                                    onDismissed: (direction) => fincasBloc.borrarEspecie(plantas[index].idPlanta, plantas[index].idEstacion),
+                                    onDismissed: (direction) => fincasBloc.borrarEspecie(plantas[index].idPlanta, plantas[index].idEstacion, idTestSombra),
                                 );
                             
                             },

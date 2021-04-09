@@ -18,6 +18,7 @@ class EstacionesPage extends StatefulWidget {
 class _EstacionesPageState extends State<EstacionesPage> {
 
     final fincasBloc = new FincasBloc();
+    List<int> countEspecie;
 
     Future _getdataFinca(TestSombra textPlaga) async{
         Finca finca = await DBProvider.db.getFincaId(textPlaga.idFinca);
@@ -30,8 +31,9 @@ class _EstacionesPageState extends State<EstacionesPage> {
     Widget build(BuildContext context) {
         
         TestSombra sombra = ModalRoute.of(context).settings.arguments;
-
         fincasBloc.allEstacionsByTest(sombra.id);
+        
+        
 
         return StreamBuilder(
             stream: fincasBloc.allestacionesStream,
@@ -41,6 +43,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                 }
 
                 List<Estacion> estaciones = snapshot.data;
+                fincasBloc.comprobarInventario(sombra.id);
 
                 return Scaffold(
                     appBar: AppBar(),
@@ -50,9 +53,22 @@ class _EstacionesPageState extends State<EstacionesPage> {
                             TitulosPages(titulo: 'Estaciones'),
                             Divider(),
                             Expanded(
-                                child: SingleChildScrollView(
-                                    child: _listaDeEstaciones( context, sombra),
-                                ),
+                                child: StreamBuilder(
+                                    stream: fincasBloc.comprobarStream ,
+                                    builder: (BuildContext context, AsyncSnapshot snapshot){
+
+                                        if (!snapshot.hasData) {
+                                            return CircularProgressIndicator();
+                                        }
+
+                                        List<int> countEspecie = snapshot.data;
+
+                                        return SingleChildScrollView(
+                                            child: _listaDeEstaciones( context, sombra, countEspecie),
+                                        );
+                                    },
+                                )
+                                
                             ),
                         ],
                     ),
@@ -62,53 +78,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                 );
             },
         );
-        
-
-    //    return StreamBuilder<List<Planta>>(
-    //         stream: fincasBloc.countPlanta,
-    //         builder: (BuildContext context, AsyncSnapshot snapshot){
-    //             if (!snapshot.hasData) {
-    //                 return CircularProgressIndicator();
-    //             }
-    //             List<Planta> plantas= snapshot.data;
-    //             //print(plantas.length);
-    //             fincasBloc.obtenerDecisiones(poda.id);
-    //             int estacion1 = 0;
-    //             int estacion2 = 0;
-    //             int estacion3 = 0;
-    //             List countEstaciones = [];
-
-    //             for (var item in plantas) {
-    //                 if (item.estacion == 1) {
-    //                     estacion1 ++;
-    //                 } else if (item.estacion == 2){
-    //                     estacion2 ++;
-    //                 }else{
-    //                     estacion3 ++;
-    //                 }
-    //             }
-    //             countEstaciones = [estacion1,estacion2,estacion3];
-                
-    //             return Scaffold(
-    //                 appBar: AppBar(),
-    //                 body: Column(
-    //                     children: [
-    //                         escabezadoEstacion( context, poda ),
-    //                         TitulosPages(titulo: 'Estaciones'),
-    //                         Divider(),
-    //                         Expanded(
-    //                             child: SingleChildScrollView(
-    //                                 child: _listaDeEstaciones( context, poda, countEstaciones ),
-    //                             ),
-    //                         ),
-    //                     ],
-    //                 ),
-    //                 bottomNavigationBar: BottomAppBar(
-    //                     child: _tomarDecisiones(countEstaciones, poda)
-    //                 ),
-    //             );
-    //         },
-    //     );
+    
     }
 
 
@@ -177,26 +147,28 @@ class _EstacionesPageState extends State<EstacionesPage> {
         );        
     }
 
-    Widget  _listaDeEstaciones( BuildContext context, TestSombra sombra){
+    Widget  _listaDeEstaciones( BuildContext context, TestSombra sombra, List<int> countEspecie){
+        
         return ListView.builder(
             itemBuilder: (context, index) {
                 
                 return GestureDetector(
-                    child: _cardTest(index+1),
+                    child: _cardTest(index+1, countEspecie[index]),
                     onTap: () => Navigator.pushNamed(context, 'inventario', arguments: [sombra, index]),
                 );
                 
-               
+            
             },
             shrinkWrap: true,
             itemCount:  sombra.estaciones,
             padding: EdgeInsets.only(bottom: 30.0),
             controller: ScrollController(keepScrollOffset: false),
         );
+         
 
     }
 
-    Widget _cardTest(int estacion){
+    Widget _cardTest(int estacion, int countEstacion){
 
 
         return Container(
@@ -216,7 +188,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                         ],
                 ),
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                         
                         Flexible(
@@ -234,6 +206,15 @@ class _EstacionesPageState extends State<EstacionesPage> {
                                             style: Theme.of(context).textTheme.headline6,
                                         ),
                                     ),
+                                    Padding(
+                                        padding: EdgeInsets.only(bottom: 10.0),
+                                        child: Text(
+                                                'Número de especies:: $countEstacion',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(color: kLightBlackColor),
+                                            ),
+                                    ),
                                     
                                 ],  
                             ),
@@ -245,29 +226,40 @@ class _EstacionesPageState extends State<EstacionesPage> {
     }
    
 
-    Widget  _tomarDecisiones(List<Estacion> estaciones, TestSombra sombra){
+    Widget  _tomarDecisiones(List<Estacion> estaciones, TestSombra sombrae){
 
-        if (estaciones.length >= 3) {
-            return Container(
-                color: kBackgroundColor,
-                child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-                    child: RaisedButton.icon(
-                        icon:Icon(Icons.add_circle_outline_outlined),
-                        
-                        label: Text('Toma de decisiones',
-                            style: Theme.of(context).textTheme
-                                .headline6
-                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+
+        return StreamBuilder(
+            stream: fincasBloc.comprobarStream ,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+
+                countEspecie = snapshot.data;
+
+                if (estaciones.length >= 3 && !countEspecie.contains(0)) {
+                    return Container(
+                        color: kBackgroundColor,
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+                            child: RaisedButton.icon(
+                                icon:Icon(Icons.add_circle_outline_outlined),
+                                
+                                label: Text('Toma de decisiones',
+                                    style: Theme.of(context).textTheme
+                                        .headline6
+                                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                                ),
+                                padding:EdgeInsets.all(13),
+                                //onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: sombra),
+                                onPressed: (){},
+                            )
                         ),
-                        padding:EdgeInsets.all(13),
-                        //onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: sombra),
-                        onPressed: (){},
-                    )
-                ),
-            );
-        }else{
-            return Container(
+                    );
+                }
+                return Container(
                     color: kBackgroundColor,
                     child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -280,72 +272,9 @@ class _EstacionesPageState extends State<EstacionesPage> {
                         ),
                     ),
                 );
-        }
-
                 
-
                 
-                        
-        
-        
-        // if(countEstaciones[0] >= 10 && countEstaciones[1] >= 10 && countEstaciones[2] >= 10){
-            
-        //     return StreamBuilder(
-        //     stream: fincasBloc.decisionesStream ,
-        //         builder: (BuildContext context, AsyncSnapshot snapshot) {
-        //             if (!snapshot.hasData) {
-        //                 return Center(child: CircularProgressIndicator());
-        //             }
-        //             List desiciones = snapshot.data;
-
-        //             //print(desiciones);
-
-        //             if (desiciones.length == 0){
-
-        //                 return Container(
-        //                     color: kBackgroundColor,
-        //                     child: Padding(
-        //                         padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-        //                         child: RaisedButton.icon(
-        //                             icon:Icon(Icons.add_circle_outline_outlined),
-                                    
-        //                             label: Text('Toma de decisiones',
-        //                                 style: Theme.of(context).textTheme
-        //                                     .headline6
-        //                                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-        //                             ),
-        //                             padding:EdgeInsets.all(13),
-        //                             onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: poda),
-        //                         )
-        //                     ),
-        //                 );
-                        
-        //             }
-
-
-        //             return Container(
-        //                 color: kBackgroundColor,
-        //                 child: Padding(
-        //                     padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-        //                     child: RaisedButton.icon(
-        //                         icon:Icon(Icons.receipt_rounded),
-                            
-        //                         label: Text('Consultar decisiones',
-        //                             style: Theme.of(context).textTheme
-        //                                 .headline6
-        //                                 .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-        //                         ),
-        //                         padding:EdgeInsets.all(13),
-        //                         onPressed: () => Navigator.pushNamed(context, 'reporte', arguments: poda.id),
-        //                     )
-        //                 ),
-        //             );
-                                       
-        //         },  
-        //     );
-        // }
-        
-
-        
+            },
+        );
     }
 }

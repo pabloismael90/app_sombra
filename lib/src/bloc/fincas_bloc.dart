@@ -27,7 +27,7 @@ class FincasBloc {
     final _estacionController = StreamController<Estacion>.broadcast();
     final _allestacionController = StreamController<List<Estacion>> .broadcast();
     final _inventarioController = StreamController<List<InventacioPlanta>>.broadcast();
-    final _comprobarController = StreamController<List<InventacioPlanta>>.broadcast();
+    final _comprobarController = StreamController<List<int>>.broadcast();
 
     
 
@@ -40,7 +40,7 @@ class FincasBloc {
     Stream<Estacion> get estacionStream => _estacionController.stream;
     Stream<List<Estacion>> get allestacionesStream => _allestacionController.stream;
     Stream<List<InventacioPlanta>> get inventarioStream => _inventarioController.stream;
-    Stream<List<InventacioPlanta>> get comprobarStream => _comprobarController.stream;
+    Stream<List<int>> get comprobarStream => _comprobarController.stream;
 
 
 
@@ -137,19 +137,20 @@ class FincasBloc {
         _inventarioController.sink.add( await DBProvider.db.getInventarioIdEstacion(idEstacion) );
     }
 
-    comprobarInventario( String idTestSombra, int nEstacion ) async {
-        _comprobarController.sink.add( await DBProvider.db.getPrueba(idTestSombra, nEstacion) );
+    comprobarInventario( String idTestSombra) async {
+        _comprobarController.sink.add( await DBProvider.db.getPrueba(idTestSombra) );
     }
 
     addInventario( InventacioPlanta nuevoInventario, String idEstacion, String idTestSombra, int nEstacion) async{
         await DBProvider.db.nuevoInventario(nuevoInventario);
         obtenerInventario(idEstacion);
-        comprobarInventario( idTestSombra, nEstacion );
+        comprobarInventario(idTestSombra);
     }
 
-    borrarEspecie( int idPlanta, String idEstacion) async{
+    borrarEspecie( int idPlanta, String idEstacion, String idTestSombra) async{
         await DBProvider.db.deleteEspecie(idPlanta, idEstacion);
         obtenerInventario(idEstacion);
+        comprobarInventario(idTestSombra);
     }
 
 
