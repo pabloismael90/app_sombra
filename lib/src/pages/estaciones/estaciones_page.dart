@@ -226,7 +226,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
     }
    
 
-    Widget  _tomarDecisiones(List<Estacion> estaciones, TestSombra sombrae){
+    Widget  _tomarDecisiones(List<Estacion> estaciones, TestSombra sombra){
 
 
         return StreamBuilder(
@@ -253,8 +253,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                                         .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                                 ),
                                 padding:EdgeInsets.all(13),
-                                //onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: sombra),
-                                onPressed: (){},
+                                onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: sombra),
                             )
                         ),
                     );

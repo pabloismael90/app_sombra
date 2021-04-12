@@ -1,4 +1,5 @@
 import 'package:app_sombra/src/pages/PDFView.dart';
+import 'package:app_sombra/src/pages/decisiones/decisiones_form.dart';
 
 import 'package:app_sombra/src/pages/estaciones/estaciones_page.dart';
 import 'package:app_sombra/src/pages/estaciones/invetarioPlanta_page.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
                 'addPlanta' : ( BuildContext context ) => PlantaForm(),
                 
                 //Decisiones
+                'decisiones' : ( BuildContext context ) => DesicionesPage(),
                 
                 //Galeria de imagenes
                 'galeria' : ( BuildContext context ) => GaleriaImagenes(),
