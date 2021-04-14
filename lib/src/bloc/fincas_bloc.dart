@@ -138,7 +138,7 @@ class FincasBloc {
     }
 
     comprobarInventario( String idTestSombra) async {
-        _comprobarController.sink.add( await DBProvider.db.getPrueba(idTestSombra) );
+        _comprobarController.sink.add( await DBProvider.db.getConteoEstaciones(idTestSombra) );
     }
 
     addInventario( InventacioPlanta nuevoInventario, String idEstacion, String idTestSombra, int nEstacion) async{

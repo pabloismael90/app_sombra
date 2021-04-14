@@ -19,6 +19,20 @@ class DesicionesPage extends StatefulWidget {
 }
 
 class _DesicionesPageState extends State<DesicionesPage> {
+
+    Widget textmt= Text('0', textAlign: TextAlign.center);
+
+    Future<int> _riquezaByEstacion(String idSombra, int estacion) async{
+        int countEspecies = await DBProvider.db.getConteoByEstacion(idSombra, estacion);
+        return countEspecies;
+    }
+
+    Future<int> _riquezaTotal(String idSombra) async{
+        int countEspecies = await DBProvider.db.getConteoEspecies(idSombra);
+        return countEspecies;
+    }
+
+
     @override
     Widget build(BuildContext context) {
 
@@ -45,7 +59,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                     Finca finca = snapshot.data[0];
                     Parcela parcela = snapshot.data[1];
 
-                    pageItem.add(_principalData(finca, parcela));
+                    pageItem.add(_principalData(finca, parcela, sombra.id));
 
                     return Column(
                         children: [
@@ -88,7 +102,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
 
-    Widget _principalData(Finca finca, Parcela parcela){
+    Widget _principalData(Finca finca, Parcela parcela, String idSombra){
     
                 return Container(
                     decoration: BoxDecoration(
@@ -154,23 +168,35 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                                             Row(
                                                                 mainAxisAlignment: MainAxisAlignment.end,
                                                                 children: [
-                                                                    Expanded(
-                                                                        child: Container(
-                                                                            padding: EdgeInsets.symmetric(horizontal: 20.0),
-                                                                            child: Text('Tipos', textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6
-                                                                                                    .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
-                                                                        ),
-                                                                    ),
-                                                                    
+                                                                    Expanded(child: Container(
+                                                                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                                                                        child: Text('Estaciones', textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6
+                                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                                                                    ),),
                                                                     Container(
-                                                                        width: 100,
-                                                                        child: Text('Cobertura', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                        width: 45,
+                                                                        child: Text('1', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                                                                    ),
+                                                                    Container(
+                                                                        width: 45,
+                                                                        child: Text('2', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                                                                    ),
+                                                                    Container(
+                                                                        width: 45,
+                                                                        child: Text('3', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600))
+                                                                    ),
+                                                                    Container(
+                                                                        width: 45,
+                                                                        child: Text('Total', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
                                                                                 .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
                                                                     ),
                                                                 ],
                                                             ),
                                                             Divider(),
-                                                            //_countPlagas(plagaid, 1),
+                                                            _riqueza(idSombra),
                                                         ],
                                                     ),
                                                 ),
@@ -194,8 +220,6 @@ class _DesicionesPageState extends State<DesicionesPage> {
 
         final item = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}');
         labelMedidaFinca  = item['label'];
-
-        
 
         final itemvariedad = selectMap.variedadCacao().firstWhere((e) => e['value'] == '${parcela.variedadCacao}');
         labelvariedad  = itemvariedad['label'];
@@ -309,7 +333,152 @@ class _DesicionesPageState extends State<DesicionesPage> {
 
     } 
 
+     Widget _cobertura(String idSombra){
+        List<Widget> lisItem = List<Widget>();
 
+
+            lisItem.add(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        Expanded(child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text('Riqueza (# de especies)', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
+                        ),),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _riquezaByEstacion(idSombra, 1),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _riquezaByEstacion(idSombra, 2),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _riquezaByEstacion(idSombra, 3),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _riquezaTotal(idSombra),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        
+                    ],
+                )
+            );
+            lisItem.add(Divider());
+        
+        return Column(children:lisItem,);
+    }
+
+    
+    Widget _riqueza(String idSombra){
+        List<Widget> lisItem = List<Widget>();
+
+
+            lisItem.add(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        Expanded(child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text('Riqueza (# de especies)', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
+                        ),),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _riquezaByEstacion(idSombra, 1),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _riquezaByEstacion(idSombra, 2),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _riquezaByEstacion(idSombra, 3),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _riquezaTotal(idSombra),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        
+                    ],
+                )
+            );
+            lisItem.add(Divider());
+        
+        return Column(children:lisItem,);
+    }
 
 
 

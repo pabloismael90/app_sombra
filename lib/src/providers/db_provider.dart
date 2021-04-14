@@ -253,7 +253,7 @@ class DBProvider {
         return list;          
     }
 
-    Future<List<int>> getPrueba(String idTestSombra) async{
+    Future<List<int>> getConteoEstaciones(String idTestSombra) async{
         final db = await database;
         List<int> countEspecie = [];
         for (var i = 0; i < 3; i++) {
@@ -318,6 +318,33 @@ class DBProvider {
 
     //Conteos analisis
     
+    Future<double> getCobertura(String idTestSombra, int nEstacion) async{
+        final db = await database;
+        
+        var res = await db.rawQuery("SELECT FROM Estacion.cobertura WHERE idTestSombra = '$idTestSombra' AND Nestacion = '$nEstacion'");
+
+        print(res);
+        return 0;          
+    }
+    
+    Future<int> getConteoByEstacion(String idTestSombra, int nEstacion) async{
+        final db = await database;
+        
+        int res = Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT(*) FROM Estacion "+
+                    "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
+                    "WHERE idTestSombra = '$idTestSombra' AND Nestacion = '$nEstacion'"));
+        return res;          
+    }
+
+    Future<int> getConteoEspecies(String idTestSombra) async{
+        final db = await database;
+        
+        int res = Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT(DISTINCT idPlanta) FROM Estacion "+
+                    "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
+                    "WHERE idTestSombra = '$idTestSombra'"));
+        return res;          
+    }
+
 
     // Eliminar registros
     Future<int> deleteFinca( String idFinca ) async {
