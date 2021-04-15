@@ -318,13 +318,21 @@ class DBProvider {
 
     //Conteos analisis
     
-    Future<double> getCobertura(String idTestSombra, int nEstacion) async{
+    Future<double> getCoberturaByEstacion(String idTestSombra, int nEstacion) async{
         final db = await database;
         
-        var res = await db.rawQuery("SELECT FROM Estacion.cobertura WHERE idTestSombra = '$idTestSombra' AND Nestacion = '$nEstacion'");
+        var res = await db.rawQuery("SELECT Estacion.cobertura  FROM Estacion WHERE idTestSombra = '$idTestSombra' AND Nestacion = '$nEstacion'");
+        double value = res[0]['cobertura'];
+        return value;          
+    }
 
-        print(res);
-        return 0;          
+    Future<double> getCoberturaPromedio(String idTestSombra) async{
+        final db = await database;        
+        var res = await db.rawQuery("SELECT SUM(cobertura) FROM Estacion WHERE idTestSombra = '$idTestSombra'");
+        double value = res[0]['SUM(cobertura)']/3;
+        
+        
+        return value;          
     }
     
     Future<int> getConteoByEstacion(String idTestSombra, int nEstacion) async{
@@ -343,6 +351,36 @@ class DBProvider {
                     "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
                     "WHERE idTestSombra = '$idTestSombra'"));
         return res;          
+    }
+
+    Future<int> getArbolesByEstacion(String idTestSombra, int nEstacion) async{
+        final db = await database;        
+        var res = await db.rawQuery("SELECT SUM(pequeno + mediano + grande)  AS arboles FROM Estacion "+
+                    "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
+                    "WHERE idTestSombra = '$idTestSombra' AND Nestacion = '$nEstacion'");
+        int value = res[0]['arboles'];
+        
+        return value;          
+    }
+
+    Future<double> getArbolesPromedio(String idTestSombra) async{
+        final db = await database;        
+        var res = await db.rawQuery("SELECT SUM(pequeno + mediano + grande)  AS arboles FROM Estacion "+
+                    "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
+                    "WHERE idTestSombra = '$idTestSombra'");
+        double value = res[0]['arboles']/3;
+        
+        return value;          
+    }
+
+    Future<List<Map<String, dynamic>>> dominanciaEspecie(String idTestSombra) async{
+        final db = await database;        
+        final res = await db.rawQuery("SELECT InventacioPlanta.idPlanta, SUM(pequeno + mediano + grande) AS total FROM Estacion "+
+                    "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
+                    "WHERE idTestSombra = '$idTestSombra' GROUP BY InventacioPlanta.idPlanta");
+        
+        List<Map<String, dynamic>> list = res.isNotEmpty ? res : [];
+        return list;          
     }
 
 

@@ -20,7 +20,20 @@ class DesicionesPage extends StatefulWidget {
 
 class _DesicionesPageState extends State<DesicionesPage> {
 
+    final List<Map<String, dynamic>>  itemEspecie = selectMap.especies();
+
     Widget textmt= Text('0', textAlign: TextAlign.center);
+    double areaEstacion;
+
+    Future<double> _coberturaByEstacion(String idSombra, int estacion) async{
+        double coberturaEstacion = await DBProvider.db.getCoberturaByEstacion(idSombra, estacion);
+        return coberturaEstacion;
+    }
+
+    Future<double> _coberturaPromedio(String idSombra) async{
+        double coberturaPromedio = await DBProvider.db.getCoberturaPromedio(idSombra);
+        return coberturaPromedio;
+    }
 
     Future<int> _riquezaByEstacion(String idSombra, int estacion) async{
         int countEspecies = await DBProvider.db.getConteoByEstacion(idSombra, estacion);
@@ -32,11 +45,27 @@ class _DesicionesPageState extends State<DesicionesPage> {
         return countEspecies;
     }
 
+    Future<int> _arbolesByEstacion(String idSombra, int estacion) async{
+        int countArboles = await DBProvider.db.getArbolesByEstacion(idSombra, estacion);
+        return countArboles;
+    }
+
+    Future<double> _arbolesPromedio(String idSombra) async{
+        double countArboles = await DBProvider.db.getArbolesPromedio(idSombra);
+        return countArboles;
+    }
+
+    Future<List<Map<String, dynamic>>> _countByEspecie(String idSombra) async{
+        List<Map<String, dynamic>> listEspecies = await DBProvider.db.dominanciaEspecie(idSombra);
+        return listEspecies;
+    }
+
 
     @override
     Widget build(BuildContext context) {
 
         TestSombra sombra = ModalRoute.of(context).settings.arguments;
+        areaEstacion = (sombra.surcoDistancia * 10)*(sombra.plantaDistancia * 10);
 
         Future _getdataFinca() async{
             Finca finca = await DBProvider.db.getFincaId(sombra.idFinca);
@@ -59,7 +88,8 @@ class _DesicionesPageState extends State<DesicionesPage> {
                     Finca finca = snapshot.data[0];
                     Parcela parcela = snapshot.data[1];
 
-                    pageItem.add(_principalData(finca, parcela, sombra.id));
+                    pageItem.add(_principalData(finca, parcela, sombra));
+                    pageItem.add(_dominanciaEspecie(sombra.id));
 
                     return Column(
                         children: [
@@ -99,119 +129,6 @@ class _DesicionesPageState extends State<DesicionesPage> {
             ),
             
         );
-    }
-
-
-    Widget _principalData(Finca finca, Parcela parcela, String idSombra){
-    
-                return Container(
-                    decoration: BoxDecoration(
-                        
-                    ),
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                        children: [
-                            _dataFincas( context, finca, parcela),
-
-                            Expanded(
-                                child: SingleChildScrollView(
-                                    child: Container(
-                                        color: Colors.white,
-                                        child: Column(
-                                            children: [
-                                                Padding(
-                                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                                    child: InkWell(
-                                                        child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            children: [
-                                                                Container(                                                                    
-                                                                    child: Text(
-                                                                        "Porcentaje de cobertura",
-                                                                        textAlign: TextAlign.center,
-                                                                        style: Theme.of(context).textTheme
-                                                                            .headline5
-                                                                            .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
-                                                                    ),
-                                                                ),
-                                                                Padding(
-                                                                    padding: EdgeInsets.only(left: 10),
-                                                                    child: Icon(
-                                                                        Icons.info_outline_rounded,
-                                                                        color: Colors.green,
-                                                                        size: 22.0,
-                                                                    ),
-                                                                ),
-                                                            ],
-                                                        ),
-                                                        onTap: () => _dialogText(context),
-                                                    ),
-                                                ),
-                                                
-                                                Container(
-                                                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                                    width: double.infinity,
-                                                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.circular(10),
-                                                        boxShadow: [
-                                                            BoxShadow(
-                                                                    color: Color(0xFF3A5160)
-                                                                        .withOpacity(0.05),
-                                                                    offset: const Offset(1.1, 1.1),
-                                                                    blurRadius: 17.0),
-                                                            ],
-                                                    ),
-                                                    child: Column(
-                                                        children: [
-                                                            Row(
-                                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                                children: [
-                                                                    Expanded(child: Container(
-                                                                        padding: EdgeInsets.symmetric(horizontal: 20.0),
-                                                                        child: Text('Estaciones', textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6
-                                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
-                                                                    ),),
-                                                                    Container(
-                                                                        width: 45,
-                                                                        child: Text('1', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
-                                                                    ),
-                                                                    Container(
-                                                                        width: 45,
-                                                                        child: Text('2', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
-                                                                    ),
-                                                                    Container(
-                                                                        width: 45,
-                                                                        child: Text('3', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600))
-                                                                    ),
-                                                                    Container(
-                                                                        width: 45,
-                                                                        child: Text('Total', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
-                                                                    ),
-                                                                ],
-                                                            ),
-                                                            Divider(),
-                                                            _riqueza(idSombra),
-                                                        ],
-                                                    ),
-                                                ),
-                                            ],
-                                        ),
-                                    ),
-                                ),
-                            )
-                            
-                        ],
-                    ),
-                );
-                
-
-            
     }
 
     Widget _dataFincas( BuildContext context, Finca finca, Parcela parcela ){
@@ -333,7 +250,183 @@ class _DesicionesPageState extends State<DesicionesPage> {
 
     } 
 
-     Widget _cobertura(String idSombra){
+    Widget _principalData(Finca finca, Parcela parcela, TestSombra sombra){
+    
+                return Container(
+                    decoration: BoxDecoration(
+                        
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                        children: [
+                            _dataFincas( context, finca, parcela),
+
+                            Expanded(
+                                child: SingleChildScrollView(
+                                    child: Container(
+                                        color: Colors.white,
+                                        child: Column(
+                                            children: [
+                                                Padding(
+                                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                                    child: InkWell(
+                                                        child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                                Container(                                                                    
+                                                                    child: Text(
+                                                                        "Porcentaje de cobertura",
+                                                                        textAlign: TextAlign.center,
+                                                                        style: Theme.of(context).textTheme
+                                                                            .headline5
+                                                                            .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                                                    ),
+                                                                ),
+                                                                Padding(
+                                                                    padding: EdgeInsets.only(left: 10),
+                                                                    child: Icon(
+                                                                        Icons.info_outline_rounded,
+                                                                        color: Colors.green,
+                                                                        size: 22.0,
+                                                                    ),
+                                                                ),
+                                                            ],
+                                                        ),
+                                                        onTap: () => _dialogText(context),
+                                                    ),
+                                                ),
+                                                
+                                                Container(
+                                                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                                    width: double.infinity,
+                                                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius: BorderRadius.circular(10),
+                                                        boxShadow: [
+                                                            BoxShadow(
+                                                                    color: Color(0xFF3A5160)
+                                                                        .withOpacity(0.05),
+                                                                    offset: const Offset(1.1, 1.1),
+                                                                    blurRadius: 17.0),
+                                                            ],
+                                                    ),
+                                                    child: Column(
+                                                        children: [
+                                                            _areByEstacion(),
+                                                            _areTotalEstacion(),
+                                                            Row(
+                                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                                children: [
+                                                                    Expanded(child: Container(
+                                                                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                                                                        child: Text('Estaciones', textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6
+                                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                                                                    ),),
+                                                                    Container(
+                                                                        width: 45,
+                                                                        child: Text('1', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                                                                    ),
+                                                                    Container(
+                                                                        width: 45,
+                                                                        child: Text('2', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                                                                    ),
+                                                                    Container(
+                                                                        width: 45,
+                                                                        child: Text('3', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600))
+                                                                    ),
+                                                                    Container(
+                                                                        width: 45,
+                                                                        child: Text('Total', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                                                                    ),
+                                                                ],
+                                                            ),
+                                                            Divider(),
+                                                            _cobertura(sombra.id),
+                                                            _riqueza(sombra.id),
+                                                            _arboles(sombra.id),
+                                                            _densidad(sombra.id),
+                                                        ],
+                                                    ),
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                ),
+                            )
+                            
+                        ],
+                    ),
+                );
+                
+
+            
+    }
+
+    Widget _areByEstacion(){
+        List<Widget> lisItem = List<Widget>();
+
+
+            lisItem.add(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        
+                        Container(
+                            width: 225,
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text('Area de cada estación mt2', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
+                        ),
+
+                        Expanded(
+                            child: Text('$areaEstacion', textAlign: TextAlign.center),
+                                
+                        ),
+                       
+                        
+                    ],
+                )
+            );
+            lisItem.add(Divider());
+        
+        return Column(children:lisItem,);
+    }
+
+    Widget _areTotalEstacion(){
+        List<Widget> lisItem = List<Widget>();
+
+
+            lisItem.add(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        
+                        Container(
+                            width: 225,
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text('Area de tres estaciones mt2', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
+                        ),
+
+                        Expanded(
+                            child: Text('${areaEstacion*3}', textAlign: TextAlign.center),
+                                
+                        ),
+                       
+                        
+                    ],
+                )
+            );
+            lisItem.add(Divider());
+        
+        return Column(children:lisItem,);
+    }
+
+    
+    Widget _cobertura(String idSombra){
         List<Widget> lisItem = List<Widget>();
 
 
@@ -343,57 +436,57 @@ class _DesicionesPageState extends State<DesicionesPage> {
                     children: [
                         Expanded(child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text('Riqueza (# de especies)', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
+                            child: Text('Cobertura de sombra % Est', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
                         ),),
                         Container(
                             width: 45,
                             child: FutureBuilder(
-                                future: _riquezaByEstacion(idSombra, 1),
+                                future: _coberturaByEstacion(idSombra, 1),
                                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                                     if (!snapshot.hasData) {
                                         return textmt;
                                     }
 
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
                                 },
                             ),
                         ),
                         Container(
                             width: 45,
                             child: FutureBuilder(
-                                future: _riquezaByEstacion(idSombra, 2),
+                                future: _coberturaByEstacion(idSombra, 2),
                                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                                     if (!snapshot.hasData) {
                                         return textmt;
                                     }
 
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
                                 },
                             ),
                         ),
                         Container(
                             width: 45,
                             child: FutureBuilder(
-                                future: _riquezaByEstacion(idSombra, 3),
+                                future: _coberturaByEstacion(idSombra, 3),
                                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                                     if (!snapshot.hasData) {
                                         return textmt;
                                     }
 
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
                                 },
                             ),
                         ),
                         Container(
                             width: 45,
                             child: FutureBuilder(
-                                future: _riquezaTotal(idSombra),
+                                future: _coberturaPromedio(idSombra),
                                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                                     if (!snapshot.hasData) {
                                         return textmt;
                                     }
 
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
                                 },
                             ),
                         ),
@@ -406,7 +499,6 @@ class _DesicionesPageState extends State<DesicionesPage> {
         return Column(children:lisItem,);
     }
 
-    
     Widget _riqueza(String idSombra){
         List<Widget> lisItem = List<Widget>();
 
@@ -480,6 +572,258 @@ class _DesicionesPageState extends State<DesicionesPage> {
         return Column(children:lisItem,);
     }
 
+    Widget _arboles(String idSombra){
+        List<Widget> lisItem = List<Widget>();
+
+
+            lisItem.add(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        Expanded(child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text('Suma de arboles (todas)', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
+                        ),),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _arbolesByEstacion(idSombra, 1),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _arbolesByEstacion(idSombra, 2),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _arbolesByEstacion(idSombra, 3),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _arbolesPromedio(idSombra),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${snapshot.data.toStringAsFixed(1)}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        
+                    ],
+                )
+            );
+            lisItem.add(Divider());
+        
+        return Column(children:lisItem,);
+    }
+
+    Widget _densidad(String idSombra){
+        List<Widget> lisItem = List<Widget>();
+
+
+            lisItem.add(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        Expanded(child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text('Densidad de árboles (#/ha)', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
+                        ),),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _arbolesByEstacion(idSombra, 1),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(1)}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _arbolesByEstacion(idSombra, 2),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(1)}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _arbolesByEstacion(idSombra, 3),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(1)}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _arbolesPromedio(idSombra),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(1)}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        
+                    ],
+                )
+            );
+            lisItem.add(Divider());
+        
+        return Column(children:lisItem,);
+    }
+
+
+    Widget _dominanciaEspecie(String idSombra){
+        
+
+        
+        return FutureBuilder(
+            future:Future.wait([
+                _countByEspecie(idSombra),
+                _arbolesPromedio(idSombra)
+            ]),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData) {
+                    return textmt;
+                }
+                
+                List<Map<String, dynamic>> especiesConteo = snapshot.data[0];
+                double totalArboles = snapshot.data[1]*3;
+                List<Widget> listPrincipales = List<Widget>();
+
+                listPrincipales.add(
+                    Column(
+                        children: [
+                            Container(
+                                child: Padding(
+                                    padding: EdgeInsets.only(top: 20, bottom: 10),
+                                    child: Text(
+                                        "Dominancia de especies",
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context).textTheme
+                                            .headline5
+                                            .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                    ),
+                                )
+                            ),
+                            Divider(),
+                        ],
+                    )
+                    
+                );
+
+                
+                for (var especie in especiesConteo) {
+
+                    String labelEspecie = itemEspecie.firstWhere((e) => e['value'] == '${especie['idPlanta']}', orElse: () => {"value": "1","label": "No data"})['label'];
+                    double densidad = (especie['total']/totalArboles)*100;
+                                        
+                    listPrincipales.add(
+                        Column(
+                            children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                        Expanded(
+                                            child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                                                child: Text(labelEspecie, textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
+                                            ),
+                                        ),
+                                        Container(
+                                            width: 45,
+                                            child: FutureBuilder(
+                                                future: _arbolesPromedio(idSombra),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                                    if (!snapshot.hasData) {
+                                                        return textmt;
+                                                    }
+
+                                                    return Text('${densidad.toStringAsFixed(1)}%', textAlign: TextAlign.center);
+                                                },
+                                            ),
+                                        ),
+                                        
+                                    ],
+                                ),
+                                Divider(),
+                            ],
+                        )
+                        
+                    );
+                }
+
+                return SingleChildScrollView(
+                    child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                                BoxShadow(
+                                        color: Color(0xFF3A5160)
+                                            .withOpacity(0.05),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 17.0),
+                                ],
+                        ),
+                        child: Column(children:listPrincipales)
+                    ),
+                );
+            },
+        );
+    
+        
+        
+    }
 
 
 
