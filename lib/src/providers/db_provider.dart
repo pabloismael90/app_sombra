@@ -1,6 +1,7 @@
 import 'dart:io';
 
 
+import 'package:app_sombra/src/models/decisiones_model.dart';
 import 'package:app_sombra/src/models/estacion_model.dart';
 import 'package:app_sombra/src/models/inventarioPlanta_model.dart';
 import 'package:app_sombra/src/models/testsombra_model.dart';
@@ -104,6 +105,17 @@ class DBProvider {
                     ')'
                 );
 
+                await db.execute(
+                    'CREATE TABLE Decisiones ('
+                    'id TEXT PRIMARY KEY,'
+                    ' idPregunta INTEGER,'
+                    ' idItem INTEGER,'
+                    ' repuesta INTEGER,'
+                    ' idTest TEXT,'
+                    ' CONSTRAINT fk_decisiones FOREIGN KEY(idTest) REFERENCES TestSombra(id) ON DELETE CASCADE'
+                    ')'
+                );
+
 
 
                    
@@ -150,7 +162,11 @@ class DBProvider {
         return res;
     }
 
-    
+    nuevaDecision( Decisiones decisiones ) async {
+        final db  = await database;
+        final res = await db.insert('Decisiones',  decisiones.toJson() );
+        return res;
+    }
 
 
 
@@ -191,6 +207,16 @@ class DBProvider {
         return list;
     }
 
+    Future<List<Decisiones>> getTodasDesiciones() async {
+
+        final db  = await database;
+        final res = await db.rawQuery('SELECT DISTINCT idTest FROM Decisiones');
+
+        List<Decisiones> list = res.isNotEmpty 
+                                ? res.map( (c) => Decisiones.fromJson(c) ).toList()
+                                : [];
+        return list;
+    }
 
     
     
@@ -265,6 +291,15 @@ class DBProvider {
         }
         
         return countEspecie;          
+    }
+
+    Future<List<Decisiones>> getDecisionesIdTest(String idTest) async{
+        final db = await database;
+        final res = await db.query('Decisiones', where: 'idTest = ?', whereArgs: [idTest]);
+        List<Decisiones> list = res.isNotEmpty 
+                                ? res.map( (c) => Decisiones.fromJson(c) ).toList()
+                                : [];
+        return list;
     }
 
 

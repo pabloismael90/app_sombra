@@ -1,4 +1,5 @@
 import 'package:app_sombra/src/bloc/fincas_bloc.dart';
+import 'package:app_sombra/src/models/decisiones_model.dart';
 import 'package:app_sombra/src/models/estacion_model.dart';
 import 'package:app_sombra/src/models/finca_model.dart';
 import 'package:app_sombra/src/models/parcela_model.dart';
@@ -33,7 +34,6 @@ class _EstacionesPageState extends State<EstacionesPage> {
         TestSombra sombra = ModalRoute.of(context).settings.arguments;
         fincasBloc.allEstacionsByTest(sombra.id);
         
-        
 
         return StreamBuilder(
             stream: fincasBloc.allestacionesStream,
@@ -44,6 +44,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
 
                 List<Estacion> estaciones = snapshot.data;
                 fincasBloc.comprobarInventario(sombra.id);
+                
 
                 return Scaffold(
                     appBar: AppBar(),
@@ -228,7 +229,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
 
     Widget  _tomarDecisiones(List<Estacion> estaciones, TestSombra sombra){
 
-
+        
         return StreamBuilder(
             stream: fincasBloc.comprobarStream ,
             builder: (BuildContext context, AsyncSnapshot snapshot){
@@ -240,23 +241,60 @@ class _EstacionesPageState extends State<EstacionesPage> {
                 countEspecie = snapshot.data;
 
                 if (estaciones.length >= 3 && !countEspecie.contains(0)) {
-                    return Container(
-                        color: kBackgroundColor,
-                        child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-                            child: RaisedButton.icon(
-                                icon:Icon(Icons.add_circle_outline_outlined),
+                    fincasBloc.obtenerDecisiones(sombra.id);
+
+                     return StreamBuilder(
+                        stream: fincasBloc.decisionesStream ,
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                            if (!snapshot.hasData) {
+                                return Center(child: CircularProgressIndicator());
+                            }
+                            List<Decisiones> desiciones = snapshot.data;
+
+                            if (desiciones.length == 0){
+
+                                return Container(
+                                    color: kBackgroundColor,
+                                    child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+                                        child: RaisedButton.icon(
+                                            icon:Icon(Icons.add_circle_outline_outlined),
+                                            
+                                            label: Text('Toma de decisiones',
+                                                style: Theme.of(context).textTheme
+                                                    .headline6
+                                                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                                            ),
+                                            padding:EdgeInsets.all(13),
+                                            onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: sombra),
+                                        )
+                                    ),
+                                );
                                 
-                                label: Text('Toma de decisiones',
-                                    style: Theme.of(context).textTheme
-                                        .headline6
-                                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                            }
+
+
+                            return Container(
+                                color: kBackgroundColor,
+                                child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+                                    child: RaisedButton.icon(
+                                        icon:Icon(Icons.receipt_rounded),
+                                    
+                                        label: Text('Consultar decisiones',
+                                            style: Theme.of(context).textTheme
+                                                .headline6
+                                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                                        ),
+                                        padding:EdgeInsets.all(13),
+                                        onPressed: () => Navigator.pushNamed(context, 'reporte', arguments: sombra.id),
+                                    )
                                 ),
-                                padding:EdgeInsets.all(13),
-                                onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: sombra),
-                            )
-                        ),
+                            );
+                                            
+                        },  
                     );
+                    
                 }
                 return Container(
                     color: kBackgroundColor,

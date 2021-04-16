@@ -494,210 +494,238 @@ List<Map<String, dynamic>> listaUso(){
 
 
 
-List<Map<String, dynamic>> podaCacao(){
-    final List<Map<String, dynamic>>  plagasCacao = [
+List<Map<String, dynamic>> densidadSombra(){
+    final List<Map<String, dynamic>>  densidad = [
             {
                 'value': '0', 
-                'label': 'Buena arquitectura'
+                'label': 'Muy alta'
             },
             {
                 'value': '1', 
-                'label': 'Ramas en contacto'
+                'label': 'Adecuada'
             },
             {
                 'value': '2', 
-                'label': 'Ramas entrecruzados'
-            },
-            {
-                'value': '3', 
-                'label': 'Ramas cercanas al suelo'
-            },
-            {
-                'value': '4', 
-                'label': 'Chupones'
-            },
-            {
-                'value': '5', 
-                'label': 'Entrada de luz'
+                'label': 'Muy baja'
             }
 
         ];
 
-    return plagasCacao;
+    return densidad;
 }
 
-List<Map<String, dynamic>> podaProblemas(){
-    final List<Map<String, dynamic>>  podaProblemas = [
+List<Map<String, dynamic>> formaArboles(){
+    final List<Map<String, dynamic>>  forma = [
         {
             'value': '0',
-            'label': 'Altura',
+            'label': 'Ancha',
         },
         {
             'value': '1',
-            'label': 'Ancho',
+            'label': 'Adecuada',
         },
         {
             'value': '2',
-            'label': 'Ramas',
+            'label': 'Angosta',
         },
         {
             'value': '3',
-            'label': 'Arquitectura',
-        },
-        {
-            'value': '4',
-            'label': 'Chupones',
-        },
-        {
-            'value': '5',
-            'label': 'Poca entrada de luz',
-        },
-        {
-            'value': '6',
-            'label': 'Baja productividad',
-        },
-        {
-            'value': '7',
-            'label': 'Ninguno',
-        },
-
-    ];
-
-    return podaProblemas;
-}
-
-List<Map<String, dynamic>> podaAplicar(){
-    final List<Map<String, dynamic>>  podaAplicar = [
-        {
-            'value': '0',
-            'label': 'Poda de altura'
-        },
-        {
-            'value': '1',
-            'label': 'Poda de ramas'
-        },
-        {
-            'value': '2',
-            'label': 'Poda de formación'
-        },
-        {
-            'value': '3',
-            'label': 'Deschuponar'
-        },
-        {
-            'value': '4',
-            'label': 'Cambio de coronas'
+            'label': 'Grabar',
         }
 
     ];
 
-    return podaAplicar;
+    return forma;
 }
 
-List<Map<String, dynamic>> dondeAplicar(){
-    final List<Map<String, dynamic>>  dondeAplicar = [
+List<Map<String, dynamic>> competenciaCacao(){
+    final List<Map<String, dynamic>>  competencia = [
+        {
+            'value': '0',
+            'label': 'Fuerte'
+        },
+        {
+            'value': '1',
+            'label': 'Mediana'
+        },
+        {
+            'value': '2',
+            'label': 'Leve'
+        }
+
+    ];
+    
+
+
+
+    return competencia;
+}
+
+List<Map<String, dynamic>> arregloArboles(){
+    final List<Map<String, dynamic>>  arreglos = [
+        {
+            'value': '0',
+            'label': 'Uniforme'
+        },
+        {
+            'value': '1',
+            'label': 'Uniforme en partes'
+        },
+        {
+            'value': '2',
+            'label': 'Desuniforme'
+        },
+        {
+            'value': '3',
+            'label': 'Grabar'
+        }
+
+    ];
+
+    return arreglos;
+}
+
+List<Map<String, dynamic>> cantidadHoja(){
+    final List<Map<String, dynamic>>  vigorPlanta = [
+        {
+            'value': '0',
+            'label': 'Abundante'
+        },
+        {
+            'value': '1',
+            'label': 'Suficientes'
+        },
+        {
+            'value': '2',
+            'label': 'No suficiente'
+        }
+
+    ];
+    return vigorPlanta;
+}
+
+List<Map<String, dynamic>> calidadHoja(){
+    final List<Map<String, dynamic>>  calidad = [
+        {
+            'value': '0',
+            'label': 'Rico en nutriente'
+        },
+        {
+            'value': '1',
+            'label': 'Medio en nutriente'
+        },
+        {
+            'value': '2',
+            'label': 'Pobre en nutriente'
+        },
+        {
+            'value': '3',
+            'label': 'Grabar'
+        }
+
+    ];
+    return calidad;
+}
+
+
+
+
+List<Map<String, dynamic>> accionesMejora(){
+    final List<Map<String, dynamic>>  acciones = [
+        {
+            'value': '0',
+            'label': 'Aumento de la sombra'
+        },
+        {
+            'value': '1',
+            'label': 'Reducción de la sombra'
+        },
+        {
+            'value': '2',
+            'label': 'Ninguna'
+        }
+
+    ];
+
+    return acciones;
+}
+
+List<Map<String, dynamic>> dominioSombra(){
+    final List<Map<String, dynamic>>  dominio = [
         {
             'value': '0',
             'label': 'En toda la parcela'
         },
         {
             'value': '1',
-            'label': 'En varios partes'
-        },
-        {
-            'value': '2',
             'label': 'En algunas partes'
-        }
-
-    ];
-
-    return dondeAplicar;
-}
-
-List<Map<String, dynamic>> vigorPlanta(){
-    final List<Map<String, dynamic>>  vigorPlanta = [
-        {
-            'value': '0',
-            'label': 'Todas las plantas'
-        },
-        {
-            'value': '1',
-            'label': 'Algunas de las plantas'
         },
         {
             'value': '2',
-            'label': 'Ninguna de las planta'
-        }
-
-    ];
-
-    return vigorPlanta;
-}
-
-List<Map<String, dynamic>> entraLuz(){
-    final List<Map<String, dynamic>>  entraLuz = [
-        {
-            'value': '0',
-            'label': 'Poda de copa'
-        },
-        {
-            'value': '1',
-            'label': 'Poda de ramam entrecruzadas'
-        },
-        {
-            'value': '2',
-            'label': 'Arreglo de la sombra'
-        }
-
-    ];
-
-    return entraLuz;
-}
-
-
-List<Map<String, dynamic>> solucionesXmes(){
-    final List<Map<String, dynamic>>  solucionesXmes = [
-        {
-            'value': '0',
-            'label': 'Recuento de plagas'
-        },
-        {
-            'value': '1',
-            'label': 'Cortar las mazorcas enfermas'
-        },
-        {
-            'value': '2',
-            'label': 'Abonar las plantas'
+            'label': 'En ninguna parte'
         },
         {
             'value': '3',
-            'label': 'Aplicar Caldos'
-        },
-        {
-            'value': '4',
-            'label': 'Aplicar Fungicidas'
-        },
-        {
-            'value': '5',
-            'label': 'Manejo de sombra'
-        },
-        {
-            'value': '6',
-            'label': 'Podar las plantas de cacao'
-        },
-        {
-            'value': '7',
-            'label': 'Aplicar venenos para Zompopo'
-        },
-        {
-            'value': '8',
-            'label': 'Control de Comején'
+            'label': 'Grabar'
         }
 
     ];
 
-    return solucionesXmes;
+    return dominio;
 }
+
+List<Map<String, dynamic>> accionesReduccion(){
+    final List<Map<String, dynamic>>  acciones = [
+        {
+            'value': '0',
+            'label': 'Eliminando árboles'
+        },
+        {
+            'value': '1',
+            'label': 'Podando árboles'
+        },
+        {
+            'value': '2',
+            'label': 'Ninguna acción'
+        }
+
+    ];
+
+    return acciones;
+}
+
+List<Map<String, dynamic>> accionesAumento(){
+    final List<Map<String, dynamic>>  aumento = [
+        {
+            'value': '0',
+            'label': 'Sembrando árboles'
+        },
+        {
+            'value': '1',
+            'label': 'Podando para estimular'
+        },
+        {
+            'value': '2',
+            'label': 'Ninguna acción'
+        },
+        {
+            'value': '3',
+            'label': 'Grabar'
+        }
+
+    ];
+
+    return aumento;
+}
+
+
+
+
+
+
+
+
+
 
 
 

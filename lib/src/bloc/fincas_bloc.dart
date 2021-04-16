@@ -2,6 +2,7 @@
 import 'dart:async';
 
 
+import 'package:app_sombra/src/models/decisiones_model.dart';
 import 'package:app_sombra/src/models/estacion_model.dart';
 import 'package:app_sombra/src/models/inventarioPlanta_model.dart';
 import 'package:app_sombra/src/models/testsombra_model.dart';
@@ -28,6 +29,7 @@ class FincasBloc {
     final _allestacionController = StreamController<List<Estacion>> .broadcast();
     final _inventarioController = StreamController<List<InventacioPlanta>>.broadcast();
     final _comprobarController = StreamController<List<int>>.broadcast();
+    final _decisionesControl = StreamController<List<Decisiones>>.broadcast();
 
     
 
@@ -41,6 +43,7 @@ class FincasBloc {
     Stream<List<Estacion>> get allestacionesStream => _allestacionController.stream;
     Stream<List<InventacioPlanta>> get inventarioStream => _inventarioController.stream;
     Stream<List<int>> get comprobarStream => _comprobarController.stream;
+    Stream<List<Decisiones>> get decisionesStream => _decisionesControl.stream;
 
 
 
@@ -139,6 +142,7 @@ class FincasBloc {
 
     comprobarInventario( String idTestSombra) async {
         _comprobarController.sink.add( await DBProvider.db.getConteoEstaciones(idTestSombra) );
+       
     }
 
     addInventario( InventacioPlanta nuevoInventario, String idEstacion, String idTestSombra, int nEstacion) async{
@@ -155,6 +159,9 @@ class FincasBloc {
 
 
     //deciones
+    obtenerDecisiones(String idTest) async {
+        _decisionesControl.sink.add( await DBProvider.db.getDecisionesIdTest(idTest) );
+    }
     
 
 
@@ -170,6 +177,7 @@ class FincasBloc {
         _allestacionController?.close();
         _inventarioController?.close();
         _comprobarController?.close();
+        _decisionesControl?.close();
 
         _parcelaSelectControl?.close();
         _podaController?.close();
