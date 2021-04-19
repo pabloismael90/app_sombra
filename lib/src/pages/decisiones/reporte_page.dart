@@ -101,10 +101,17 @@ class _ReportePageState extends State<ReportePage> {
                     Finca finca = snapshot.data[1];
                     Parcela parcela = snapshot.data[2];
                     TestSombra sombra = snapshot.data[3];
-                    print(snapshot.data[3]);
+                    areaEstacion = (sombra.surcoDistancia * 10)*(sombra.plantaDistancia * 10);
+
                     pageItem.add(_principalData(finca, parcela, sombra));
+                    pageItem.add(_dominanciaEspecie(sombra.id));
                     
-                    
+                    pageItem.add( _densidadForma(snapshot.data[0]));
+                    pageItem.add( _competenciaArreglo(snapshot.data[0]));
+                    pageItem.add( _cantidadCalidad(snapshot.data[0]));
+                    pageItem.add( _mejoraDominio(snapshot.data[0]));
+                    pageItem.add( _reduccionAumento(snapshot.data[0]));
+                    pageItem.add( _accionesMeses(snapshot.data[0]));
                     
                     return Column(
                         children: [
@@ -264,7 +271,6 @@ class _ReportePageState extends State<ReportePage> {
                 ],
             ),
         );
-
     } 
 
     Widget _principalData(Finca finca, Parcela parcela, TestSombra sombra){
@@ -734,114 +740,781 @@ class _ReportePageState extends State<ReportePage> {
         return Column(children:lisItem,);
     }
 
-    // Widget _dominanciaEspecie(String idSombra){
-        
-    //     return FutureBuilder(
-    //         future:Future.wait([
-    //             _countByEspecie(idSombra),
-    //             _arbolesPromedio(idSombra)
-    //         ]),
-    //         builder: (BuildContext context, AsyncSnapshot snapshot) {
-    //             if (!snapshot.hasData) {
-    //                 return textmt;
-    //             }
-                
-    //             List<Map<String, dynamic>> especiesConteo = snapshot.data[0];
-    //             double totalArboles = snapshot.data[1]*3;
-    //             List<Widget> listPrincipales = List<Widget>();
 
-    //             listPrincipales.add(
-    //                 Column(
-    //                     children: [
-    //                         Container(
-    //                             child: Padding(
-    //                                 padding: EdgeInsets.only(top: 20, bottom: 10),
-    //                                 child: Text(
-    //                                     "Dominancia de especies",
-    //                                     textAlign: TextAlign.center,
-    //                                     style: Theme.of(context).textTheme
-    //                                         .headline5
-    //                                         .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
-    //                                 ),
-    //                             )
-    //                         ),
-    //                         Divider(),
-    //                     ],
-    //                 )
+
+
+    Widget _dominanciaEspecie(String idSombra){
+        
+        return FutureBuilder(
+            future:Future.wait([
+                _countByEspecie(idSombra),
+                _arbolesPromedio(idSombra)
+            ]),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData) {
+                    return textmt;
+                }
+                
+                List<Map<String, dynamic>> especiesConteo = snapshot.data[0];
+                double totalArboles = snapshot.data[1]*3;
+                List<Widget> listPrincipales = List<Widget>();
+
+                listPrincipales.add(
+                    Column(
+                        children: [
+                            Container(
+                                child: Padding(
+                                    padding: EdgeInsets.only(top: 20, bottom: 10),
+                                    child: Text(
+                                        "Dominancia de especies",
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context).textTheme
+                                            .headline5
+                                            .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                    ),
+                                )
+                            ),
+                            Divider(),
+                        ],
+                    )
                     
-    //             );
+                );
 
                 
-    //             for (var especie in especiesConteo) {
+                for (var especie in especiesConteo) {
 
-    //                 String labelEspecie = itemEspecie.firstWhere((e) => e['value'] == '${especie['idPlanta']}', orElse: () => {"value": "1","label": "No data"})['label'];
-    //                 double densidad = (especie['total']/totalArboles)*100;
+                    String labelEspecie = itemEspecie.firstWhere((e) => e['value'] == '${especie['idPlanta']}', orElse: () => {"value": "1","label": "No data"})['label'];
+                    double densidad = (especie['total']/totalArboles)*100;
                                         
-    //                 listPrincipales.add(
-    //                     Column(
-    //                         children: [
-    //                             Row(
-    //                                 mainAxisAlignment: MainAxisAlignment.end,
-    //                                 children: [
-    //                                     Expanded(
-    //                                         child: Container(
-    //                                             padding: EdgeInsets.symmetric(horizontal: 20.0),
-    //                                             child: Text(labelEspecie, textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
-    //                                         ),
-    //                                     ),
-    //                                     Container(
-    //                                         width: 45,
-    //                                         child: FutureBuilder(
-    //                                             future: _arbolesPromedio(idSombra),
-    //                                             builder: (BuildContext context, AsyncSnapshot snapshot) {
-    //                                                 if (!snapshot.hasData) {
-    //                                                     return textmt;
-    //                                                 }
+                    listPrincipales.add(
+                        Column(
+                            children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                        Expanded(
+                                            child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                                                child: Text(labelEspecie, textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
+                                            ),
+                                        ),
+                                        Container(
+                                            width: 45,
+                                            child: FutureBuilder(
+                                                future: _arbolesPromedio(idSombra),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                                    if (!snapshot.hasData) {
+                                                        return textmt;
+                                                    }
 
-    //                                                 return Text('${densidad.toStringAsFixed(1)}%', textAlign: TextAlign.center);
-    //                                             },
-    //                                         ),
-    //                                     ),
+                                                    return Text('${densidad.toStringAsFixed(1)}%', textAlign: TextAlign.center);
+                                                },
+                                            ),
+                                        ),
                                         
-    //                                 ],
-    //                             ),
-    //                             Divider(),
-    //                         ],
-    //                     )
+                                    ],
+                                ),
+                                Divider(),
+                            ],
+                        )
                         
-    //                 );
-    //             }
+                    );
+                }
 
-    //             return SingleChildScrollView(
-    //                 child: Container(
-    //                     margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-    //                     width: double.infinity,
-    //                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-    //                     decoration: BoxDecoration(
-    //                         color: Colors.white,
-    //                         borderRadius: BorderRadius.circular(10),
-    //                         boxShadow: [
-    //                             BoxShadow(
-    //                                     color: Color(0xFF3A5160)
-    //                                         .withOpacity(0.05),
-    //                                     offset: const Offset(1.1, 1.1),
-    //                                     blurRadius: 17.0),
-    //                             ],
-    //                     ),
-    //                     child: Column(children:listPrincipales)
-    //                 ),
-    //             );
-    //         },
-    //     );
+                return SingleChildScrollView(
+                    child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                                BoxShadow(
+                                        color: Color(0xFF3A5160)
+                                            .withOpacity(0.05),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 17.0),
+                                ],
+                        ),
+                        child: Column(children:listPrincipales)
+                    ),
+                );
+            },
+        );
     
         
         
-    // }
+    }
 
-   
+    Widget _densidadForma(List<Decisiones> decisionesList){
+        List<Widget> listPrincipales = List<Widget>();
 
-    
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Densidad de árboles de sombra",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
 
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 1) {
+                String label = itemDensidad.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Forma de copa de árboles",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
+
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 2) {
+                String label = itemForma.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+        
+        return SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Column(children:listPrincipales,)
+            ),
+        );
+        
+    }
+
+    Widget _competenciaArreglo(List<Decisiones> decisionesList){
+        List<Widget> listPrincipales = List<Widget>();
+
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Competencia de árboles con cacao",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
+
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 3) {
+                String label = itemCompetencia.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Arreglo de árboles",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
+
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 4) {
+                String label = itemArreglo.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+        
+        return SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Column(children:listPrincipales,)
+            ),
+        );
+        
+    }
+
+    Widget _cantidadCalidad(List<Decisiones> decisionesList){
+        List<Widget> listPrincipales = List<Widget>();
+
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Catidad de hoja rasca",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
+
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 5) {
+                String label = itemCantidad.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Calidad de hora rasca",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
+
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 6) {
+                String label = itemCalidad.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+        
+        return SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Column(children:listPrincipales,)
+            ),
+        );
+        
+    }
+
+    Widget _mejoraDominio(List<Decisiones> decisionesList){
+        List<Widget> listPrincipales = List<Widget>();
+
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Acciones para mejorar la sombra",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
+
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 7) {
+                String label = itemMejora.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Dominio de la acción",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
+
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 8) {
+                String label = itemDominio.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+        
+        return SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Column(children:listPrincipales,)
+            ),
+        );
+        
+    }
+
+    Widget _reduccionAumento(List<Decisiones> decisionesList){
+        List<Widget> listPrincipales = List<Widget>();
+
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Acciones para reducción de sombra",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
+
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 9) {
+                String label = itemReduccion.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Acciones para aumento de sombra",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
+
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 10) {
+                String label = itemAumento.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+        
+        return SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Column(children:listPrincipales,)
+            ),
+        );
+        
+    }
+
+    Widget _accionesMeses(List<Decisiones> decisionesList){
+        List<Widget> listPrincipales = List<Widget>();
+
+        listPrincipales.add(
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "¿Cúando vamos a realizar el manejo de sombra?",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            ),
+                        )
+                    ),
+                    Divider(),
+                ],
+            )
+            
+        );
+        
+
+        for (var item in decisionesList) {
+
+            if (item.idPregunta == 11) {
+                String label = itemMeses.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                listPrincipales.add(
+
+                    Container(
+                        child: CheckboxListTile(
+                        title: Text('$label'),
+                            value: item.repuesta == 1 ? true : false ,
+                            activeColor: Colors.teal[900], 
+                            onChanged: (value) {
+                                
+                            },
+                        ),
+                    )                  
+                        
+                );
+            }
+            
+            
+            
+        }
+
+        
+        
+        return SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Column(children:listPrincipales,)
+            ),
+        );
+        
+    }
 
 }
 
