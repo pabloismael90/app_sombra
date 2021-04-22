@@ -408,11 +408,34 @@ class DBProvider {
         return value;          
     }
 
+    Future<int> noMusaceaeByEstacion(String idTestSombra, int nEstacion) async{
+        final db = await database;        
+        var res = await db.rawQuery("SELECT SUM(pequeno + mediano + grande)  AS arboles FROM Estacion "+
+                    "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
+                    "WHERE idTestSombra = '$idTestSombra' AND Nestacion = '$nEstacion' AND InventacioPlanta.idPlanta != '11'");
+        int value = res[0]['arboles'];
+        
+        return value;          
+    }
+
+    Future<double> noMusaceaePromedio(String idTestSombra) async{
+        final db = await database;        
+        var res = await db.rawQuery("SELECT SUM(pequeno + mediano + grande)  AS arboles FROM Estacion "+
+                    "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
+                    "WHERE idTestSombra = '$idTestSombra' AND InventacioPlanta.idPlanta != '11'");
+        double value = res[0]['arboles']/3;
+        
+        return value;          
+    }
+
+
+
     Future<List<Map<String, dynamic>>> dominanciaEspecie(String idTestSombra) async{
         final db = await database;        
         final res = await db.rawQuery("SELECT InventacioPlanta.idPlanta, SUM(pequeno + mediano + grande) AS total FROM Estacion "+
                     "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
                     "WHERE idTestSombra = '$idTestSombra' GROUP BY InventacioPlanta.idPlanta");
+                    
         
         List<Map<String, dynamic>> list = res.isNotEmpty ? res : [];
         return list;          

@@ -43,7 +43,7 @@ dependencies:
   # Base de datos
   uuid: ^2.2.2
   sqflite: ^1.1.5
-  path_provider: ^1.6.7
+  path_provider: ^1.6.28
   #Storage
   #ext_storage: ^1.0.3
   #imagenes

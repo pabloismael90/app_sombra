@@ -125,6 +125,16 @@ class _DesicionesPageState extends State<DesicionesPage> {
         return countArboles;
     }
 
+    Future<int> _noMusaceaeByEstacion(String idSombra, int estacion) async{
+        int countArboles = await DBProvider.db.noMusaceaeByEstacion(idSombra, estacion);
+        return countArboles;
+    }
+
+    Future<double> _noMusaceaePromedio(String idSombra) async{
+        double countArboles = await DBProvider.db.noMusaceaePromedio(idSombra);
+        return countArboles;
+    }
+
     Future<List<Map<String, dynamic>>> _countByEspecie(String idSombra) async{
         List<Map<String, dynamic>> listEspecies = await DBProvider.db.dominanciaEspecie(idSombra);
         return listEspecies;
@@ -434,6 +444,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                                             _riqueza(sombra.id),
                                                             _arboles(sombra.id),
                                                             _densidad(sombra.id),
+                                                            _noMusaceaeDensidad(sombra.id),
                                                         ],
                                                     ),
                                                 ),
@@ -716,7 +727,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                         return textmt;
                                     }
 
-                                    return Text('${snapshot.data.toStringAsFixed(1)}', textAlign: TextAlign.center);
+                                    return Text('${snapshot.data.toStringAsFixed(0)}', textAlign: TextAlign.center);
                                 },
                             ),
                         ),
@@ -750,7 +761,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                         return textmt;
                                     }
 
-                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(1)}', textAlign: TextAlign.center);
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
                                 },
                             ),
                         ),
@@ -763,7 +774,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                         return textmt;
                                     }
 
-                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(1)}', textAlign: TextAlign.center);
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
                                 },
                             ),
                         ),
@@ -776,7 +787,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                         return textmt;
                                     }
 
-                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(1)}', textAlign: TextAlign.center);
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
                                 },
                             ),
                         ),
@@ -789,7 +800,80 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                         return textmt;
                                     }
 
-                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(1)}', textAlign: TextAlign.center);
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        
+                    ],
+                )
+            );
+            lisItem.add(Divider());
+        
+        return Column(children:lisItem,);
+    }
+
+    Widget _noMusaceaeDensidad(String idSombra){
+        List<Widget> lisItem = List<Widget>();
+
+
+            lisItem.add(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        Expanded(child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text('Densidad de árboles (#/ha) sin Musaceae', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
+                        ),),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _noMusaceaeByEstacion(idSombra, 1),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _noMusaceaeByEstacion(idSombra, 2),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _noMusaceaeByEstacion(idSombra, 3),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 45,
+                            child: FutureBuilder(
+                                future: _noMusaceaePromedio(idSombra),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return textmt;
+                                    }
+
+                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
                                 },
                             ),
                         ),
@@ -867,7 +951,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                                         return textmt;
                                                     }
 
-                                                    return Text('${densidad.toStringAsFixed(1)}%', textAlign: TextAlign.center);
+                                                    return Text('${densidad.toStringAsFixed(0)}%', textAlign: TextAlign.center);
                                                 },
                                             ),
                                         ),

@@ -149,7 +149,7 @@ List<Map<String, dynamic>> especies(){
         },
         {
             "value": '11',
-            "label": "Banano"
+            "label": "Musaceae"
         },
         {
             "value": '12',
@@ -527,10 +527,6 @@ List<Map<String, dynamic>> formaArboles(){
         {
             'value': '2',
             'label': 'Angosta',
-        },
-        {
-            'value': '3',
-            'label': 'Grabar',
         }
 
     ];
@@ -574,10 +570,6 @@ List<Map<String, dynamic>> arregloArboles(){
         {
             'value': '2',
             'label': 'Desuniforme'
-        },
-        {
-            'value': '3',
-            'label': 'Grabar'
         }
 
     ];
@@ -617,10 +609,6 @@ List<Map<String, dynamic>> calidadHoja(){
         {
             'value': '2',
             'label': 'Pobre en nutriente'
-        },
-        {
-            'value': '3',
-            'label': 'Grabar'
         }
 
     ];
@@ -663,10 +651,6 @@ List<Map<String, dynamic>> dominioSombra(){
         {
             'value': '2',
             'label': 'En ninguna parte'
-        },
-        {
-            'value': '3',
-            'label': 'Grabar'
         }
 
     ];
@@ -707,10 +691,6 @@ List<Map<String, dynamic>> accionesAumento(){
         {
             'value': '2',
             'label': 'Ninguna acción'
-        },
-        {
-            'value': '3',
-            'label': 'Grabar'
         }
 
     ];

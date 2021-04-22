@@ -71,7 +71,27 @@ class _InventarioPageState extends State<InventarioPage> {
                             _listaPlanta(estacion.id, sombra.id)
                         ],
                     ),
-                    bottomNavigationBar: _addPlanta(estacion),
+                    bottomNavigationBar: BottomAppBar(
+                        child: Container(
+                            color: kBackgroundColor,
+                            child: Padding(
+                                padding: EdgeInsets.symmetric( vertical: 10),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                        Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 5),
+                                            child: _addPlanta(estacion),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 5),
+                                            child: _netEstacion(sombra, estacion),
+                                        ),
+                                    ],
+                                ),
+                            ),
+                        ),
+                    ),
                 );
             },
         );        
@@ -299,26 +319,80 @@ class _InventarioPageState extends State<InventarioPage> {
 
 
     Widget _addPlanta(Estacion estacion){
-        return BottomAppBar(
-            child: Container(
-                color: kBackgroundColor,
-                child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                    child: RaisedButton.icon(
-                        icon:Icon(Icons.add_circle_outline_outlined),
+
+
+        return RaisedButton.icon(
+            
+            icon:Icon(Icons.add_circle_outline_outlined),
                         
-                        label: Text('Agregar planta',
+            label: Text('Agregar planta',
+                style: Theme.of(context).textTheme
+                    .headline6
+                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+            ),
+            padding:EdgeInsets.all(10),
+            onPressed:() => Navigator.pushNamed(context, 'addPlanta', arguments:[estacion, plantas]),
+        );
+        
+    }
+    Widget _netEstacion(TestSombra sombra, Estacion estacion){
+        fincasBloc.obtenerInventario(estacion.id);
+        return StreamBuilder(
+            stream: fincasBloc.inventarioStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+                plantas = snapshot.data;
+
+                if (plantas.length == 0) {
+                    return RaisedButton.icon(
+                        icon:Icon(Icons.navigate_next_rounded),                               
+                        label: Text('Siguiente estaciones',
                             style: Theme.of(context).textTheme
                                 .headline6
-                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
+                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                         ),
-                        padding:EdgeInsets.all(13),
-                        onPressed:() => Navigator.pushNamed(context, 'addPlanta', arguments:[estacion, plantas]),
-                    ),
-                ),
-            ),
+                        padding:EdgeInsets.all(10),
+                        onPressed:null,
+                    );
+                } else {
+                    if (estacion.nestacion <= 2){
+                      
+                        return RaisedButton.icon(
+                            icon:Icon(Icons.navigate_next_rounded),                               
+                            label: Text('Siguiente estaciones',
+                                style: Theme.of(context).textTheme
+                                    .headline6
+                                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                            ),
+                            padding:EdgeInsets.all(10),
+                            onPressed:() => Navigator.popAndPushNamed(context, 'inventario', arguments: [sombra, estacion.nestacion]),
+                        );
+                    } else {
+
+                        return RaisedButton.icon(
+                            icon:Icon(Icons.chevron_left),                               
+                            label: Text('Lista de estaciones',
+                                style: Theme.of(context).textTheme
+                                    .headline6
+                                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                            ),
+                            padding:EdgeInsets.all(10),
+                            onPressed:() => Navigator.pop(context),
+                        );
+                    }
+                }
+            },
         );
-}
+
+       
+          
+       
+        
+        
+    } 
+    
 
     void _submit( ){
 

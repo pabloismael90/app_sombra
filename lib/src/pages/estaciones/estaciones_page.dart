@@ -189,7 +189,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                         ],
                 ),
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                         
                         Flexible(
@@ -219,7 +219,15 @@ class _EstacionesPageState extends State<EstacionesPage> {
                                     
                                 ],  
                             ),
-                        ),    
+                        ),
+                        Container(
+                            child: Icon(Icons.check_circle, 
+                                color: countEstacion == 0 ? Colors.black38 : Colors.green[900],
+                                size: 30,
+                            ),
+                            
+                        ) 
+                          
                         
                     ],
                 ),
