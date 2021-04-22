@@ -9,6 +9,7 @@ import 'package:app_sombra/src/utils/constants.dart';
 import 'package:app_sombra/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'dart:math' as math;
 import 'package:uuid/uuid.dart';
 
 
@@ -194,12 +195,33 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                         Divider(),
                                         Padding(
                                             padding: EdgeInsets.symmetric(vertical: 10),
-                                            child: Text(
-                                                "Deslice hacia la derecha para continuar con el formulario",
-                                                textAlign: TextAlign.center,
-                                                style: Theme.of(context).textTheme
-                                                    .headline5
-                                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 16)
+                                            child: Row(
+                                          
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                    Container(
+                                                        width: 200,
+                                                        child: Flexible(
+                                                        child: Text(
+                                                            "Deslice hacia la derecha para continuar con el formulario",
+                                                            textAlign: TextAlign.center,
+                                                            style: Theme.of(context).textTheme
+                                                                .headline5
+                                                                .copyWith(fontWeight: FontWeight.w600, fontSize: 14)
+                                                        )
+                                                    ),
+                                                    ),
+                                                    
+                                                    
+                                                    Transform.rotate(
+                                                        angle: 90 * math.pi / 180,
+                                                        child: Icon(
+                                                            Icons.arrow_circle_up_rounded,
+                                                            size: 25,
+                                                        ),
+                                                        
+                                                    ),
+                                                ],
                                             ),
                                         ),
                                     ],

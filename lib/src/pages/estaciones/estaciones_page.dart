@@ -51,7 +51,23 @@ class _EstacionesPageState extends State<EstacionesPage> {
                     body: Column(
                         children: [
                             escabezadoEstacion( context, sombra ),
-                            TitulosPages(titulo: 'Estaciones'),
+                            InkWell(
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                        TitulosPages(titulo: 'Estaciones'),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 10, top: 5),
+                                            child: Icon(
+                                                Icons.info_outline_rounded,
+                                                color: Colors.green,
+                                                size: 25.0,
+                                            ),
+                                        ),
+                                    ],
+                                ),
+                                onTap: () => _dialogText(context),
+                            ),
                             Divider(),
                             Expanded(
                                 child: StreamBuilder(
@@ -322,4 +338,31 @@ class _EstacionesPageState extends State<EstacionesPage> {
             },
         );
     }
+}
+
+Future<void> _dialogText(BuildContext context) async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+            return AlertDialog(
+                title: Text('Titulo'),
+                content: SingleChildScrollView(
+                    child: ListBody(
+                        children: <Widget>[
+                        Text('Texto para breve explicacion'),
+                        ],
+                    ),
+                ),
+                actions: <Widget>[
+                    TextButton(
+                        child: Text('Cerrar'),
+                        onPressed: () {
+                        Navigator.of(context).pop();
+                        },
+                    ),
+                ],
+            );
+        },
+    );
 }
