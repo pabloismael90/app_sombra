@@ -46,11 +46,11 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "ni.org.simas.app_sombra"
+        applicationId "org.rikolto.latinoamerica.app_sombra"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 2
+        versionName '0.2.0'
     }
 
     signingConfigs {

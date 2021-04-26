@@ -139,7 +139,7 @@ class _ReportePageState extends State<ReportePage> {
                                                 children: [
                                                     Container(
                                                         width: 200,
-                                                        child: Flexible(
+                                                        
                                                         child: Text(
                                                             "Deslice hacia la derecha para continuar con el reporte",
                                                             textAlign: TextAlign.center,
@@ -147,7 +147,7 @@ class _ReportePageState extends State<ReportePage> {
                                                                 .headline5
                                                                 .copyWith(fontWeight: FontWeight.w600, fontSize: 14)
                                                         )
-                                                    ),
+                                                    
                                                     ),
                                                     
                                                     

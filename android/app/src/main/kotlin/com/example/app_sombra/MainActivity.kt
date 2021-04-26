@@ -1,4 +1,4 @@
-package ni.org.simas.app_sombra
+package org.rikolto.latinoamerica.app_sombra
 
 import io.flutter.embedding.android.FlutterActivity
 
