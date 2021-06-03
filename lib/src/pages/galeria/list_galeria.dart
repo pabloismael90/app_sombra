@@ -21,10 +21,14 @@ Future _initImages(BuildContext context) async {
     final Map<String, dynamic> manifestMap = json.decode(manifestContent);
     // >> To get paths you need these 2 lines
     
-    final imagePaths = manifestMap.keys
+    List imagePaths = manifestMap.keys
         .where((String key) => key.contains('assets/galeria/'))
         .where((String key) => key.contains('.jpg'))
         .toList();
+
+    for (var i = 0; i < imagePaths.length; i++) {
+       imagePaths[i] = imagePaths[i].replaceAll("%20", " ");
+    }
     
     return imagePaths;
 }

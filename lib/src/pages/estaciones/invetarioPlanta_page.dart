@@ -151,13 +151,14 @@ class _InventarioPageState extends State<InventarioPage> {
                     Form(
                         key: formKey,
                         child: TextFormField(
-                            initialValue: estacion.cobertura.toString(),
+                            initialValue: estacion.cobertura == null ? '' : estacion.cobertura.toString(),
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly
                             ], 
                             decoration: InputDecoration(
-                                labelText: 'Ingresar Porcentaje de Cobertura'
+                                labelText: 'Ingresar Porcentaje de Cobertura',
+                                hintText: 'ejem: 20',
                             ),
                             validator: (value) {
 
@@ -335,6 +336,8 @@ class _InventarioPageState extends State<InventarioPage> {
         );
         
     }
+    
+    
     Widget _netEstacion(TestSombra sombra, Estacion estacion){
         fincasBloc.obtenerInventario(estacion.id);
         return StreamBuilder(

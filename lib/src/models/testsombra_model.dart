@@ -11,8 +11,8 @@ class TestSombra {
         this.idLote = '',
         this.estaciones = 3,
         this.fechaTest,
-        this.surcoDistancia = 0.0,
-        this.plantaDistancia = 0.0,
+        this.surcoDistancia,
+        this.plantaDistancia,
     });
 
     String id;

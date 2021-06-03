@@ -5,7 +5,6 @@ import 'package:app_sombra/src/utils/widget/titulos.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:uuid/uuid.dart';
 import 'package:app_sombra/src/models/selectValue.dart' as selectMap;
-import 'package:app_sombra/src/utils/validaciones.dart' as utils;
 import 'package:flutter/material.dart';
 
 
@@ -125,7 +124,7 @@ class _PlantaFormState extends State<PlantaForm> {
     Widget _plantaPequeno(){
 
         return TextFormField(
-            initialValue: inventarioPlanta.pequeno.toString(),
+            initialValue: inventarioPlanta.pequeno == null ? '' : inventarioPlanta.pequeno.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Pequeño',
@@ -134,14 +133,14 @@ class _PlantaFormState extends State<PlantaForm> {
             ),
             validator: (value) {
                 
-                if (utils.isNumeric(value)){
-                    if (int.parse(value) >= 0) {
-                        return null;
-                    } else {
-                        return 'Número invalido';
-                    }
+                final isDigitsOnly = int.tryParse(value);
+                if (isDigitsOnly == null) {
+                    return 'Solo números enteros';
+                }
+                if (isDigitsOnly <= 0) {
+                    return 'Valor invalido';
                 }else{
-                    return 'Solo números';
+                    return null;
                 }
             },
             onSaved: (value) => inventarioPlanta.pequeno = int.parse(value),
@@ -152,7 +151,7 @@ class _PlantaFormState extends State<PlantaForm> {
     Widget _plantaMediano(){
         
         return TextFormField(
-            initialValue: inventarioPlanta.mediano.toString(),
+            initialValue: inventarioPlanta.mediano == null ? '' : inventarioPlanta.mediano.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Mediano',
@@ -161,14 +160,14 @@ class _PlantaFormState extends State<PlantaForm> {
             ),
             validator: (value) {
                 
-                if (utils.isNumeric(value)){
-                    if (int.parse(value) >= 0) {
-                        return null;
-                    } else {
-                        return 'Número invalido';
-                    }
+                final isDigitsOnly = int.tryParse(value);
+                if (isDigitsOnly == null) {
+                    return 'Solo números enteros';
+                }
+                if (isDigitsOnly <= 0) {
+                    return 'Valor invalido';
                 }else{
-                    return 'Solo números';
+                    return null;
                 }
             },
             onSaved: (value) => inventarioPlanta.mediano = int.parse(value),
@@ -179,7 +178,7 @@ class _PlantaFormState extends State<PlantaForm> {
     Widget _plantaGrande(){
         
         return TextFormField(
-            initialValue: inventarioPlanta.grande.toString(),
+            initialValue: inventarioPlanta.grande == null ? '' : inventarioPlanta.grande.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Grande',
@@ -188,14 +187,14 @@ class _PlantaFormState extends State<PlantaForm> {
             ),
             validator: (value) {
                 
-                if (utils.isNumeric(value)){
-                    if (int.parse(value) >= 0) {
-                        return null;
-                    } else {
-                        return 'Número invalido';
-                    }
+                final isDigitsOnly = int.tryParse(value);
+                if (isDigitsOnly == null) {
+                    return 'Solo números enteros';
+                }
+                if (isDigitsOnly <= 0) {
+                    return 'Valor invalido';
                 }else{
-                    return 'Solo números';
+                    return null;
                 }
             },
             onSaved: (value) => inventarioPlanta.grande = int.parse(value),

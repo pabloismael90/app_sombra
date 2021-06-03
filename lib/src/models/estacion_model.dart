@@ -3,7 +3,7 @@ class Estacion {
         this.id,
         this.idTestSombra,
         this.nestacion,
-        this.cobertura = 0,
+        this.cobertura,
     });
 
     String id;

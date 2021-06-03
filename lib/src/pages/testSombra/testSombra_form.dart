@@ -200,7 +200,7 @@ class _AgregarTestState extends State<AgregarTest> {
     Widget _distanciaSurco(){
 
         return TextFormField(
-            initialValue: sombra.surcoDistancia.toString(),
+            initialValue: sombra.surcoDistancia == null ? '' : sombra.surcoDistancia.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Distancia entre surco mt',
@@ -227,7 +227,7 @@ class _AgregarTestState extends State<AgregarTest> {
     Widget _distanciaPlanta(){
 
         return TextFormField(
-            initialValue: sombra.plantaDistancia.toString(),
+            initialValue: sombra.plantaDistancia == null ? '' : sombra.plantaDistancia.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Distancia entre planta mt',

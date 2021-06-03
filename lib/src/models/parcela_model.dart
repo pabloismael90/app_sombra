@@ -2,10 +2,10 @@ class Parcela {
     Parcela({
         this.id,
         this.idFinca,
-        this.nombreLote = '',
-        this.areaLote = 0.0,
+        this.nombreLote,
+        this.areaLote,
         this.variedadCacao = 1,
-        this.numeroPlanta = 0,
+        this.numeroPlanta,
     });
 
     String id;

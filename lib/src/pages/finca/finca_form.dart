@@ -132,11 +132,11 @@ class _AgregarFincaState extends State<AgregarFinca> {
     Widget _areaFinca(){
 
         return TextFormField(
-            initialValue: finca.areaFinca.toString(),
+            initialValue: finca.areaFinca == null ? '' : finca.areaFinca.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Área de la finca',
-                hintText: 'ejem: 200.0',
+                hintText: 'ejem: 2',
                 
             ),
             validator: (value) {
@@ -221,18 +221,10 @@ class _AgregarFincaState extends State<AgregarFinca> {
         formKey.currentState.save();
 
         setState(() {_guardando = true;});
-
-        // print(finca.id);
-        // print(finca.userid);
-        // print(finca.nombreFinca);
-        // print(finca.areaFinca);
-        // print(finca.tipoMedida);
         if(finca.id == null){
             finca.id = uuid.v1();
-            //print(finca.id);
             fincasBloc.addFinca(finca);
         }else{
-            //print(finca.id);
             fincasBloc.actualizarFinca(finca);
         }
 
