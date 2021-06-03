@@ -137,7 +137,7 @@ class _PlantaFormState extends State<PlantaForm> {
                 if (isDigitsOnly == null) {
                     return 'Solo números enteros';
                 }
-                if (isDigitsOnly <= 0) {
+                if (isDigitsOnly < 0) {
                     return 'Valor invalido';
                 }else{
                     return null;
@@ -164,7 +164,7 @@ class _PlantaFormState extends State<PlantaForm> {
                 if (isDigitsOnly == null) {
                     return 'Solo números enteros';
                 }
-                if (isDigitsOnly <= 0) {
+                if (isDigitsOnly < 0) {
                     return 'Valor invalido';
                 }else{
                     return null;
@@ -191,7 +191,7 @@ class _PlantaFormState extends State<PlantaForm> {
                 if (isDigitsOnly == null) {
                     return 'Solo números enteros';
                 }
-                if (isDigitsOnly <= 0) {
+                if (isDigitsOnly < 0) {
                     return 'Valor invalido';
                 }else{
                     return null;
