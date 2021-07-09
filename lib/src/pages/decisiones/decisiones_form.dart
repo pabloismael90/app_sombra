@@ -8,7 +8,7 @@ import 'package:app_sombra/src/providers/db_provider.dart';
 import 'package:app_sombra/src/utils/constants.dart';
 import 'package:app_sombra/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'dart:math' as math;
 import 'package:uuid/uuid.dart';
 
@@ -16,7 +16,7 @@ import 'package:uuid/uuid.dart';
 
 
 class DesicionesPage extends StatefulWidget {
-    DesicionesPage({Key key}) : super(key: key);
+    DesicionesPage({Key? key}) : super(key: key);
 
     @override
     _DesicionesPageState createState() => _DesicionesPageState();
@@ -26,7 +26,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
 
     Decisiones decisiones = Decisiones();
     List<Decisiones> listaDecisiones = [];
-    String idSombraMain = "";
+    String? idSombraMain = "";
     bool _guardando = false;
     var uuid = Uuid();
     
@@ -44,7 +44,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
     final List<Map<String, dynamic>>  itemMeses = selectMap.listMeses();
 
     Widget textmt= Text('0', textAlign: TextAlign.center);
-    double areaEstacion;
+    late double areaEstacion;
 
     final Map checksDensidad= {};
     final Map checksForma= {};
@@ -96,47 +96,47 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
 
-    Future<double> _coberturaByEstacion(String idSombra, int estacion) async{
-        double coberturaEstacion = await DBProvider.db.getCoberturaByEstacion(idSombra, estacion);
+    Future<double?> _coberturaByEstacion(String? idSombra, int estacion) async{
+        double? coberturaEstacion = await DBProvider.db.getCoberturaByEstacion(idSombra, estacion);
         return coberturaEstacion;
     }
 
-    Future<double> _coberturaPromedio(String idSombra) async{
-        double coberturaPromedio = await DBProvider.db.getCoberturaPromedio(idSombra);
+    Future<double?> _coberturaPromedio(String? idSombra) async{
+        double? coberturaPromedio = await DBProvider.db.getCoberturaPromedio(idSombra);
         return coberturaPromedio;
     }
 
-    Future<int> _riquezaByEstacion(String idSombra, int estacion) async{
+    Future<int> _riquezaByEstacion(String? idSombra, int estacion) async{
         int countEspecies = await DBProvider.db.getConteoByEstacion(idSombra, estacion);
         return countEspecies;
     }
 
-    Future<int> _riquezaTotal(String idSombra) async{
+    Future<int> _riquezaTotal(String? idSombra) async{
         int countEspecies = await DBProvider.db.getConteoEspecies(idSombra);
         return countEspecies;
     }
 
-    Future<int> _arbolesByEstacion(String idSombra, int estacion) async{
-        int countArboles = await DBProvider.db.getArbolesByEstacion(idSombra, estacion);
+    Future<int?> _arbolesByEstacion(String? idSombra, int estacion) async{
+        int? countArboles = await DBProvider.db.getArbolesByEstacion(idSombra, estacion);
         return countArboles;
     }
 
-    Future<double> _arbolesPromedio(String idSombra) async{
-        double countArboles = await DBProvider.db.getArbolesPromedio(idSombra);
+    Future<double?> _arbolesPromedio(String? idSombra) async{
+        double? countArboles = await DBProvider.db.getArbolesPromedio(idSombra);
         return countArboles;
     }
 
-    Future<int> _noMusaceaeByEstacion(String idSombra, int estacion) async{
-        int countArboles = await DBProvider.db.noMusaceaeByEstacion(idSombra, estacion);
+    Future<int?> _noMusaceaeByEstacion(String? idSombra, int estacion) async{
+        int? countArboles = await DBProvider.db.noMusaceaeByEstacion(idSombra, estacion);
         return countArboles;
     }
 
-    Future<double> _noMusaceaePromedio(String idSombra) async{
-        double countArboles = await DBProvider.db.noMusaceaePromedio(idSombra);
+    Future<double?> _noMusaceaePromedio(String? idSombra) async{
+        double? countArboles = await DBProvider.db.noMusaceaePromedio(idSombra);
         return countArboles;
     }
 
-    Future<List<Map<String, dynamic>>> _countByEspecie(String idSombra) async{
+    Future<List<Map<String, dynamic>>> _countByEspecie(String? idSombra) async{
         List<Map<String, dynamic>> listEspecies = await DBProvider.db.dominanciaEspecie(idSombra);
         return listEspecies;
     }
@@ -152,12 +152,12 @@ class _DesicionesPageState extends State<DesicionesPage> {
     @override
     Widget build(BuildContext context) {
         
-        TestSombra sombra = ModalRoute.of(context).settings.arguments;
-        areaEstacion = (sombra.surcoDistancia * 10)*(sombra.plantaDistancia * 10);
+        TestSombra sombra = ModalRoute.of(context)!.settings.arguments as TestSombra;
+        areaEstacion = (sombra.surcoDistancia! * 10)*(sombra.plantaDistancia! * 10);
 
         Future _getdataFinca() async{
-            Finca finca = await DBProvider.db.getFincaId(sombra.idFinca);
-            Parcela parcela = await DBProvider.db.getParcelaId(sombra.idLote);
+            Finca? finca = await DBProvider.db.getFincaId(sombra.idFinca);
+            Parcela? parcela = await DBProvider.db.getParcelaId(sombra.idLote);
             //List<Paso> pasos = await DBProvider.db.getTodasPasoIdTest(plagaTest.id);
             return [finca, parcela];
         }
@@ -172,7 +172,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                         return CircularProgressIndicator();
                     }
 
-                    List<Widget> pageItem = List<Widget>();
+                    List<Widget> pageItem = [];
                     Finca finca = snapshot.data[0];
                     Parcela parcela = snapshot.data[1];
 
@@ -205,7 +205,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                                                 "Deslice hacia la derecha para continuar con el formulario",
                                                                 textAlign: TextAlign.center,
                                                                 style: Theme.of(context).textTheme
-                                                                    .headline5
+                                                                    .headline5!
                                                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 14)
                                                             )
                                                     
@@ -247,8 +247,8 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
     Widget _dataFincas( BuildContext context, Finca finca, Parcela parcela ){
-        String labelMedidaFinca;
-        String labelvariedad;
+        String? labelMedidaFinca;
+        String? labelvariedad;
 
         final item = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}');
         labelMedidaFinca  = item['label'];
@@ -393,7 +393,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                                                         "Porcentaje de cobertura",
                                                                         textAlign: TextAlign.center,
                                                                         style: Theme.of(context).textTheme
-                                                                            .headline5
+                                                                            .headline5!
                                                                             .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                                                                     ),
                                                                 ),
@@ -435,27 +435,27 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                                                 children: [
                                                                     Expanded(child: Container(
                                                                         padding: EdgeInsets.symmetric(horizontal: 20.0),
-                                                                        child: Text('Estaciones', textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6
+                                                                        child: Text('Estaciones', textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6!
                                                                                                 .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
                                                                     ),),
                                                                     Container(
                                                                         width: 45,
-                                                                        child: Text('1', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                        child: Text('1', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                                                                 .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
                                                                     ),
                                                                     Container(
                                                                         width: 45,
-                                                                        child: Text('2', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                        child: Text('2', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                                                                 .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
                                                                     ),
                                                                     Container(
                                                                         width: 45,
-                                                                        child: Text('3', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                        child: Text('3', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                                                                 .copyWith(fontSize: 16, fontWeight: FontWeight.w600))
                                                                     ),
                                                                     Container(
                                                                         width: 45,
-                                                                        child: Text('Total', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                                                        child: Text('Total', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                                                                 .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
                                                                     ),
                                                                 ],
@@ -484,7 +484,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
     Widget _areByEstacion(){
-        List<Widget> lisItem = List<Widget>();
+        List<Widget> lisItem = [];
 
 
             lisItem.add(
@@ -513,7 +513,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
     Widget _areTotalEstacion(){
-        List<Widget> lisItem = List<Widget>();
+        List<Widget> lisItem = [];
 
 
             lisItem.add(
@@ -542,8 +542,8 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
     
-    Widget _cobertura(String idSombra){
-        List<Widget> lisItem = List<Widget>();
+    Widget _cobertura(String? idSombra){
+        List<Widget> lisItem = [];
 
 
             lisItem.add(
@@ -615,8 +615,8 @@ class _DesicionesPageState extends State<DesicionesPage> {
         return Column(children:lisItem,);
     }
 
-    Widget _riqueza(String idSombra){
-        List<Widget> lisItem = List<Widget>();
+    Widget _riqueza(String? idSombra){
+        List<Widget> lisItem = [];
 
 
             lisItem.add(
@@ -688,8 +688,8 @@ class _DesicionesPageState extends State<DesicionesPage> {
         return Column(children:lisItem,);
     }
 
-    Widget _arboles(String idSombra){
-        List<Widget> lisItem = List<Widget>();
+    Widget _arboles(String? idSombra){
+        List<Widget> lisItem = [];
 
 
             lisItem.add(
@@ -761,8 +761,8 @@ class _DesicionesPageState extends State<DesicionesPage> {
         return Column(children:lisItem,);
     }
 
-    Widget _densidad(String idSombra){
-        List<Widget> lisItem = List<Widget>();
+    Widget _densidad(String? idSombra){
+        List<Widget> lisItem = [];
 
 
             lisItem.add(
@@ -834,8 +834,8 @@ class _DesicionesPageState extends State<DesicionesPage> {
         return Column(children:lisItem,);
     }
 
-    Widget _noMusaceaeDensidad(String idSombra){
-        List<Widget> lisItem = List<Widget>();
+    Widget _noMusaceaeDensidad(String? idSombra){
+        List<Widget> lisItem = [];
 
 
             lisItem.add(
@@ -908,7 +908,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
 
-    Widget _dominanciaEspecie(String idSombra){
+    Widget _dominanciaEspecie(String? idSombra){
         
         return FutureBuilder(
             future:Future.wait([
@@ -921,8 +921,8 @@ class _DesicionesPageState extends State<DesicionesPage> {
                 }
                 
                 List<Map<String, dynamic>> especiesConteo = snapshot.data[0];
-                double totalArboles = snapshot.data[1]*3;
-                List<Widget> listPrincipales = List<Widget>();
+                double? totalArboles = snapshot.data[1]*3;
+                List<Widget> listPrincipales = [];
 
                 listPrincipales.add(
                     Column(
@@ -934,7 +934,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                         "Dominancia de especies",
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context).textTheme
-                                            .headline5
+                                            .headline5!
                                             .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                                     ),
                                 )
@@ -949,7 +949,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                 for (var especie in especiesConteo) {
 
                     String labelEspecie = itemEspecie.firstWhere((e) => e['value'] == '${especie['idPlanta']}', orElse: () => {"value": "1","label": "No data"})['label'];
-                    double densidad = (especie['total']/totalArboles)*100;
+                    double? densidad = (especie['total']/totalArboles)*100;
                                         
                     listPrincipales.add(
                         Column(
@@ -972,7 +972,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                                         return textmt;
                                                     }
 
-                                                    return Text('${densidad.toStringAsFixed(0)}%', textAlign: TextAlign.center);
+                                                    return Text('${densidad!.toStringAsFixed(0)}%', textAlign: TextAlign.center);
                                                 },
                                             ),
                                         ),
@@ -1014,7 +1014,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
 
 
     Widget _densidadForma(){
-        List<Widget> listPrincipales = List<Widget>();
+        List<Widget> listPrincipales = [];
 
         listPrincipales.add(
             Column(
@@ -1026,7 +1026,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "Densidad de árboles de sombra",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1037,13 +1037,13 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemDensidad.length; i++) {
-            String label = itemDensidad.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? label = itemDensidad.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listPrincipales.add(
 
                 CheckboxListTile(
                     title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
                     ),
                     value: checksDensidad[itemDensidad[i]['value']], 
                     onChanged: (value) {
@@ -1068,7 +1068,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "Forma de copa de árboles",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1079,13 +1079,13 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemForma.length; i++) {
-            String label = itemForma.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? label = itemForma.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listPrincipales.add(
 
                 CheckboxListTile(
                     title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
                     ),
                     value: checksForma[itemForma[i]['value']], 
                     onChanged: (value) {
@@ -1122,7 +1122,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
     Widget _competenciaArreglo(){
-        List<Widget> listPrincipales = List<Widget>();
+        List<Widget> listPrincipales = [];
 
         listPrincipales.add(
             Column(
@@ -1134,7 +1134,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "Competencia de árboles con cacao",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1145,13 +1145,13 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemCompetencia.length; i++) {
-            String label = itemCompetencia.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? label = itemCompetencia.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listPrincipales.add(
 
                 CheckboxListTile(
                     title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
                     ),
                     value: checksCompetencia[itemCompetencia[i]['value']], 
                     onChanged: (value) {
@@ -1176,7 +1176,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "Arreglo de árboles",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1187,13 +1187,13 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemArreglo.length; i++) {
-            String label = itemArreglo.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? label = itemArreglo.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listPrincipales.add(
 
                 CheckboxListTile(
                     title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
                     ),
                     value: checksArreglo[itemArreglo[i]['value']], 
                     onChanged: (value) {
@@ -1230,7 +1230,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
     Widget _cantidadCalidad(){
-        List<Widget> listPrincipales = List<Widget>();
+        List<Widget> listPrincipales = [];
 
         listPrincipales.add(
             Column(
@@ -1242,7 +1242,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "Catidad de hoja rasca",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1253,13 +1253,13 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemCantidad.length; i++) {
-            String label = itemCantidad.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? label = itemCantidad.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listPrincipales.add(
 
                 CheckboxListTile(
                     title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
                     ),
                     value: checksCantidad[itemCantidad[i]['value']], 
                     onChanged: (value) {
@@ -1284,7 +1284,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "Calidad de hora rasca",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1295,13 +1295,13 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemCalidad.length; i++) {
-            String label = itemCalidad.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? label = itemCalidad.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listPrincipales.add(
 
                 CheckboxListTile(
                     title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
                     ),
                     value: checksCalidad[itemCalidad[i]['value']], 
                     onChanged: (value) {
@@ -1338,7 +1338,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
     Widget _mejoraDominio(){
-        List<Widget> listPrincipales = List<Widget>();
+        List<Widget> listPrincipales = [];
 
         listPrincipales.add(
             Column(
@@ -1350,7 +1350,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "Acciones para mejorar la sombra",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1361,13 +1361,13 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemMejora.length; i++) {
-            String label = itemMejora.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? label = itemMejora.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listPrincipales.add(
 
                 CheckboxListTile(
                     title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
                     ),
                     value: checksMejora[itemMejora[i]['value']], 
                     onChanged: (value) {
@@ -1392,7 +1392,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "Dominio de la acción",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1403,13 +1403,13 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemDominio.length; i++) {
-            String label = itemDominio.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? label = itemDominio.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listPrincipales.add(
 
                 CheckboxListTile(
                     title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
                     ),
                     value: checksDominio[itemDominio[i]['value']], 
                     onChanged: (value) {
@@ -1446,7 +1446,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
     Widget _reduccionAumento(){
-        List<Widget> listPrincipales = List<Widget>();
+        List<Widget> listPrincipales = [];
 
         listPrincipales.add(
             Column(
@@ -1458,7 +1458,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "Acciones para reducción de sombra",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1469,13 +1469,13 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemReduccion.length; i++) {
-            String label = itemReduccion.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? label = itemReduccion.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listPrincipales.add(
 
                 CheckboxListTile(
                     title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
                     ),
                     value: checksReduccion[itemReduccion[i]['value']], 
                     onChanged: (value) {
@@ -1500,7 +1500,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "Acciones para aumento de sombra",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1511,13 +1511,13 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemAumento.length; i++) {
-            String label = itemAumento.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? label = itemAumento.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listPrincipales.add(
 
                 CheckboxListTile(
                     title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
                     ),
                     value: checksAumento[itemAumento[i]['value']], 
                     onChanged: (value) {
@@ -1555,7 +1555,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
 
     Widget _accionesMeses(){
 
-        List<Widget> listaAcciones = List<Widget>();
+        List<Widget> listaAcciones = [];
         listaAcciones.add(
             
             Column(
@@ -1567,7 +1567,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "¿Cúando vamos a realizar el manejo de sombra?",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         )
@@ -1578,7 +1578,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             
         );
         for (var i = 0; i < itemMeses.length; i++) {
-            String labelmeses = itemMeses.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? labelmeses = itemMeses.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             
             listaAcciones.add(
@@ -1617,7 +1617,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
         );
     }
 
-    Widget  _botonsubmit(String idSombra){
+    Widget  _botonsubmit(String? idSombra){
         idSombraMain = idSombra;
         return SingleChildScrollView(
             child: Container(
@@ -1643,7 +1643,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 "¿Ha Terminado todos los formularios de toma de desición?",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600)
                             ),
                         ),
@@ -1653,7 +1653,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                                 icon:Icon(Icons.save),
                                 label: Text('Guardar',
                                     style: Theme.of(context).textTheme
-                                        .headline6
+                                        .headline6!
                                         .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
                                 ),
                                 padding:EdgeInsets.all(13),

@@ -10,7 +10,7 @@ import 'package:app_sombra/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 
 class EstacionesPage extends StatefulWidget {
-    const EstacionesPage({Key key}) : super(key: key);
+    const EstacionesPage({Key? key}) : super(key: key);
 
   @override
   _EstacionesPageState createState() => _EstacionesPageState();
@@ -19,11 +19,11 @@ class EstacionesPage extends StatefulWidget {
 class _EstacionesPageState extends State<EstacionesPage> {
 
     final fincasBloc = new FincasBloc();
-    List<int> countEspecie;
+    List<int>? countEspecie;
 
     Future _getdataFinca(TestSombra textPlaga) async{
-        Finca finca = await DBProvider.db.getFincaId(textPlaga.idFinca);
-        Parcela parcela = await DBProvider.db.getParcelaId(textPlaga.idLote);
+        Finca? finca = await DBProvider.db.getFincaId(textPlaga.idFinca);
+        Parcela? parcela = await DBProvider.db.getParcelaId(textPlaga.idLote);
         
         return [finca, parcela];
     }
@@ -31,7 +31,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
     @override
     Widget build(BuildContext context) {
         
-        TestSombra sombra = ModalRoute.of(context).settings.arguments;
+        TestSombra sombra = ModalRoute.of(context)!.settings.arguments as TestSombra;
         fincasBloc.allEstacionsByTest(sombra.id);
         
 
@@ -42,7 +42,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                     return CircularProgressIndicator();
                 }
 
-                List<Estacion> estaciones = snapshot.data;
+                List<Estacion>? estaciones = snapshot.data;
                 fincasBloc.comprobarInventario(sombra.id);
                 
 
@@ -78,7 +78,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                                             return CircularProgressIndicator();
                                         }
 
-                                        List<int> countEspecie = snapshot.data;
+                                        List<int>? countEspecie = snapshot.data;
 
                                         return SingleChildScrollView(
                                             child: _listaDeEstaciones( context, sombra, countEspecie),
@@ -164,13 +164,13 @@ class _EstacionesPageState extends State<EstacionesPage> {
         );        
     }
 
-    Widget  _listaDeEstaciones( BuildContext context, TestSombra sombra, List<int> countEspecie){
+    Widget  _listaDeEstaciones( BuildContext context, TestSombra sombra, List<int>? countEspecie){
         
         return ListView.builder(
             itemBuilder: (context, index) {
                 
                 return GestureDetector(
-                    child: _cardTest(index+1, countEspecie[index]),
+                    child: _cardTest(index+1, countEspecie![index]),
                     onTap: () => Navigator.pushNamed(context, 'inventario', arguments: [sombra, index]),
                 );
                 
@@ -251,7 +251,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
     }
    
 
-    Widget  _tomarDecisiones(List<Estacion> estaciones, TestSombra sombra){
+    Widget  _tomarDecisiones(List<Estacion>? estaciones, TestSombra sombra){
 
         
         return StreamBuilder(
@@ -264,7 +264,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
 
                 countEspecie = snapshot.data;
 
-                if (estaciones.length >= 3 && !countEspecie.contains(0)) {
+                if (estaciones!.length >= 3 && !countEspecie!.contains(0)) {
                     fincasBloc.obtenerDecisiones(sombra.id);
 
                      return StreamBuilder(
@@ -286,7 +286,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                                             
                                             label: Text('Toma de decisiones',
                                                 style: Theme.of(context).textTheme
-                                                    .headline6
+                                                    .headline6!
                                                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                                             ),
                                             padding:EdgeInsets.all(13),
@@ -307,7 +307,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                                     
                                         label: Text('Consultar decisiones',
                                             style: Theme.of(context).textTheme
-                                                .headline6
+                                                .headline6!
                                                 .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                                         ),
                                         padding:EdgeInsets.all(13),
@@ -328,7 +328,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                             "Complete las estaciones",
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme
-                                .headline5
+                                .headline5!
                                 .copyWith(fontWeight: FontWeight.w900, color: kRedColor, fontSize: 22)
                         ),
                     ),

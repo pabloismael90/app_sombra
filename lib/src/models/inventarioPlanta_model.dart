@@ -9,13 +9,13 @@ class InventacioPlanta {
         this.uso,
     });
 
-    String id;
-    String idEstacion;
-    int idPlanta;
-    int pequeno;
-    int mediano;
-    int grande;
-    int uso;
+    String? id;
+    String? idEstacion;
+    int? idPlanta;
+    int? pequeno;
+    int? mediano;
+    int? grande;
+    int? uso;
 
     factory InventacioPlanta.fromJson(Map<String, dynamic> json) => InventacioPlanta(
         id: json["id"],

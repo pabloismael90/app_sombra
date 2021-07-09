@@ -87,7 +87,7 @@ class MyApp extends StatelessWidget {
                 primaryIconTheme: IconThemeData(color: Colors.white),
                 inputDecorationTheme: InputDecorationTheme(
                     labelStyle: Theme.of(context).textTheme
-                                .headline6
+                                .headline6!
                                 .copyWith(fontWeight: FontWeight.bold, color: kTextColor, fontSize: 18, fontFamily: 'Museo'),
                 ),
             

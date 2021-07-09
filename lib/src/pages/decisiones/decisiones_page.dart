@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class DesicionesList extends StatelessWidget {
-    const DesicionesList({Key key}) : super(key: key);
+    const DesicionesList({Key? key}) : super(key: key);
 
     
     Future getRegistros() async{
@@ -18,12 +18,12 @@ class DesicionesList extends StatelessWidget {
         return listAcciones;
     }
 
-    Future getDatos(String id) async{
+    Future getDatos(String? id) async{
         
-        TestSombra testSombra= await DBProvider.db.getTestId(id);
+        TestSombra? testSombra= await (DBProvider.db.getTestId(id));
 
-        Finca finca = await DBProvider.db.getFincaId(testSombra.idFinca);
-        Parcela parcela = await DBProvider.db.getParcelaId(testSombra.idLote);
+        Finca? finca = await DBProvider.db.getFincaId(testSombra!.idFinca);
+        Parcela? parcela = await DBProvider.db.getParcelaId(testSombra.idLote);
 
         return [testSombra, finca, parcela];
     }

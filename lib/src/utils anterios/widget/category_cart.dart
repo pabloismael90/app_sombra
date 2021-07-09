@@ -27,23 +27,24 @@ class CategoryCard extends StatelessWidget {
                           blurRadius: 17.0),
                 ],
             ),
-            child: InkWell(
-                onTap: press as void Function()?,
-                child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                        children: <Widget>[
-                            Spacer(),
-                            SvgPicture.asset(svgSrc!, height: 60,),
-                            Spacer(),
-                            Text(
-                                title!,
-                                textAlign: TextAlign.center,
-                                textScaleFactor: 1.0,
-                                style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.w600, fontSize: 16, )
-                            ),
-                            Spacer(),
-                        ],
+            child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                    onTap: press as void Function()?,
+                    child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                            children: <Widget>[
+                                Spacer(),
+                                SvgPicture.asset(svgSrc!, height: 70,),
+                                Spacer(),
+                                Text(
+                                    title!,
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.w600, fontSize: 16.0)
+                                )
+                            ],
+                        ),
                     ),
                 ),
             ),

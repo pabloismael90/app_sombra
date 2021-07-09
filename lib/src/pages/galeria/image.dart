@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ViewImage extends StatefulWidget {
-  const ViewImage({Key key}) : super(key: key);
+  const ViewImage({Key? key}) : super(key: key);
 
   @override
   _ViewImageState createState() => _ViewImageState();
 }
 
 class _ViewImageState extends State<ViewImage> {
-    int currentIndex;
+    int? currentIndex;
 
     @override
     void initState() {
@@ -28,7 +28,7 @@ class _ViewImageState extends State<ViewImage> {
     @override
     Widget build(BuildContext context) {
         
-        List dataRoute = ModalRoute.of(context).settings.arguments;
+        List dataRoute = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
         List listimg = dataRoute[0];
         int index = dataRoute[1];
         List<String> listname = dataRoute[2];

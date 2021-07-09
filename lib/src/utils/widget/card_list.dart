@@ -5,14 +5,12 @@ import 'package:app_sombra/src/models/selectValue.dart' as selectMap;
 import '../constants.dart';
 
 
-class CardList extends StatelessWidget {
-    final Size size;  
-    final Finca finca;
-    final String icon;
+class CardList extends StatelessWidget {  
+    final Finca? finca;
+    final String? icon;
     
     const CardList({
-        Key key,
-        this.size,
+        Key? key,
         this.finca,
         this.icon
 
@@ -22,8 +20,8 @@ class CardList extends StatelessWidget {
     Widget build(BuildContext context) {
 
         
-        String labelMedida;
-        final item = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}');
+        String? labelMedida;
+        final item = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca!.tipoMedida}');
         labelMedida  = item['label'];
 
 
@@ -43,56 +41,42 @@ class CardList extends StatelessWidget {
                                 blurRadius: 17.0),
                         ],
                 ),
-                child: Column(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                                Padding(
-                                    padding: EdgeInsets.only(right: 20),
-                                    child: SvgPicture.asset('assets/icons/finca.svg', height:60,),
-                                ),
-                                Flexible(
-                                    child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                        
-                                            Padding(
-                                                padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                                child: Text(
-                                                    "${finca.nombreFinca}",
-                                                    style: Theme.of(context).textTheme.headline6,
-                                                ),
-                                            ),
-                                            Text(
-                                                "${finca.nombreProductor}",
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(color: kLightBlackColor),
-                                            ),
-                                            Padding(
-                                                padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                                child: Text(
-                                                    "${finca.areaFinca} $labelMedida",
-                                                    style: TextStyle(color: kLightBlackColor),
-                                                ),
-                                            ),
-                                        ],
-                                    ),
-                                ),
-                                
-                                
-                            ],
+                        Padding(
+                            padding: EdgeInsets.only(right: 20),
+                            child: SvgPicture.asset('assets/icons/finca.svg', height:60,),
                         ),
-                        Divider(),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                                Icon(Icons.touch_app, color: kRedColor,),
-                                Text(' Tocar para agregar parcelas', style: TextStyle(color: kRedColor),)
-                            ],
-                        )
+                        Flexible(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                
+                                    Padding(
+                                        padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                                        child: Text(
+                                            "${finca!.nombreFinca}",
+                                            style: Theme.of(context).textTheme.headline6,
+                                        ),
+                                    ),
+                                    Text(
+                                        "${finca!.nombreProductor}",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: kLightBlackColor),
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                                        child: Text(
+                                            "${finca!.areaFinca} $labelMedida",
+                                            style: TextStyle(color: kLightBlackColor),
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        
                     ],
                 ),
         );

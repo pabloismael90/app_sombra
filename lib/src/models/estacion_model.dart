@@ -6,10 +6,10 @@ class Estacion {
         this.cobertura,
     });
 
-    String id;
-    String idTestSombra;
-    int nestacion;
-    double cobertura;
+    String? id;
+    String? idTestSombra;
+    int? nestacion;
+    double? cobertura;
 
     factory Estacion.fromJson(Map<String, dynamic> json) => Estacion(
         id: json["id"],

@@ -15,13 +15,13 @@ class TestSombra {
         this.plantaDistancia,
     });
 
-    String id;
-    String idFinca;
-    String idLote;
-    int estaciones;
-    String fechaTest;
-    double surcoDistancia;
-    double plantaDistancia;
+    String? id;
+    String? idFinca;
+    String? idLote;
+    int? estaciones;
+    String? fechaTest;
+    double? surcoDistancia;
+    double? plantaDistancia;
 
     factory TestSombra.fromJson(Map<String, dynamic> json) => TestSombra(
         id: json["id"],

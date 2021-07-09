@@ -8,13 +8,13 @@ class Finca {
         this.nombreTecnico = '',
     });
 
-    String id;
-    int userid;
-    String nombreFinca;
-    String nombreProductor;
-    double areaFinca;
-    int tipoMedida;
-    String nombreTecnico;
+    String? id;
+    int? userid;
+    String? nombreFinca;
+    String? nombreProductor;
+    double? areaFinca;
+    int? tipoMedida;
+    String? nombreTecnico;
 
     factory Finca.fromJson(Map<String, dynamic> json) => Finca(
         id: json["id"],

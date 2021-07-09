@@ -23,8 +23,8 @@ class _TestPageState extends State<TestPage> {
 
     
     Future _getdataFinca(TestSombra textSombra) async{
-        Finca finca = await DBProvider.db.getFincaId(textSombra.idFinca);
-        Parcela parcela = await DBProvider.db.getParcelaId(textSombra.idLote);
+        Finca? finca = await DBProvider.db.getFincaId(textSombra.idFinca);
+        Parcela? parcela = await DBProvider.db.getParcelaId(textSombra.idLote);
         return [finca, parcela];
     }
 
@@ -92,7 +92,7 @@ class _TestPageState extends State<TestPage> {
             
             label: Text('Escoger parcelas',
                 style: Theme.of(context).textTheme
-                    .headline6
+                    .headline6!
                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
             ),
             padding:EdgeInsets.all(13),

@@ -14,7 +14,7 @@ import 'package:flutter/services.dart';
 
 
 class InventarioPage extends StatefulWidget {
-    InventarioPage({Key key}) : super(key: key);
+    InventarioPage({Key? key}) : super(key: key);
     final scaffoldKey = GlobalKey<ScaffoldState>();
 
     @override
@@ -27,22 +27,22 @@ class _InventarioPageState extends State<InventarioPage> {
     final formKey = GlobalKey<FormState>();
     bool _guardando = false;
     var uuid = Uuid();
-    TestSombra testSombra;
-    int numeroEstacion;
+    late TestSombra testSombra;
+    int? numeroEstacion;
 
-    Estacion estacion = Estacion();
-    List<InventacioPlanta> plantas;
+    Estacion? estacion = Estacion();
+    List<InventacioPlanta>? plantas;
 
     @override
     Widget build(BuildContext context) {
-        List dataSombra = ModalRoute.of(context).settings.arguments;
+        List dataSombra = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
         testSombra = dataSombra[0];
         numeroEstacion = dataSombra[1]+1;
         
         return _body(context, testSombra, numeroEstacion);
     }
 
-    Widget _body( BuildContext context, TestSombra sombra, int nEstacion){
+    Widget _body( BuildContext context, TestSombra sombra, int? nEstacion){
 
         fincasBloc.obtenerEstacion(sombra.id, nEstacion);
 
@@ -68,7 +68,7 @@ class _InventarioPageState extends State<InventarioPage> {
                     body: Column(
                         children: [
                             _dataEstacion(sombra),
-                            _listaPlanta(estacion.id, sombra.id)
+                            _listaPlanta(estacion!.id, sombra.id)
                         ],
                     ),
                     bottomNavigationBar: BottomAppBar(
@@ -85,7 +85,7 @@ class _InventarioPageState extends State<InventarioPage> {
                                         ),
                                         Padding(
                                             padding: EdgeInsets.symmetric(horizontal: 5),
-                                            child: _netEstacion(sombra, estacion),
+                                            child: _netEstacion(sombra, estacion!),
                                         ),
                                     ],
                                 ),
@@ -116,7 +116,7 @@ class _InventarioPageState extends State<InventarioPage> {
                 
                     
                     Text(
-                        "Estación ${estacion.nestacion}",
+                        "Estación ${estacion!.nestacion}",
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -125,14 +125,14 @@ class _InventarioPageState extends State<InventarioPage> {
                     SizedBox(height: 10,),
                 
                     Text(
-                        "Cobertura: ${estacion.cobertura}%",
+                        "Cobertura: ${estacion!.cobertura}%",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: kLightBlackColor),
                     ),
                     SizedBox(height: 10,),
                     Text(
-                        "Area de estación mt2: ${sombra.surcoDistancia * 10} x ${sombra.plantaDistancia * 10}",
+                        "Area de estación mt2: ${sombra.surcoDistancia! * 10} x ${sombra.plantaDistancia! * 10}",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: kLightBlackColor),
@@ -151,7 +151,7 @@ class _InventarioPageState extends State<InventarioPage> {
                     Form(
                         key: formKey,
                         child: TextFormField(
-                            initialValue: estacion.cobertura == null ? '' : estacion.cobertura.toString(),
+                            initialValue: estacion!.cobertura == null ? '' : estacion!.cobertura.toString(),
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly
@@ -162,7 +162,7 @@ class _InventarioPageState extends State<InventarioPage> {
                             ),
                             validator: (value) {
 
-                                if (utils.isNumeric(value)){
+                                if (utils.isNumeric(value!)){
                                     if (double.parse(value) > 0 && double.parse(value) <= 100) {
                                         return null;
                                     } else {
@@ -172,7 +172,7 @@ class _InventarioPageState extends State<InventarioPage> {
                                     return 'Solo números';
                                 }
                             },
-                            onSaved: (value) => estacion.cobertura = double.parse(value),
+                            onSaved: (value) => estacion!.cobertura = double.parse(value!),
                         ),
                     ),
                     SizedBox(height: 20,),
@@ -182,7 +182,7 @@ class _InventarioPageState extends State<InventarioPage> {
                         
                         label: Text('Guardar',
                             style: Theme.of(context).textTheme
-                                .headline6
+                                .headline6!
                                 .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16)
                         ),
                         padding:EdgeInsets.symmetric(vertical: 10, horizontal: 40),
@@ -193,7 +193,7 @@ class _InventarioPageState extends State<InventarioPage> {
         );
     }
 
-    Widget _listaPlanta(String idEstacion, String idTestSombra){
+    Widget _listaPlanta(String? idEstacion, String? idTestSombra){
 
         fincasBloc.obtenerInventario(idEstacion);
 
@@ -205,7 +205,7 @@ class _InventarioPageState extends State<InventarioPage> {
                 }
                 plantas = snapshot.data;
 
-                if (plantas.length == 0) {
+                if (plantas!.length == 0) {
                     return Expanded(child: Center(
                         child: Text('Ingrese datos de especies', 
                         textAlign: TextAlign.center,
@@ -223,18 +223,18 @@ class _InventarioPageState extends State<InventarioPage> {
                                 return Dismissible(
                                     key: UniqueKey(),
                                     child: GestureDetector(
-                                        child: _cardEspecie(plantas[index]),
+                                        child: _cardEspecie(plantas![index]),
                                     ),
                                     confirmDismiss: (direction) => confirmacionUser(direction, context),
                                     direction: DismissDirection.endToStart,
                                     background: backgroundTrash(context),
                                     movementDuration: Duration(milliseconds: 500),
-                                    onDismissed: (direction) => fincasBloc.borrarEspecie(plantas[index].idPlanta, plantas[index].idEstacion, idTestSombra),
+                                    onDismissed: (direction) => fincasBloc.borrarEspecie(plantas![index].idPlanta, plantas![index].idEstacion, idTestSombra),
                                 );
                             
                             },
                             shrinkWrap: true,
-                            itemCount: plantas.length,
+                            itemCount: plantas!.length,
                             padding: EdgeInsets.only(bottom: 30.0),
                             controller: ScrollController(keepScrollOffset: false),
                         )
@@ -319,7 +319,7 @@ class _InventarioPageState extends State<InventarioPage> {
 
 
 
-    Widget _addPlanta(Estacion estacion){
+    Widget _addPlanta(Estacion? estacion){
 
 
         return RaisedButton.icon(
@@ -328,7 +328,7 @@ class _InventarioPageState extends State<InventarioPage> {
                         
             label: Text('Agregar planta',
                 style: Theme.of(context).textTheme
-                    .headline6
+                    .headline6!
                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
             ),
             padding:EdgeInsets.all(10),
@@ -348,25 +348,25 @@ class _InventarioPageState extends State<InventarioPage> {
                 }
                 plantas = snapshot.data;
 
-                if (plantas.length == 0) {
+                if (plantas!.length == 0) {
                     return RaisedButton.icon(
                         icon:Icon(Icons.navigate_next_rounded),                               
                         label: Text('Siguiente estaciones',
                             style: Theme.of(context).textTheme
-                                .headline6
+                                .headline6!
                                 .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                         ),
                         padding:EdgeInsets.all(10),
                         onPressed:null,
                     );
                 } else {
-                    if (estacion.nestacion <= 2){
+                    if (estacion.nestacion! <= 2){
                       
                         return RaisedButton.icon(
                             icon:Icon(Icons.navigate_next_rounded),                               
                             label: Text('Siguiente estaciones',
                                 style: Theme.of(context).textTheme
-                                    .headline6
+                                    .headline6!
                                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                             ),
                             padding:EdgeInsets.all(10),
@@ -378,7 +378,7 @@ class _InventarioPageState extends State<InventarioPage> {
                             icon:Icon(Icons.chevron_left),                               
                             label: Text('Lista de estaciones',
                                 style: Theme.of(context).textTheme
-                                    .headline6
+                                    .headline6!
                                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                             ),
                             padding:EdgeInsets.all(10),
@@ -399,19 +399,19 @@ class _InventarioPageState extends State<InventarioPage> {
 
     void _submit( ){
 
-        if  ( !formKey.currentState.validate() ){
+        if  ( !formKey.currentState!.validate() ){
             return null;
         }
         
-        formKey.currentState.save();
+        formKey.currentState!.save();
 
         setState(() {_guardando = true;});
 
-        estacion.id = uuid.v1();
-        estacion.idTestSombra = testSombra.id;
-        estacion.nestacion = numeroEstacion;
+        estacion!.id = uuid.v1();
+        estacion!.idTestSombra = testSombra.id;
+        estacion!.nestacion = numeroEstacion;
        
-        fincasBloc.addEstacion(estacion, estacion.idTestSombra, estacion.nestacion);
+        fincasBloc.addEstacion(estacion!, estacion!.idTestSombra, estacion!.nestacion);
         
         
 

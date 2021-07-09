@@ -66,7 +66,7 @@ class FincasBloc {
         obtenerFincas();
     }
 
-    borrarFinca( String id ) async {
+    borrarFinca( String? id ) async {
         await DBProvider.db.deleteFinca(id);
         obtenerFincas();
     }
@@ -81,21 +81,21 @@ class FincasBloc {
         _parcelasController.sink.add( await DBProvider.db.getTodasParcelas() );
     }
     
-    obtenerParcelasIdFinca(String idFinca) async {
+    obtenerParcelasIdFinca(String? idFinca) async {
         _parcelasController.sink.add( await DBProvider.db.getTodasParcelasIdFinca(idFinca) );
     }
 
-    addParcela( Parcela parcela, String idFinca ) async{
+    addParcela( Parcela parcela, String? idFinca ) async{
         await DBProvider.db.nuevoParcela(parcela);
         obtenerParcelasIdFinca(idFinca);
     }
 
-    actualizarParcela( Parcela parcela, String idFinca ) async{
+    actualizarParcela( Parcela parcela, String? idFinca ) async{
         await DBProvider.db.updateParcela(parcela);
         obtenerParcelasIdFinca(idFinca);
     }
     
-    borrarParcela( String id ) async {
+    borrarParcela( String? id ) async {
         await DBProvider.db.deleteParcela(id);
         obtenerParcelas();
     }
@@ -114,21 +114,21 @@ class FincasBloc {
         obtenerSombra();
     }
 
-    borrarTestSombra( String idTest) async{
+    borrarTestSombra( String? idTest) async{
         await DBProvider.db.deleteTestSombra(idTest);
         obtenerSombra();
     }
 
     //Estacion y estaciones
-    allEstacionsByTest(String idTestSombra) async {
+    allEstacionsByTest(String? idTestSombra) async {
         _allestacionController.sink.add( await DBProvider.db.allEstacionesIdSombra(idTestSombra) );
     }
     
-    obtenerEstacion(String idTestSombra, int nEstacion) async {
+    obtenerEstacion(String? idTestSombra, int? nEstacion) async {
         _estacionController.sink.add( await DBProvider.db.getEstacionIdSombra(idTestSombra, nEstacion) );
     }
 
-    addEstacion( Estacion nuevoEstacion, String idTestSombra, int nEstacion) async{
+    addEstacion( Estacion nuevoEstacion, String? idTestSombra, int? nEstacion) async{
         await DBProvider.db.nuevoEstacion(nuevoEstacion);
         obtenerEstacion(idTestSombra, nEstacion);
         allEstacionsByTest(idTestSombra);
@@ -136,22 +136,22 @@ class FincasBloc {
 
 
     //Inventario Plantas
-    obtenerInventario( String idEstacion) async {
+    obtenerInventario( String? idEstacion) async {
         _inventarioController.sink.add( await DBProvider.db.getInventarioIdEstacion(idEstacion) );
     }
 
-    comprobarInventario( String idTestSombra) async {
+    comprobarInventario( String? idTestSombra) async {
         _comprobarController.sink.add( await DBProvider.db.getConteoEstaciones(idTestSombra) );
        
     }
 
-    addInventario( InventacioPlanta nuevoInventario, String idEstacion, String idTestSombra, int nEstacion) async{
+    addInventario( InventacioPlanta nuevoInventario, String? idEstacion, String? idTestSombra, int? nEstacion) async{
         await DBProvider.db.nuevoInventario(nuevoInventario);
         obtenerInventario(idEstacion);
         comprobarInventario(idTestSombra);
     }
 
-    borrarEspecie( int idPlanta, String idEstacion, String idTestSombra) async{
+    borrarEspecie( int? idPlanta, String? idEstacion, String? idTestSombra) async{
         await DBProvider.db.deleteEspecie(idPlanta, idEstacion);
         obtenerInventario(idEstacion);
         comprobarInventario(idTestSombra);
@@ -159,7 +159,7 @@ class FincasBloc {
 
 
     //deciones
-    obtenerDecisiones(String idTest) async {
+    obtenerDecisiones(String? idTest) async {
         _decisionesControl.sink.add( await DBProvider.db.getDecisionesIdTest(idTest) );
     }
     
@@ -170,17 +170,17 @@ class FincasBloc {
 
     //Cerrar stream
     dispose() {
-        _fincasController?.close();
-        _parcelasController?.close();
-        _fincasSelectControl?.close();
-        _estacionController?.close();
-        _allestacionController?.close();
-        _inventarioController?.close();
-        _comprobarController?.close();
-        _decisionesControl?.close();
+        _fincasController.close();
+        _parcelasController.close();
+        _fincasSelectControl.close();
+        _estacionController.close();
+        _allestacionController.close();
+        _inventarioController.close();
+        _comprobarController.close();
+        _decisionesControl.close();
 
-        _parcelaSelectControl?.close();
-        _podaController?.close();
+        _parcelaSelectControl.close();
+        _podaController.close();
 
     }
 

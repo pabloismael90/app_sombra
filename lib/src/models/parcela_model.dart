@@ -8,12 +8,12 @@ class Parcela {
         this.numeroPlanta,
     });
 
-    String id;
-    String idFinca;
-    String nombreLote;
-    double areaLote;
-    int variedadCacao;
-    int numeroPlanta;
+    String? id;
+    String? idFinca;
+    String? nombreLote;
+    double? areaLote;
+    int? variedadCacao;
+    int? numeroPlanta;
 
     factory Parcela.fromJson(Map<String, dynamic> json) => Parcela(
         id: json["id"],

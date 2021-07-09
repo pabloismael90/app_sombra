@@ -7,11 +7,11 @@ class Decisiones {
         this.idTest,
     });
 
-    String id;
-    int idPregunta;
-    int idItem;
-    int repuesta;
-    String idTest;
+    String? id;
+    int? idPregunta;
+    int? idItem;
+    int? repuesta;
+    String? idTest;
 
     factory Decisiones.fromJson(Map<String, dynamic> json) => Decisiones(
         id: json["id"],

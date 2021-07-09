@@ -4,7 +4,7 @@ import 'package:app_sombra/src/utils/widget/category_cart.dart';
 
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
     @override
     Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
                                     child: Text(
                                         "Cacao Sombra",
                                         style: Theme.of(context).textTheme
-                                            .headline4
+                                            .headline4!
                                             .copyWith(fontWeight: FontWeight.w900, fontSize: 30)
                                     ),
                                 ),

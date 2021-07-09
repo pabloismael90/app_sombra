@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 
 class PlantaForm extends StatefulWidget {
-    PlantaForm({Key key}) : super(key: key);
+    PlantaForm({Key? key}) : super(key: key);
 
     @override
     _PlantaFormState createState() => _PlantaFormState();
@@ -18,9 +18,9 @@ class PlantaForm extends StatefulWidget {
 
 class _PlantaFormState extends State<PlantaForm> {
 
-    Estacion estacion;
+    late Estacion estacion;
     InventacioPlanta inventarioPlanta = InventacioPlanta();
-    List<InventacioPlanta> plantas;
+    late List<InventacioPlanta> plantas;
     final formKey = GlobalKey<FormState>();
     final scaffoldKey = GlobalKey<ScaffoldState>();
     final fincasBloc = new FincasBloc();
@@ -41,7 +41,7 @@ class _PlantaFormState extends State<PlantaForm> {
 
     @override
     Widget build(BuildContext context) {
-        final List dataRoute = ModalRoute.of(context).settings.arguments;
+        final List dataRoute = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
         estacion = dataRoute[0];
         plantas = dataRoute[1];
         inventarioPlanta.idEstacion = estacion.id;
@@ -111,13 +111,13 @@ class _PlantaFormState extends State<PlantaForm> {
             dialogSearchHint: 'Buscar',
             items: _especies,
             validator: (value) {
-                if(value.length < 1){
+                if(value!.length < 1){
                     return 'No se selecciono especie';
                 }else{
                     return null;
                 }
             },          
-            onSaved: (value) => inventarioPlanta.idPlanta = int.parse(value),
+            onSaved: (value) => inventarioPlanta.idPlanta = int.parse(value!),
         );
     }
 
@@ -133,7 +133,7 @@ class _PlantaFormState extends State<PlantaForm> {
             ),
             validator: (value) {
                 
-                final isDigitsOnly = int.tryParse(value);
+                final isDigitsOnly = int.tryParse(value!);
                 if (isDigitsOnly == null) {
                     return 'Solo números enteros';
                 }
@@ -143,7 +143,7 @@ class _PlantaFormState extends State<PlantaForm> {
                     return null;
                 }
             },
-            onSaved: (value) => inventarioPlanta.pequeno = int.parse(value),
+            onSaved: (value) => inventarioPlanta.pequeno = int.parse(value!),
         );
 
     }
@@ -160,7 +160,7 @@ class _PlantaFormState extends State<PlantaForm> {
             ),
             validator: (value) {
                 
-                final isDigitsOnly = int.tryParse(value);
+                final isDigitsOnly = int.tryParse(value!);
                 if (isDigitsOnly == null) {
                     return 'Solo números enteros';
                 }
@@ -170,7 +170,7 @@ class _PlantaFormState extends State<PlantaForm> {
                     return null;
                 }
             },
-            onSaved: (value) => inventarioPlanta.mediano = int.parse(value),
+            onSaved: (value) => inventarioPlanta.mediano = int.parse(value!),
         );
 
     }
@@ -187,7 +187,7 @@ class _PlantaFormState extends State<PlantaForm> {
             ),
             validator: (value) {
                 
-                final isDigitsOnly = int.tryParse(value);
+                final isDigitsOnly = int.tryParse(value!);
                 if (isDigitsOnly == null) {
                     return 'Solo números enteros';
                 }
@@ -197,7 +197,7 @@ class _PlantaFormState extends State<PlantaForm> {
                     return null;
                 }
             },
-            onSaved: (value) => inventarioPlanta.grande = int.parse(value),
+            onSaved: (value) => inventarioPlanta.grande = int.parse(value!),
         );
 
     }
@@ -210,13 +210,13 @@ class _PlantaFormState extends State<PlantaForm> {
             dialogTitle: '',
             items: _uso,
             validator: (value) {
-                if(value.length < 1){
+                if(value!.length < 1){
                     return 'No se selecciono uso';
                 }else{
                     return null;
                 }
             },          
-            onSaved: (value) => inventarioPlanta.uso = int.parse(value),
+            onSaved: (value) => inventarioPlanta.uso = int.parse(value!),
         );
     }
 
@@ -226,7 +226,7 @@ class _PlantaFormState extends State<PlantaForm> {
 
             label: Text('Guardar',
                 style: Theme.of(context).textTheme
-                    .headline6
+                    .headline6!
                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
             ),
             padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
@@ -239,11 +239,11 @@ class _PlantaFormState extends State<PlantaForm> {
     void _submit(){
 
         
-        if  ( !formKey.currentState.validate() ){
+        if  ( !formKey.currentState!.validate() ){
             return null;
         }
 
-        formKey.currentState.save();
+        formKey.currentState!.save();
 
         for (var item in plantas) {
             if (item.idPlanta == inventarioPlanta.idPlanta) {
@@ -277,7 +277,7 @@ class _PlantaFormState extends State<PlantaForm> {
             duration: Duration(seconds: 2),
         );
 
-        scaffoldKey.currentState.showSnackBar(snackbar);
+        scaffoldKey.currentState!.showSnackBar(snackbar);
     }
 
 }

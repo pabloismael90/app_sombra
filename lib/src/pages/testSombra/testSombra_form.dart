@@ -36,10 +36,10 @@ class _AgregarTestState extends State<AgregarTest> {
     String _fecha = '';
     TextEditingController _inputfecha = new TextEditingController();
 
-    List<TestSombra> mainlistsombras ;
+    List<TestSombra>? mainlistsombras ;
 
-    List mainparcela;
-    TextEditingController _control;
+    List? mainparcela;
+    TextEditingController? _control;
 
     @mustCallSuper
     // ignore: must_call_super
@@ -87,7 +87,7 @@ class _AgregarTestState extends State<AgregarTest> {
                                                     child:Text(
                                                         'Plantas por estaciones: 100 plantas 10x 10',
                                                         style: Theme.of(context).textTheme
-                                                            .headline6
+                                                            .headline6!
                                                             .copyWith(fontSize: 16)
                                                     ),
                                                 ),
@@ -97,7 +97,7 @@ class _AgregarTestState extends State<AgregarTest> {
                                                     child:Text(
                                                         '3 Estaciones',
                                                         style: Theme.of(context).textTheme
-                                                            .headline6
+                                                            .headline6!
                                                             .copyWith(fontSize: 16)
                                                     ),
                                                 ),
@@ -146,7 +146,7 @@ class _AgregarTestState extends State<AgregarTest> {
             items: _listitem,
             enabled: _enableFinca,
             validator: (value){
-                if(value.length < 1){
+                if(value!.length < 1){
                     return 'No se selecciono una finca';
                 }else{
                     return null;
@@ -180,9 +180,9 @@ class _AgregarTestState extends State<AgregarTest> {
                     controller: _control,
                     initialValue: '',
                     labelText: 'Seleccione la parcela',
-                    items: mainparcela,
+                    items: mainparcela as List<Map<String, dynamic>>,
                     validator: (value){
-                        if(value.length < 1){
+                        if(value!.length < 1){
                             return 'Selecione un elemento';
                         }else{
                             return null;
@@ -209,7 +209,7 @@ class _AgregarTestState extends State<AgregarTest> {
             ),
             validator: (value) {
                 
-                if (utils.isNumeric(value)){
+                if (utils.isNumeric(value!)){
                     if (double.parse(value) > 0) {
                         return null;
                     } else {
@@ -219,7 +219,7 @@ class _AgregarTestState extends State<AgregarTest> {
                     return 'Solo números';
                 }
             },
-            onSaved: (value) => sombra.surcoDistancia = double.parse(value),
+            onSaved: (value) => sombra.surcoDistancia = double.parse(value!),
         );
 
     }
@@ -236,7 +236,7 @@ class _AgregarTestState extends State<AgregarTest> {
             ),
             validator: (value) {
                 
-                if (utils.isNumeric(value)){
+                if (utils.isNumeric(value!)){
                     if (double.parse(value) > 0) {
                         return null;
                     } else {
@@ -246,7 +246,7 @@ class _AgregarTestState extends State<AgregarTest> {
                     return 'Solo números';
                 }
             },
-            onSaved: (value) => sombra.plantaDistancia = double.parse(value),
+            onSaved: (value) => sombra.plantaDistancia = double.parse(value!),
         );
 
     }
@@ -273,7 +273,7 @@ class _AgregarTestState extends State<AgregarTest> {
     }
 
     _selectDate(BuildContext context) async{
-        DateTime picked = await showDatePicker(
+        DateTime? picked = await showDatePicker(
             context: context,
 
             initialDate: new DateTime.now(),
@@ -309,7 +309,7 @@ class _AgregarTestState extends State<AgregarTest> {
 
                     label: Text('Guardar',
                         style: Theme.of(context).textTheme
-                            .headline6
+                            .headline6!
                             .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
                     ),
                     padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
@@ -331,13 +331,13 @@ class _AgregarTestState extends State<AgregarTest> {
 
         sombra.estaciones = 3;
 
-        if  ( !formKey.currentState.validate() ){
+        if  ( !formKey.currentState!.validate() ){
             //Cuendo el form no es valido
             return null;
         }
-        formKey.currentState.save();
+        formKey.currentState!.save();
 
-        mainlistsombras.forEach((e) {
+        mainlistsombras!.forEach((e) {
             //print(sombra.fechaTest);
             //print(e.fechaTest);
             if (sombra.idFinca == e.idFinca && sombra.idLote == e.idLote && sombra.fechaTest == e.fechaTest) {
@@ -352,7 +352,7 @@ class _AgregarTestState extends State<AgregarTest> {
             return null;
         }
 
-        String checkParcela = mainparcela.firstWhere((e) => e['value'] == '${sombra.idLote}', orElse: () => {"value": "1","label": "No data"})['value'];
+        String? checkParcela = mainparcela!.firstWhere((e) => e['value'] == '${sombra.idLote}', orElse: () => {"value": "1","label": "No data"})['value'];
 
 
 
@@ -391,6 +391,6 @@ class _AgregarTestState extends State<AgregarTest> {
             duration: Duration(seconds: 2),
         );
 
-        scaffoldKey.currentState.showSnackBar(snackbar);
+        scaffoldKey.currentState!.showSnackBar(snackbar);
     }
 }
