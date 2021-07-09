@@ -2,8 +2,12 @@ import 'package:app_sombra/src/bloc/fincas_bloc.dart';
 import 'package:app_sombra/src/models/estacion_model.dart';
 import 'package:app_sombra/src/models/inventarioPlanta_model.dart';
 import 'package:app_sombra/src/models/testsombra_model.dart';
+import 'package:app_sombra/src/pages/testSombra/testSombra_page.dart';
+import 'package:app_sombra/src/providers/db_provider.dart';
 import 'package:app_sombra/src/utils/constants.dart';
+import 'package:app_sombra/src/utils/widget/button.dart';
 import 'package:app_sombra/src/utils/widget/dialogDelete.dart';
+import 'package:app_sombra/src/utils/widget/varios_widget.dart';
 import 'package:uuid/uuid.dart';
 import 'package:app_sombra/src/utils/validaciones.dart' as utils;
 import 'package:app_sombra/src/models/selectValue.dart' as selectMap;
@@ -99,50 +103,53 @@ class _InventarioPageState extends State<InventarioPage> {
 
     Widget _dataEstacion(TestSombra sombra){
         return Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                    BoxShadow(
-                            color: Color(0xFF3A5160)
-                                .withOpacity(0.05),
-                            offset: const Offset(1.1, 1.1),
-                            blurRadius: 17.0),
-                    ],
-            ),
+            color: Colors.white,
+            padding: EdgeInsets.all(15),
+            margin: EdgeInsets.only(bottom: 10),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                
-                    
-                    Text(
-                        "Estación ${estacion!.nestacion}",
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: Theme.of(context).textTheme.headline6,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                            Flexible(
+                                child: Container(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                            tituloCard('Sitio ${estacion!.nestacion}'),
+                                            subtituloCardBody('Cobertura: ${estacion!.cobertura}%')
+                                        ],
+                                    ),
+                                ),
+                            ),
+                            
+                            TextButton(
+                                // onPressed: () => Navigator.pushNamed(context, 'addFinca', arguments: finca),
+                                onPressed: () => _dialogText(estacion!, context),
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(kmorado),
+                                ),
+                                child: Row(
+                                    children: [
+                                        Icon(Icons.mode_edit_outlined, color: kwhite, size: 16,),
+                                        SizedBox(width: 5,),
+                                        Text('Editar', style: TextStyle(color: kwhite, fontWeight: FontWeight.bold),)
+                                    ],
+                                ),
+                            )
+                        ],
                     ),
-                    SizedBox(height: 10,),
-                
-                    Text(
-                        "Cobertura: ${estacion!.cobertura}%",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: kLightBlackColor),
-                    ),
-                    SizedBox(height: 10,),
-                    Text(
-                        "Area de estación mt2: ${sombra.surcoDistancia! * 10} x ${sombra.plantaDistancia! * 10}",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: kLightBlackColor),
-                    ),
-                    
-                ],  
+                    textoCardBody('Área del sitio mt2: ${sombra.surcoDistancia! * 10} x ${sombra.plantaDistancia! * 10}'),         
+
+                ],
             ),
         );
     }
 
+ 
     Widget _coberturaForm(){
         return Padding(
             padding: EdgeInsets.all(15),
@@ -160,34 +167,17 @@ class _InventarioPageState extends State<InventarioPage> {
                                 labelText: 'Ingresar Porcentaje de Cobertura',
                                 hintText: 'ejem: 20',
                             ),
-                            validator: (value) {
-
-                                if (utils.isNumeric(value!)){
-                                    if (double.parse(value) > 0 && double.parse(value) <= 100) {
-                                        return null;
-                                    } else {
-                                        return 'Porcentar entre 1 y 100';
-                                    }
-                                }else{
-                                    return 'Solo números';
-                                }
-                            },
+                            validator: (value) => utils.validateEntero(value),
                             onSaved: (value) => estacion!.cobertura = double.parse(value!),
                         ),
                     ),
                     SizedBox(height: 20,),
-                    RaisedButton.icon(
-            
-                        icon:Icon(Icons.save, color: Colors.white,),
-                        
-                        label: Text('Guardar',
-                            style: Theme.of(context).textTheme
-                                .headline6!
-                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16)
-                        ),
-                        padding:EdgeInsets.symmetric(vertical: 10, horizontal: 40),
-                        onPressed:(_guardando) ? null : _submit,
-                    ),
+                    ButtonMainStyle(
+                        title: 'Guardar',
+                        icon: Icons.post_add,
+                        press: (_guardando) ? null : _submit,
+                    )
+                    
                 ],
             )
         );
@@ -206,13 +196,7 @@ class _InventarioPageState extends State<InventarioPage> {
                 plantas = snapshot.data;
 
                 if (plantas!.length == 0) {
-                    return Expanded(child: Center(
-                        child: Text('Ingrese datos de especies', 
-                        textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline6,
-                            )
-                        )
-                    );
+                    return Expanded(child: textoListaVacio('Ingrese datos de especies'));
                 }
 
                 return Expanded(
@@ -246,73 +230,25 @@ class _InventarioPageState extends State<InventarioPage> {
 
     Widget _cardEspecie(InventacioPlanta planta){
         final nombrePlanta = selectMap.especies().firstWhere((e) => e['value'] == '${planta.idPlanta}')['label'];
-        return Container(
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+        final labelUso = selectMap.listaUso().firstWhere((e) => e['value'] == '${planta.uso}')['label'];
+        return cardDefault(
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
                 
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(13),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
+                    tituloCard('$nombrePlanta'),
+                    Wrap(
+                        spacing: 15,
+                        children: [
+                            textoCardBody('Pequeño: ${planta.pequeno}'),
+                            textoCardBody('Mediano: ${planta.mediano}'),
+                            textoCardBody('Grande: ${planta.grande}'),
+                            textoCardBody('Uso: $labelUso'),
                         ],
-                ),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                        
-                        Flexible(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                        child: Text(
-                                            "$nombrePlanta",
-                                            softWrap: true,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style: Theme.of(context).textTheme.headline6,
-                                        ),
-                                    ),
-                                    Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                            Text(
-                                                'Pequeño: ${planta.pequeno}',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(color: kLightBlackColor),
-                                            ),
-                                            Text(
-                                                'Mediano: ${planta.mediano}',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(color: kLightBlackColor),
-                                            ),
-                                            Text(
-                                                'Grande: ${planta.grande}',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(color: kLightBlackColor),
-                                            ),
-                                        ],
-                                    )
-                                    
-                                ],  
-                            ),
-                        ),
-                        
-                        
-                        
-                    ],
-                ),
+                    ),                    
+                ],  
+            )
+
         );
     }
    
@@ -322,18 +258,13 @@ class _InventarioPageState extends State<InventarioPage> {
     Widget _addPlanta(Estacion? estacion){
 
 
-        return RaisedButton.icon(
-            
-            icon:Icon(Icons.add_circle_outline_outlined),
-                        
-            label: Text('Agregar planta',
-                style: Theme.of(context).textTheme
-                    .headline6!
-                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-            ),
-            padding:EdgeInsets.all(10),
-            onPressed:() => Navigator.pushNamed(context, 'addPlanta', arguments:[estacion, plantas]),
+        return ButtonMainStyle(
+            title: 'Agregar planta',
+            icon: Icons.post_add,
+            press: () => Navigator.pushNamed(context, 'addPlanta', arguments:[estacion, plantas]),
         );
+
+        
         
     }
     
@@ -349,40 +280,23 @@ class _InventarioPageState extends State<InventarioPage> {
                 plantas = snapshot.data;
 
                 if (plantas!.length == 0) {
-                    return RaisedButton.icon(
-                        icon:Icon(Icons.navigate_next_rounded),                               
-                        label: Text('Siguiente estaciones',
-                            style: Theme.of(context).textTheme
-                                .headline6!
-                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-                        ),
-                        padding:EdgeInsets.all(10),
-                        onPressed:null,
+                    return ButtonMainStyle(
+                        title: 'Siguiente Sitio',
+                        icon: Icons.navigate_next_rounded,
+                        press: null,
                     );
                 } else {
                     if (estacion.nestacion! <= 2){
-                      
-                        return RaisedButton.icon(
-                            icon:Icon(Icons.navigate_next_rounded),                               
-                            label: Text('Siguiente estaciones',
-                                style: Theme.of(context).textTheme
-                                    .headline6!
-                                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-                            ),
-                            padding:EdgeInsets.all(10),
-                            onPressed:() => Navigator.popAndPushNamed(context, 'inventario', arguments: [sombra, estacion.nestacion]),
+                        return ButtonMainStyle(
+                            title: 'Siguiente Sitio',
+                            icon: Icons.navigate_next_rounded,
+                            press: () => Navigator.popAndPushNamed(context, 'inventario', arguments: [sombra, estacion.nestacion]),
                         );
                     } else {
-
-                        return RaisedButton.icon(
-                            icon:Icon(Icons.chevron_left),                               
-                            label: Text('Lista de estaciones',
-                                style: Theme.of(context).textTheme
-                                    .headline6!
-                                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-                            ),
-                            padding:EdgeInsets.all(10),
-                            onPressed:() => Navigator.pop(context),
+                        return ButtonMainStyle(
+                            title: 'Lista de sitios',
+                            icon: Icons.chevron_left,
+                            press: () =>  Navigator.pop(context),
                         );
                     }
                 }
@@ -422,4 +336,64 @@ class _InventarioPageState extends State<InventarioPage> {
     }
 }
 
+Future<void> _dialogText(Estacion estacion, BuildContext context) async {
+    final formUpdate = GlobalKey<FormState>();
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+            return AlertDialog(
+                title: Text('Titulo'),
+                content: SingleChildScrollView(
+                    child: Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                            children: [
+                                Form(
+                                    key: formUpdate,
+                                    child: TextFormField(
+                                        initialValue: estacion.cobertura == null ? '' : estacion.cobertura.toString(),
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: <TextInputFormatter>[
+                                            FilteringTextInputFormatter.digitsOnly
+                                        ], 
+                                        decoration: InputDecoration(
+                                            labelText: 'Ingresar Porcentaje de Cobertura',
+                                            hintText: 'ejem: 20',
+                                        ),
+                                        validator: (value) => utils.floatSiCero(value!),
+                                        onSaved: (value) => estacion.cobertura = double.parse(value!),
+                                    ),
+                                ),
+                                SizedBox(height: 20,),
+                                ButtonMainStyle(
+                                    title: 'Guardar',
+                                    icon: Icons.post_add,
+                                    press: () {
+                                        if  ( !formUpdate.currentState!.validate() ){
+                                            return null;
+                                        }
+                                        formUpdate.currentState!.save();
+                                        fincasBloc.actualizarEstacion(estacion);
+                                        Navigator.of(context).pop();
+                                    }
+                                    
+                                )
+                                
+                            ],
+                        )
+                    ),
+                ),
+                actions: <Widget>[
+                    TextButton(
+                        child: Text('Cerrar'),
+                        onPressed: () {
+                        Navigator.of(context).pop();
+                        },
+                    ),
+                ],
+            );
+        },
+    );
+}
 

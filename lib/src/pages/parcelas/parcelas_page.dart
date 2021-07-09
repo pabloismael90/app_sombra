@@ -78,14 +78,6 @@ class _ParcelaPageState extends State<ParcelaPage> {
         
     }
 
-    // Widget  _editarFinca(Finca finca){
-    //     return ButtonMainStyle(
-    //         title: 'Editar Finca',
-    //         icon: Icons.edit_rounded,
-    //         press:() => Navigator.pushNamed(context, 'addFinca', arguments: finca),
-    //     );
-    // }
-
     Widget  _addParcela( Finca finca ){
         return ButtonMainStyle(
             title: 'Nueva Parcela',

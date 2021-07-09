@@ -134,6 +134,11 @@ class FincasBloc {
         allEstacionsByTest(idTestSombra);
     }
 
+    actualizarEstacion( Estacion estacion) async{
+        await DBProvider.db.updateEstacion(estacion);
+        obtenerEstacion(estacion.idTestSombra, estacion.nestacion);
+    }
+
 
     //Inventario Plantas
     obtenerInventario( String? idEstacion) async {

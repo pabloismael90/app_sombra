@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
                         child: Stack(
                             children:<Widget> [
                                 Container(
-                                    height: size.height * 0.25,
+                                    height: size.height * 0.3,
                                     decoration: BoxDecoration(
                                         color: kBackgroundColor,
                                         image: DecorationImage(
@@ -28,20 +28,19 @@ class HomePage extends StatelessWidget {
                                     ),
                                         
                                 ),
-                                Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-                                    child: Text(
-                                        "Cacao Sombra",
-                                        style: Theme.of(context).textTheme
-                                            .headline4!
-                                            .copyWith(fontWeight: FontWeight.w900, fontSize: 30)
-                                    ),
-                                ),
+                                
                                 Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 20),
                                     child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                            SizedBox(height: size.height * 0.18),
+                                            Padding(
+                                                padding: EdgeInsets.only(left: 10, top: size.height*0.1, bottom: 20),
+                                                child: Text(
+                                                    "Poda de Cacao",
+                                                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24)
+                                                ),
+                                            ),
                                             Expanded(
                                                 child:GridView.count(
                                                         crossAxisCount: 2,
@@ -76,8 +75,7 @@ class HomePage extends StatelessWidget {
                                                             
                                                             
                                                         ],
-                                                ),
-                                                
+                                                ), 
                                             
                                             ),
                                         

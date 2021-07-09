@@ -347,6 +347,15 @@ class DBProvider {
 
     }
 
+    Future<int> updateEstacion( Estacion estacion ) async {
+        final db  = await (database);
+        final res = await db!.update('Estacion', estacion.toJson(), where: 'id = ?', whereArgs: [estacion.id] );
+        return res;
+
+    }
+
+    
+
   
 
 

@@ -81,23 +81,59 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 fontFamily: "Museo",
                 scaffoldBackgroundColor: kBackgroundColor,
-                textTheme: Theme.of(context).textTheme.apply(displayColor: kTextColor, fontFamily: 'Museo'),
-                appBarTheme: AppBarTheme(color: kbase,brightness: Brightness.dark),
+                primaryTextTheme: TextTheme(
+                    headline6: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18
+                    )
+                ),
+                textTheme: Theme.of(context).textTheme.apply(bodyColor: kTextColor, fontFamily: 'Museo'),
+                appBarTheme: AppBarTheme(color: kbase,brightness: Brightness.dark, centerTitle: false),
                 primaryColor:kbase,
                 primaryIconTheme: IconThemeData(color: Colors.white),
                 inputDecorationTheme: InputDecorationTheme(
-                    labelStyle: Theme.of(context).textTheme
-                                .headline6!
-                                .copyWith(fontWeight: FontWeight.bold, color: kTextColor, fontSize: 18, fontFamily: 'Museo'),
+                    filled: true,
+                    fillColor: Color(0xFFF5F5F5),
+                    counterStyle: TextStyle(fontSize: 10),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color: kmorado)
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color: kTextColor),
+                    ),
+                    disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color:kTextColor),
+                    ),
+
+                    errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color: Colors.redAccent),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color: Colors.redAccent),
+                    ),
+                    labelStyle: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        color: kTextColor, 
+                        fontSize: 14,
+                    )
                 ),
             
-                buttonTheme: ButtonThemeData(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    textTheme: ButtonTextTheme.primary,
-                    buttonColor: Color(0xFF3f2a56),
-                   
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                    style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        primary: kmorado,
+                        textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        
+
+                    )
                 )
                 
             ),

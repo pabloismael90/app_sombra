@@ -1,7 +1,6 @@
-//import 'dart:html';
-
 import 'package:app_sombra/src/models/testsombra_model.dart';
-import 'package:app_sombra/src/utils/widget/titulos.dart';
+import 'package:app_sombra/src/utils/widget/button.dart';
+import 'package:app_sombra/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_sombra/src/bloc/fincas_bloc.dart';
@@ -62,9 +61,7 @@ class _AgregarTestState extends State<AgregarTest> {
 
         return StreamBuilder(
             stream: fincasBloc.fincaSelect,
-            //future: DBProvider.db.getSelectFinca(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-                //print(snapshot.data);
                 if (!snapshot.hasData) {
                     return Scaffold(body: CircularProgressIndicator(),);
                 } else {
@@ -72,34 +69,22 @@ class _AgregarTestState extends State<AgregarTest> {
                     List<Map<String, dynamic>> _listitem = snapshot.data;
                     return Scaffold(
                         key: scaffoldKey,
-                        appBar: AppBar(),
+                        appBar: AppBar(title: Text('Toma de datos'),),
                         body: SingleChildScrollView(
                             child: Column(
                                 children: [
-                                    TitulosPages(titulo: 'Toma de datos'),
-                                    Divider(),
                                     Container(
                                         child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                                 Padding(
-                                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                                                    child:Text(
-                                                        'Plantas por estaciones: 100 plantas 10x 10',
-                                                        style: Theme.of(context).textTheme
-                                                            .headline6!
-                                                            .copyWith(fontSize: 16)
-                                                    ),
+                                                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 3),
+                                                    child:textoCardBody('Plantas por estaciones: 100 plantas 10 x 10'),
                                                 ),
                                                 Divider(),
                                                 Padding(
-                                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                                                    child:Text(
-                                                        '3 Estaciones',
-                                                        style: Theme.of(context).textTheme
-                                                            .headline6!
-                                                            .copyWith(fontSize: 16)
-                                                    ),
+                                                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 3),
+                                                    child:textoCardBody('3 Sitios'),
                                                 ),
                                             ],
                                         )
@@ -122,8 +107,6 @@ class _AgregarTestState extends State<AgregarTest> {
                                                     SizedBox(height: 30.0),
                                                     _date(context),
                                                     SizedBox(height: 60.0),
-
-                                                    _botonsubmit()
                                                 ],
                                             ),
                                         ),
@@ -131,6 +114,7 @@ class _AgregarTestState extends State<AgregarTest> {
                                 ],
                             ),
                         ),
+                        bottomNavigationBar: botonesBottom(_botonsubmit()),
                     );
                 }
             },
@@ -207,18 +191,7 @@ class _AgregarTestState extends State<AgregarTest> {
                 hintText: 'ejem: 3',
                 
             ),
-            validator: (value) {
-                
-                if (utils.isNumeric(value!)){
-                    if (double.parse(value) > 0) {
-                        return null;
-                    } else {
-                        return 'Área mayor a cero';
-                    }
-                }else{
-                    return 'Solo números';
-                }
-            },
+            validator: (value) => utils.floatPositivo(value),
             onSaved: (value) => sombra.surcoDistancia = double.parse(value!),
         );
 
@@ -234,18 +207,7 @@ class _AgregarTestState extends State<AgregarTest> {
                 hintText: 'ejem: 3',
                 
             ),
-            validator: (value) {
-                
-                if (utils.isNumeric(value!)){
-                    if (double.parse(value) > 0) {
-                        return null;
-                    } else {
-                        return 'Área mayor a cero';
-                    }
-                }else{
-                    return 'Solo números';
-                }
-            },
+            validator: (value) => utils.floatPositivo(value),
             onSaved: (value) => sombra.plantaDistancia = double.parse(value!),
         );
 
@@ -264,8 +226,6 @@ class _AgregarTestState extends State<AgregarTest> {
                 FocusScope.of(context).requestFocus(new FocusNode());
                 _selectDate(context);
             },
-            //onChanged: (value) => print('hola: $value'),
-            //validator: (value){},
             onSaved: (value){
                 sombra.fechaTest = value;
             }
@@ -283,7 +243,6 @@ class _AgregarTestState extends State<AgregarTest> {
         );
         if (picked != null){
             setState(() {
-                //_fecha = picked.toString();
                 _fecha = formatter.format(picked);
                 _inputfecha.text = _fecha;
             });
@@ -296,27 +255,29 @@ class _AgregarTestState extends State<AgregarTest> {
 
     Widget  _botonsubmit(){
         fincasBloc.obtenerSombra();
-        return StreamBuilder(
-            stream: fincasBloc.podaStream ,
-            builder: (BuildContext context, AsyncSnapshot snapshot){
-                if (!snapshot.hasData) {
-                    return Container();
-                }
-                mainlistsombras = snapshot.data;
+        return Row(
+            children: [
+                Spacer(),
+                StreamBuilder(
+                    stream: fincasBloc.podaStream ,
+                    builder: (BuildContext context, AsyncSnapshot snapshot){
+                        if (!snapshot.hasData) {
+                            return Container();
+                        }
+                        mainlistsombras= snapshot.data;
 
-                return RaisedButton.icon(
-                    icon:Icon(Icons.save, color: Colors.white,),
+                    
+                        return ButtonMainStyle(
+                            title: 'Guardar',
+                            icon: Icons.save,
+                            press: (_guardando) ? null : _submit,
+                        );
 
-                    label: Text('Guardar',
-                        style: Theme.of(context).textTheme
-                            .headline6!
-                            .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
-                    ),
-                    padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
-                    onPressed:(_guardando) ? null : _submit,
-                    //onPressed: clearTextInput,
-                );
-            },
+                        
+                    },
+                ),
+                Spacer()
+            ],
         );
 
 
@@ -338,8 +299,6 @@ class _AgregarTestState extends State<AgregarTest> {
         formKey.currentState!.save();
 
         mainlistsombras!.forEach((e) {
-            //print(sombra.fechaTest);
-            //print(e.fechaTest);
             if (sombra.idFinca == e.idFinca && sombra.idLote == e.idLote && sombra.fechaTest == e.fechaTest) {
                 checkRepetido = true;
             }
@@ -348,7 +307,7 @@ class _AgregarTestState extends State<AgregarTest> {
 
 
         if (checkRepetido == true) {
-            mostrarSnackbar('Ya existe un registros con los mismos valores');
+            mostrarSnackbar('Ya existe un registros con los mismos valores', context);
             return null;
         }
 
@@ -357,7 +316,7 @@ class _AgregarTestState extends State<AgregarTest> {
 
 
         if (checkParcela == '1') {
-            mostrarSnackbar('La parcela selecionada no pertenece a esa finca');
+            mostrarSnackbar('La parcela selecionada no pertenece a esa finca', context);
             return null;
         }
 
@@ -365,18 +324,13 @@ class _AgregarTestState extends State<AgregarTest> {
 
         setState(() {_guardando = true;});
 
-        // print(sombra.id);
-        // print(sombra.idFinca);
-        // print(sombra.idLote);
-        // print(sombra.estaciones);
-        // print(sombra.fechaTest);
         if(sombra.id == null){
             sombra.id =  uuid.v1();
             fincasBloc.addTestSombra(sombra);
+            mostrarSnackbar('Registro Guardado', context);
         }
 
         setState(() {_guardando = false;});
-        mostrarSnackbar('Registro Guardado');
 
 
         Navigator.pop(context, 'fincas');
@@ -385,12 +339,5 @@ class _AgregarTestState extends State<AgregarTest> {
     }
 
 
-    void mostrarSnackbar(String mensaje){
-        final snackbar = SnackBar(
-            content: Text(mensaje),
-            duration: Duration(seconds: 2),
-        );
 
-        scaffoldKey.currentState!.showSnackBar(snackbar);
-    }
 }

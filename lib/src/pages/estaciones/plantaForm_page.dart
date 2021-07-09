@@ -1,9 +1,13 @@
 import 'package:app_sombra/src/bloc/fincas_bloc.dart';
 import 'package:app_sombra/src/models/estacion_model.dart';
 import 'package:app_sombra/src/models/inventarioPlanta_model.dart';
+import 'package:app_sombra/src/utils/widget/button.dart';
 import 'package:app_sombra/src/utils/widget/titulos.dart';
+import 'package:app_sombra/src/utils/widget/varios_widget.dart';
+import 'package:flutter/services.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:uuid/uuid.dart';
+import 'package:app_sombra/src/utils/validaciones.dart' as utils;
 import 'package:app_sombra/src/models/selectValue.dart' as selectMap;
 import 'package:flutter/material.dart';
 
@@ -45,18 +49,13 @@ class _PlantaFormState extends State<PlantaForm> {
         estacion = dataRoute[0];
         plantas = dataRoute[1];
         inventarioPlanta.idEstacion = estacion.id;
-
-        
-    
         
         return Scaffold(
             key: scaffoldKey,
-            appBar: AppBar(),
+            appBar: AppBar(title: Text('Nueva Especie')),
             body: SingleChildScrollView(
                 child: Column(
                     children: [
-                        TitulosPages(titulo: 'Nueva Especie'),
-                        Divider(),
                         Container(
                             padding: EdgeInsets.all(15.0),
                             child: Form(
@@ -125,24 +124,16 @@ class _PlantaFormState extends State<PlantaForm> {
 
         return TextFormField(
             initialValue: inventarioPlanta.pequeno == null ? '' : inventarioPlanta.pequeno.toString(),
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+            ],
             decoration: InputDecoration(
                 labelText: 'Pequeño',
                 hintText: 'ejem: 1',
                 
             ),
-            validator: (value) {
-                
-                final isDigitsOnly = int.tryParse(value!);
-                if (isDigitsOnly == null) {
-                    return 'Solo números enteros';
-                }
-                if (isDigitsOnly < 0) {
-                    return 'Valor invalido';
-                }else{
-                    return null;
-                }
-            },
+            validator: (value) => utils.validateEntero(value),
             onSaved: (value) => inventarioPlanta.pequeno = int.parse(value!),
         );
 
@@ -152,24 +143,16 @@ class _PlantaFormState extends State<PlantaForm> {
         
         return TextFormField(
             initialValue: inventarioPlanta.mediano == null ? '' : inventarioPlanta.mediano.toString(),
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+            ],
             decoration: InputDecoration(
                 labelText: 'Mediano',
                 hintText: 'ejem: 1',
                 
             ),
-            validator: (value) {
-                
-                final isDigitsOnly = int.tryParse(value!);
-                if (isDigitsOnly == null) {
-                    return 'Solo números enteros';
-                }
-                if (isDigitsOnly < 0) {
-                    return 'Valor invalido';
-                }else{
-                    return null;
-                }
-            },
+            validator: (value) => utils.validateEntero(value),
             onSaved: (value) => inventarioPlanta.mediano = int.parse(value!),
         );
 
@@ -179,24 +162,16 @@ class _PlantaFormState extends State<PlantaForm> {
         
         return TextFormField(
             initialValue: inventarioPlanta.grande == null ? '' : inventarioPlanta.grande.toString(),
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+            ],
             decoration: InputDecoration(
                 labelText: 'Grande',
                 hintText: 'ejem: 1',
                 
             ),
-            validator: (value) {
-                
-                final isDigitsOnly = int.tryParse(value!);
-                if (isDigitsOnly == null) {
-                    return 'Solo números enteros';
-                }
-                if (isDigitsOnly < 0) {
-                    return 'Valor invalido';
-                }else{
-                    return null;
-                }
-            },
+            validator: (value) => utils.validateEntero(value),
             onSaved: (value) => inventarioPlanta.grande = int.parse(value!),
         );
 
@@ -221,18 +196,11 @@ class _PlantaFormState extends State<PlantaForm> {
     }
 
     Widget  _botonsubmit(){
-        return RaisedButton.icon(
-            icon:Icon(Icons.save, color: Colors.white,),
-
-            label: Text('Guardar',
-                style: Theme.of(context).textTheme
-                    .headline6!
-                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
-            ),
-            padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
-            onPressed:(_guardando) ? null : _submit,
+        return ButtonMainStyle(
+            title: 'Guardar',
+            icon: Icons.save,
+            press: (_guardando) ? null : _submit,
         );
-
 
     }
 
@@ -247,13 +215,13 @@ class _PlantaFormState extends State<PlantaForm> {
 
         for (var item in plantas) {
             if (item.idPlanta == inventarioPlanta.idPlanta) {
-                mostrarSnackbar('Especie ya registrada');
+                mostrarSnackbar('Especie ya registrada', context);
                 return null;
             }
         }
 
         if (inventarioPlanta.pequeno == 0 && inventarioPlanta.mediano == 0 && inventarioPlanta.grande == 0) {
-            mostrarSnackbar('Especie vacia');
+            mostrarSnackbar('Especie vacia', context);
             return null;
         }
 
@@ -262,6 +230,7 @@ class _PlantaFormState extends State<PlantaForm> {
 
         inventarioPlanta.id =  uuid.v1();
         fincasBloc.addInventario(inventarioPlanta, estacion.id, estacion.idTestSombra, estacion.nestacion);
+        mostrarSnackbar('Especie guardada', context);
 
         setState(() {_guardando = false;});
 
@@ -271,13 +240,6 @@ class _PlantaFormState extends State<PlantaForm> {
 
     }
 
-    void mostrarSnackbar(String mensaje){
-        final snackbar = SnackBar(
-            content: Text(mensaje),
-            duration: Duration(seconds: 2),
-        );
-
-        scaffoldKey.currentState!.showSnackBar(snackbar);
-    }
+    
 
 }

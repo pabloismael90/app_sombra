@@ -77,27 +77,15 @@ List<Map<String, dynamic>> variedadCacao(){
     final List<Map<String, dynamic>>  variedadesCacao = [
             {
                 'value': '1', 
-                'label': 'CAT 1'
+                'label': 'Clones'
             },
             {
                 'value': '2', 
-                'label': 'CAT 2'
+                'label': 'Plantas por semillas'
             },
             {
                 'value': '3', 
-                'label': 'CAT 3'
-            },
-            {
-                'value': '3', 
-                'label': 'CAT 3'
-            },
-            {
-                'value': '4', 
-                'label': 'CAT 4'
-            },
-            {
-                'value': '5', 
-                'label': 'CAT 5'
+                'label': 'Mezcla patrones y clones'
             },
         ];
 
