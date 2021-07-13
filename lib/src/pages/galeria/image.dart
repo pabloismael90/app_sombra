@@ -21,7 +21,6 @@ class _ViewImageState extends State<ViewImage> {
     void onPageChanged(int index) {
         setState(() {
             currentIndex = index;
-            print(currentIndex);
         });
     }
 
@@ -34,7 +33,6 @@ class _ViewImageState extends State<ViewImage> {
         List<String> listname = dataRoute[2];
         Size size = MediaQuery.of(context).size;
         
-        //print(index);
         return Scaffold(
             appBar: AppBar(),
             

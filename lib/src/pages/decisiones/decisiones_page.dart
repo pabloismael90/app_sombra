@@ -71,7 +71,6 @@ class DesicionesList extends StatelessWidget {
                     ),
                     
                     onTap: () => Navigator.pushNamed(context, 'reporte', arguments: acciones[index].idTest),
-                    //onTap: () => print (acciones[index].idTest),
                 );
                
             },

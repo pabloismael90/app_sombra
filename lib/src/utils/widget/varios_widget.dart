@@ -59,6 +59,29 @@ Widget iconTap(String texto){
     );
 }
 
+Future<void> dialogText(BuildContext context, Widget? contenido, String? titulo) async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+            return AlertDialog(
+                title: Text(titulo!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                content: SingleChildScrollView(
+                    child: contenido
+                ),
+                actions: <Widget>[
+                    TextButton(
+                        child: Text('Cerrar'),
+                        onPressed: () {
+                        Navigator.of(context).pop();
+                        },
+                    ),
+                ],
+            );
+        },
+    );
+}
+
 
 Widget encabezadoCard(String titulo, String subtitulo, String dirIcon){
     return Row(

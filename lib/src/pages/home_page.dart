@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
                                             Padding(
                                                 padding: EdgeInsets.only(left: 10, top: size.height*0.1, bottom: 20),
                                                 child: Text(
-                                                    "Poda de Cacao",
+                                                    "Cacao Sombra",
                                                     style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24)
                                                 ),
                                             ),

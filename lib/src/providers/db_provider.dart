@@ -313,8 +313,6 @@ class DBProvider {
         );
         List<Map<String, dynamic>> list = res.isNotEmpty ? res : [];
 
-        //print(list);
-
         return list; 
     }
     
@@ -411,7 +409,7 @@ class DBProvider {
         var res = await db!.rawQuery("SELECT SUM(pequeno + mediano + grande)  AS arboles FROM Estacion "+
                     "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
                     "WHERE idTestSombra = '$idTestSombra'");
-        double? value = res[0]['arboles'] as double?;
+        int? value = res[0]['arboles'] as int?;
         
         return value!/3;          
     }
