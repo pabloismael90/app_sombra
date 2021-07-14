@@ -2,7 +2,6 @@ import 'package:app_sombra/src/bloc/fincas_bloc.dart';
 import 'package:app_sombra/src/models/estacion_model.dart';
 import 'package:app_sombra/src/models/inventarioPlanta_model.dart';
 import 'package:app_sombra/src/utils/widget/button.dart';
-import 'package:app_sombra/src/utils/widget/titulos.dart';
 import 'package:app_sombra/src/utils/widget/varios_widget.dart';
 import 'package:flutter/services.dart';
 import 'package:select_form_field/select_form_field.dart';
@@ -133,7 +132,7 @@ class _PlantaFormState extends State<PlantaForm> {
                 hintText: 'ejem: 1',
                 
             ),
-            validator: (value) => utils.validateEntero(value),
+            validator: (value) => utils.validatePositive(value),
             onSaved: (value) => inventarioPlanta.pequeno = int.parse(value!),
         );
 
@@ -152,7 +151,7 @@ class _PlantaFormState extends State<PlantaForm> {
                 hintText: 'ejem: 1',
                 
             ),
-            validator: (value) => utils.validateEntero(value),
+            validator: (value) => utils.validatePositive(value),
             onSaved: (value) => inventarioPlanta.mediano = int.parse(value!),
         );
 
@@ -171,7 +170,7 @@ class _PlantaFormState extends State<PlantaForm> {
                 hintText: 'ejem: 1',
                 
             ),
-            validator: (value) => utils.validateEntero(value),
+            validator: (value) => utils.validatePositive(value),
             onSaved: (value) => inventarioPlanta.grande = int.parse(value!),
         );
 

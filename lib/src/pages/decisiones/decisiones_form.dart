@@ -5,6 +5,7 @@ import 'package:app_sombra/src/models/parcela_model.dart';
 import 'package:app_sombra/src/models/testsombra_model.dart';
 import 'package:app_sombra/src/models/selectValue.dart' as selectMap;
 import 'package:app_sombra/src/providers/db_provider.dart';
+import 'package:app_sombra/src/utils/widget/button.dart';
 import 'package:app_sombra/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
@@ -94,61 +95,77 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
 
-    Future<double?> _coberturaByEstacion(String? idSombra, int estacion) async{
-        double? coberturaEstacion = await DBProvider.db.getCoberturaByEstacion(idSombra, estacion);
-        return coberturaEstacion;
-    }
-
-    Future<double?> _coberturaPromedio(String? idSombra) async{
-        double? coberturaPromedio = await DBProvider.db.getCoberturaPromedio(idSombra);
-        return coberturaPromedio;
-    }
-
-    Future<int> _riquezaByEstacion(String? idSombra, int estacion) async{
-        int countEspecies = await DBProvider.db.getConteoByEstacion(idSombra, estacion);
-        return countEspecies;
-    }
-
-    Future<int> _riquezaTotal(String? idSombra) async{
-        int countEspecies = await DBProvider.db.getConteoEspecies(idSombra);
-        return countEspecies;
-    }
-
-    Future<int?> _arbolesByEstacion(String? idSombra, int estacion) async{
-        int? countArboles = await DBProvider.db.getArbolesByEstacion(idSombra, estacion);
-        return countArboles;
-    }
 
     Future<double?> _arbolesPromedio(String? idSombra) async{
         double? countArboles = await DBProvider.db.getArbolesPromedio(idSombra);
         return countArboles;
     }
 
-    Future<double?> _densidadByEstacion(String? idSombra, int estacion, double? areaEstacion) async{
-        int? countArboles = await DBProvider.db.getArbolesByEstacion(idSombra, estacion);
-        return (countArboles!/areaEstacion!) * 10000;
-    }
-
-    Future<double?> _densidadPromedio(String? idSombra, double? areaEstacion) async{
-        double? countArboles = await DBProvider.db.getArbolesPromedio(idSombra);
-        return (countArboles!/areaEstacion!) * 10000;
-    }
-
-
-    Future<double?> _noMusaceaeByEstacion(String? idSombra, int estacion, double? areaEstacion) async{
-        int? countArboles = await DBProvider.db.noMusaceaeByEstacion(idSombra, estacion);
-        return (countArboles!/areaEstacion!) * 10000;
-    }
-
-    Future<double?> _noMusaceaePromedio(String? idSombra, double? areaEstacion) async{
-        double? countArboles = await DBProvider.db.noMusaceaePromedio(idSombra);
-        print(countArboles);
-        return (countArboles!/areaEstacion!) * 10000;
-    }
-
     Future<List<Map<String, dynamic>>> _countByEspecie(String? idSombra) async{
         List<Map<String, dynamic>> listEspecies = await DBProvider.db.dominanciaEspecie(idSombra);
         return listEspecies;
+    }
+
+    Future _dataTableSombra( String idSombra, double? areaEstacion ) async{
+        
+
+        List<String>? coberturaData = [];
+        
+        coberturaData.add('Cobertura de sombra % Est');
+
+        for (var i = 1; i < 4; i++) {
+            double? cobertura = await DBProvider.db.getCoberturaByEstacion(idSombra, i);
+            coberturaData.add('${cobertura!.toStringAsFixed(0)}%');
+        }
+        double? coberturaPromedio = await DBProvider.db.getCoberturaPromedio(idSombra);
+        coberturaData.add('${coberturaPromedio!.toStringAsFixed(0)}%');
+
+
+        
+        List<String>? riquezaData = [];
+        riquezaData.add('Riqueza (# de especies)');
+        for (var i = 1; i < 4; i++) {
+            int? riqueza = await DBProvider.db.getConteoByEstacion(idSombra, i);
+            riquezaData.add('$riqueza');
+        }
+        int? riquezaTotal = await DBProvider.db.getConteoEspecies(idSombra);
+        riquezaData.add('$riquezaTotal');
+
+
+
+        List<String>? arbolesData = [];
+        arbolesData.add('Suma de arboles (todas)');
+        for (var i = 1; i < 4; i++) {
+            int? arboles = await DBProvider.db.getArbolesByEstacion(idSombra, i);
+            arbolesData.add('$arboles');
+        }
+        double? arbolesTotal = await DBProvider.db.getArbolesPromedio(idSombra);
+        arbolesData.add('${arbolesTotal!.toStringAsFixed(0)}');
+
+
+
+
+        List<String>? densidadData = [];
+        densidadData.add('Densidad de árboles (#/ha)');
+        for (var i = 1; i < 4; i++) {
+            int? densidad = await DBProvider.db.getArbolesByEstacion(idSombra, i);
+            densidadData.add('${((densidad!/areaEstacion!)* 10000).toStringAsFixed(0)}');
+        }
+        double? densidadTotal = await DBProvider.db.getArbolesPromedio(idSombra);
+        densidadData.add('${((densidadTotal!/areaEstacion!)* 10000).toStringAsFixed(0)}');
+        
+        
+        
+        List<String>? sinMusaceaeData = [];
+        sinMusaceaeData.add('Densidad de árboles (#/ha) sin Musaceae');
+        for (var i = 1; i < 4; i++) {
+            int? sinMusaceae = await DBProvider.db.noMusaceaeByEstacion(idSombra, i);
+            sinMusaceaeData.add('${((sinMusaceae!/areaEstacion)* 10000).toStringAsFixed(0)}');
+        }
+        double? sinMusaceaeTotal = await DBProvider.db.noMusaceaePromedio(idSombra);
+        sinMusaceaeData.add('${((sinMusaceaeTotal!/areaEstacion)* 10000).toStringAsFixed(0)}');
+    
+        return [coberturaData,riquezaData,arbolesData,densidadData,sinMusaceaeData];
     }
 
     final fincasBloc = new FincasBloc();
@@ -199,14 +216,18 @@ class _DesicionesPageState extends State<DesicionesPage> {
                         children: [
                             mensajeSwipe('Deslice hacia la izquierda para continuar con el formulario'),
                             Expanded(
-                                child: Swiper(
-                                    itemBuilder: (BuildContext context, int index) {
-                                        return pageItem[index];
-                                    },
-                                    itemCount: pageItem.length,
-                                    viewportFraction: 1,
-                                    loop: false,
-                                    scale: 1,
+                                child: Container(
+                                    color: Colors.white,
+                                    padding: EdgeInsets.all(15),
+                                    child: Swiper(
+                                        itemBuilder: (BuildContext context, int index) {
+                                            return pageItem[index];
+                                        },
+                                        itemCount: pageItem.length,
+                                        viewportFraction: 1,
+                                        loop: false,
+                                        scale: 1,
+                                    ),
                                 ),
                             ),
                         ],
@@ -246,67 +267,53 @@ class _DesicionesPageState extends State<DesicionesPage> {
     
     Widget _principalData(Finca finca, Parcela parcela, TestSombra sombra, double? areaEstacion){
     
-                return Column(
-                    children: [
-                        _dataFincas( context, finca, parcela),
-                        Expanded(
-                            child: SingleChildScrollView(
-                                child: Column(
-                                    children: [
-                                        Container(
-                                            padding: EdgeInsets.symmetric(vertical: 3),
-                                            child: InkWell(
-                                                child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                        Container(                                                                    
-                                                            child: Text(
-                                                                "Datos consolidados",
-                                                                textAlign: TextAlign.center,
-                                                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                                                            ),
-                                                        ),
-                                                        Container(
-                                                            padding: EdgeInsets.only(left: 10),
-                                                            child: Icon(
-                                                                Icons.info_outline_rounded,
-                                                                color: Colors.green,
-                                                                size: 20,
-                                                            ),
-                                                        ),
-                                                    ],
-                                                ),
-                                                onTap: () => _explicacion(context),
-                                            ),
-                                        ),
-                                        Divider(),
-                                        Column(
+        return Column(
+            children: [
+                _dataFincas( context, finca, parcela),
+                Divider(),
+                Expanded(
+                    child: SingleChildScrollView(
+                        child: Column(
+                            children: [
+                                Container(
+                                    padding: EdgeInsets.symmetric(vertical: 3),
+                                    child: InkWell(
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                                _rowAreaEstacion( 'Area de cada estación mt2', areaEstacion ),
-                                                _rowAreaEstacion( 'Area de tres estaciones mt2', areaEstacion!*3 ),
-                                                _pruebaRow( 'Cobertura de sombra % Est', _coberturaByEstacion(idSombraMain,1), _coberturaByEstacion(idSombraMain,2), _coberturaByEstacion(idSombraMain,3), _coberturaPromedio(idSombraMain), false ),
-                                                _pruebaRow( 'Riqueza (# de especies)', _riquezaByEstacion(idSombraMain,1), _riquezaByEstacion(idSombraMain,2), _riquezaByEstacion(idSombraMain,3), _riquezaTotal(idSombraMain), true),
-                                                _pruebaRow( 'Suma de arboles (todas)', _arbolesByEstacion(idSombraMain,1), _arbolesByEstacion(idSombraMain,2), _arbolesByEstacion(idSombraMain,3), _arbolesPromedio(idSombraMain), true),
-                                                _pruebaRow( 'Densidad de árboles (#/ha)', _densidadByEstacion(idSombraMain,1, areaEstacion), _densidadByEstacion(idSombraMain,2, areaEstacion), _densidadByEstacion(idSombraMain,3, areaEstacion), _densidadPromedio(idSombraMain, areaEstacion), true),
-                                                _pruebaRow( 'Densidad de árboles (#/ha)', _densidadByEstacion(idSombraMain,1, areaEstacion), _densidadByEstacion(idSombraMain,2, areaEstacion), _densidadByEstacion(idSombraMain,3, areaEstacion), _densidadPromedio(idSombraMain, areaEstacion), true),
-                                                _pruebaRow( 'Densidad de árboles (#/ha)', _noMusaceaeByEstacion(idSombraMain,1, areaEstacion), _noMusaceaeByEstacion(idSombraMain,2, areaEstacion), _noMusaceaeByEstacion(idSombraMain,3, areaEstacion), _noMusaceaePromedio(idSombraMain, areaEstacion), true),
-                                                
-                                                // _cobertura(sombra.id),
-                                                // _riqueza(sombra.id),
-                                                // _arboles(sombra.id),
-                                                // _densidad(sombra.id),
-                                                //_noMusaceaeDensidad(sombra.id),
+                                                Container(                                                                    
+                                                    child: Text(
+                                                        "Datos consolidados",
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
+                                                    ),
+                                                ),
+                                                Container(
+                                                    padding: EdgeInsets.only(left: 10),
+                                                    child: Icon(
+                                                        Icons.info_outline_rounded,
+                                                        color: Colors.green,
+                                                        size: 20,
+                                                    ),
+                                                ),
                                             ],
                                         ),
+                                        onTap: () => _explicacion(context),
+                                    ),
+                                ),
+                                Divider(),
+                                Column(
+                                    children: [
+                                        _tableDataSombra(sombra.id, areaEstacion),
                                     ],
                                 ),
-                            ),
-                        )
-                        
-                    ],
-                );
+                            ],
+                        ),
+                    ),
+                )
                 
-
+            ],
+        );
             
     }
 
@@ -330,435 +337,63 @@ class _DesicionesPageState extends State<DesicionesPage> {
         );
     }
 
-    Widget _pruebaRow( String titulo, Future<dynamic> estacion1, Future estacion2, Future estacion3, Future total, bool porcentaje){
+    Widget _rowTable( List data){
+        List<Widget> celdas = [];
+
+        celdas.add(
+            Expanded(
+                child: Container(
+                    padding: EdgeInsets.only(right: 10),
+                    child: textList(data[0])
+                )
+            ),
+        );
+
+        for (var i = 1; i < data.length; i++) {
+            celdas.add(
+                Container(
+                    width: 45,
+                    child: Text(data[i], textAlign: TextAlign.center,)
+                ),
+                
+            );
+        }
         return Column(
             children: [
-                Row(
-                    children: [
-                        Expanded(
-                            child: textList(titulo),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: estacion1,
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-                                    return Text('${snapshot.data.toStringAsFixed(0) }${porcentaje == true ? '' : ' %'}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: estacion2,
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-                                    return Text('${snapshot.data.toStringAsFixed(0) }${porcentaje == true ? '' : ' %'}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: estacion3,
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-                                    return Text('${snapshot.data.toStringAsFixed(0) }${porcentaje == true ? '' : ' %'}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: total,
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-                                    return Text('${snapshot.data.toStringAsFixed(0) }${porcentaje == true ? '' : ' %'}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                    ],
-                ),
+                Row(children: celdas,),
                 Divider()
             ],
         );
     }
 
-    Widget _cobertura(String? idSombra){
-        List<Widget> lisItem = [];
+    Widget _tableDataSombra(String? idSombra, double? areaEstacion){
 
+        return FutureBuilder(
+            future: _dataTableSombra(idSombra!, areaEstacion),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData) {
+                    return textmt;
+                }
 
-            lisItem.add(
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                        Expanded(
-                            child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                                child: Text('Cobertura de sombra % Est', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _coberturaByEstacion(idSombra, 1),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
+                List<Widget> filas = [];
+                filas.add(_rowAreaEstacion( 'Area de cada sitio mt2', areaEstacion ));
+                filas.add( _rowAreaEstacion( 'Area de tres sitios mt2', areaEstacion!*3 ));
+                filas.add(_rowTable(['Sito', '1', '2', '3', 'Total']),);
+                for (var item in snapshot.data) {
+                    filas.add(_rowTable(item));
+                }
 
-                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _coberturaByEstacion(idSombra, 2),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _coberturaByEstacion(idSombra, 3),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _coberturaPromedio(idSombra),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        
-                    ],
-                )
-            );
-            lisItem.add(Divider());
-        
-        return Column(children:lisItem,);
+                return Column(
+                    children: filas
+                );
+            },
+        );
     }
 
-    Widget _riqueza(String? idSombra){
-        List<Widget> lisItem = [];
 
 
-            lisItem.add(
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                        Expanded(child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text('Riqueza (# de especies)', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
-                        ),),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _riquezaByEstacion(idSombra, 1),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _riquezaByEstacion(idSombra, 2),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _riquezaByEstacion(idSombra, 3),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _riquezaTotal(idSombra),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        
-                    ],
-                )
-            );
-            lisItem.add(Divider());
-        
-        return Column(children:lisItem,);
-    }
-
-    Widget _arboles(String? idSombra){
-        List<Widget> lisItem = [];
 
 
-            lisItem.add(
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                        Expanded(child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text('Suma de arboles (todas)', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
-                        ),),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _arbolesByEstacion(idSombra, 1),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _arbolesByEstacion(idSombra, 2),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _arbolesByEstacion(idSombra, 3),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _arbolesPromedio(idSombra),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${snapshot.data.toStringAsFixed(0)}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        
-                    ],
-                )
-            );
-            lisItem.add(Divider());
-        
-        return Column(children:lisItem,);
-    }
-
-    Widget _densidad(String? idSombra){
-        List<Widget> lisItem = [];
-
-
-            lisItem.add(
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                        Expanded(child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text('Densidad de árboles (#/ha)', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
-                        ),),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _arbolesByEstacion(idSombra, 1),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _arbolesByEstacion(idSombra, 2),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _arbolesByEstacion(idSombra, 3),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 45,
-                            child: FutureBuilder(
-                                future: _arbolesPromedio(idSombra),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return textmt;
-                                    }
-
-                                    return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        
-                    ],
-                )
-            );
-            lisItem.add(Divider());
-        
-        return Column(children:lisItem,);
-    }
-
-    // Widget _noMusaceaeDensidad(String? idSombra){
-    //     List<Widget> lisItem = [];
-
-
-    //         lisItem.add(
-    //             Row(
-    //                 mainAxisAlignment: MainAxisAlignment.end,
-    //                 children: [
-    //                     Expanded(child: Container(
-    //                         padding: EdgeInsets.symmetric(horizontal: 20.0),
-    //                         child: Text('Densidad de árboles (#/ha) sin Musaceae', textAlign: TextAlign.left, style:TextStyle(fontWeight: FontWeight.bold) ,),
-    //                     ),),
-    //                     Container(
-    //                         width: 45,
-    //                         child: FutureBuilder(
-    //                             future: _noMusaceaeByEstacion(idSombra, 1),
-    //                             builder: (BuildContext context, AsyncSnapshot snapshot) {
-    //                                 if (!snapshot.hasData) {
-    //                                     return textmt;
-    //                                 }
-
-    //                                 return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
-    //                             },
-    //                         ),
-    //                     ),
-    //                     Container(
-    //                         width: 45,
-    //                         child: FutureBuilder(
-    //                             future: _noMusaceaeByEstacion(idSombra, 2),
-    //                             builder: (BuildContext context, AsyncSnapshot snapshot) {
-    //                                 if (!snapshot.hasData) {
-    //                                     return textmt;
-    //                                 }
-
-    //                                 return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
-    //                             },
-    //                         ),
-    //                     ),
-    //                     Container(
-    //                         width: 45,
-    //                         child: FutureBuilder(
-    //                             future: _noMusaceaeByEstacion(idSombra, 3),
-    //                             builder: (BuildContext context, AsyncSnapshot snapshot) {
-    //                                 if (!snapshot.hasData) {
-    //                                     return textmt;
-    //                                 }
-
-    //                                 return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
-    //                             },
-    //                         ),
-    //                     ),
-    //                     Container(
-    //                         width: 45,
-    //                         child: FutureBuilder(
-    //                             future: _noMusaceaePromedio(idSombra),
-    //                             builder: (BuildContext context, AsyncSnapshot snapshot) {
-    //                                 if (!snapshot.hasData) {
-    //                                     return textmt;
-    //                                 }
-
-    //                                 return Text('${((snapshot.data/areaEstacion)* 10000).toStringAsFixed(0)}', textAlign: TextAlign.center);
-    //                             },
-    //                         ),
-    //                     ),
-                        
-    //                 ],
-    //             )
-    //         );
-    //         lisItem.add(Divider());
-        
-    //     return Column(children:lisItem,);
-    // }
 
     Widget _dominanciaEspecie(String? idSombra){
         
@@ -780,16 +415,12 @@ class _DesicionesPageState extends State<DesicionesPage> {
                     Column(
                         children: [
                             Container(
-                                child: Padding(
-                                    padding: EdgeInsets.only(top: 20, bottom: 10),
-                                    child: Text(
-                                        "Dominancia de especies",
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context).textTheme
-                                            .headline5!
-                                            .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
-                                    ),
-                                )
+                                padding: EdgeInsets.only(top: 20, bottom: 10),
+                                child: Text(
+                                    "Dominancia de especies",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
+                                ),
                             ),
                             Divider(),
                         ],
@@ -839,23 +470,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                 }
 
                 return SingleChildScrollView(
-                    child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                                BoxShadow(
-                                        color: Color(0xFF3A5160)
-                                            .withOpacity(0.05),
-                                        offset: const Offset(1.1, 1.1),
-                                        blurRadius: 17.0),
-                                ],
-                        ),
-                        child: Column(children:listPrincipales)
-                    ),
+                    child: Column(children:listPrincipales),
                 );
             },
         );
@@ -871,16 +486,12 @@ class _DesicionesPageState extends State<DesicionesPage> {
             Column(
                 children: [
                     Container(
-                        child: Padding(
-                            padding: EdgeInsets.only(top: 20, bottom: 10),
-                            child: Text(
-                                "Densidad de árboles de sombra",
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
-                            ),
-                        )
+                        padding: EdgeInsets.only(top: 20, bottom: 10),
+                        child: Text(
+                            "Densidad de árboles de sombra",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
+                        ),
                     ),
                     Divider(),
                 ],
@@ -893,9 +504,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             listPrincipales.add(
 
                 CheckboxListTile(
-                    title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
-                    ),
+                    title: textoCardBody('$label'),
                     value: checksDensidad[itemDensidad[i]['value']], 
                     onChanged: (value) {
                         setState(() {
@@ -918,9 +527,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                             child: Text(
                                 "Forma de copa de árboles",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -935,9 +542,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             listPrincipales.add(
 
                 CheckboxListTile(
-                    title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
-                    ),
+                    title: textoCardBody('$label'),
                     value: checksForma[itemForma[i]['value']], 
                     onChanged: (value) {
                         setState(() {
@@ -952,23 +557,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
         }
         
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:listPrincipales,)
-            ),
+            child: Column(children:listPrincipales,),
         );
     }
 
@@ -984,9 +573,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                             child: Text(
                                 "Competencia de árboles con cacao",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -1001,9 +588,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             listPrincipales.add(
 
                 CheckboxListTile(
-                    title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
-                    ),
+                    title: textoCardBody('$label'),
                     value: checksCompetencia[itemCompetencia[i]['value']], 
                     onChanged: (value) {
                         setState(() {
@@ -1026,9 +611,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                             child: Text(
                                 "Arreglo de árboles",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -1043,9 +626,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             listPrincipales.add(
 
                 CheckboxListTile(
-                    title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
-                    ),
+                    title: textoCardBody('$label'),
                     value: checksArreglo[itemArreglo[i]['value']], 
                     onChanged: (value) {
                         setState(() {
@@ -1060,23 +641,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
         }
         
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:listPrincipales,)
-            ),
+            child: Column(children:listPrincipales,),
         );
     }
 
@@ -1092,9 +657,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                             child: Text(
                                 "Catidad de hoja rasca",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -1109,9 +672,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             listPrincipales.add(
 
                 CheckboxListTile(
-                    title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
-                    ),
+                    title: textoCardBody('$label'),
                     value: checksCantidad[itemCantidad[i]['value']], 
                     onChanged: (value) {
                         setState(() {
@@ -1134,9 +695,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                             child: Text(
                                 "Calidad de hora rasca",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -1151,9 +710,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             listPrincipales.add(
 
                 CheckboxListTile(
-                    title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
-                    ),
+                    title: textoCardBody('$label'),
                     value: checksCalidad[itemCalidad[i]['value']], 
                     onChanged: (value) {
                         setState(() {
@@ -1168,23 +725,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
         }
         
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:listPrincipales,)
-            ),
+            child: Column(children:listPrincipales,),
         );
     }
 
@@ -1200,9 +741,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                             child: Text(
                                 "Acciones para mejorar la sombra",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -1217,9 +756,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             listPrincipales.add(
 
                 CheckboxListTile(
-                    title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
-                    ),
+                    title: textoCardBody('$label'),
                     value: checksMejora[itemMejora[i]['value']], 
                     onChanged: (value) {
                         setState(() {
@@ -1242,9 +779,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                             child: Text(
                                 "Dominio de la acción",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -1259,9 +794,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             listPrincipales.add(
 
                 CheckboxListTile(
-                    title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
-                    ),
+                    title: textoCardBody('$label'),
                     value: checksDominio[itemDominio[i]['value']], 
                     onChanged: (value) {
                         setState(() {
@@ -1276,23 +809,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
         }
         
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:listPrincipales,)
-            ),
+            child: Column(children:listPrincipales,),
         );
     }
 
@@ -1308,9 +825,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                             child: Text(
                                 "Acciones para reducción de sombra",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -1325,9 +840,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             listPrincipales.add(
 
                 CheckboxListTile(
-                    title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
-                    ),
+                    title: textoCardBody('$label'),
                     value: checksReduccion[itemReduccion[i]['value']], 
                     onChanged: (value) {
                         setState(() {
@@ -1350,9 +863,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                             child: Text(
                                 "Acciones para aumento de sombra",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -1367,9 +878,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             listPrincipales.add(
 
                 CheckboxListTile(
-                    title: Text('$label',
-                        style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 16),
-                    ),
+                    title: textoCardBody('$label'),
                     value: checksAumento[itemAumento[i]['value']], 
                     onChanged: (value) {
                         setState(() {
@@ -1384,23 +893,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
         }
         
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:listPrincipales,)
-            ),
+            child: Column(children:listPrincipales,),
         );
     }
 
@@ -1417,9 +910,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
                             child: Text(
                                 "¿Cúando vamos a realizar el manejo de sombra?",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -1448,72 +939,32 @@ class _DesicionesPageState extends State<DesicionesPage> {
         }
 
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:listaAcciones,)
-            ),
+            child: Column(children:listaAcciones,),
         );
     }
 
     Widget  _botonsubmit(String? idSombra){
         idSombraMain = idSombra;
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(
-                    children: [
-                        Padding(
-                            padding: EdgeInsets.only(top: 20, bottom: 30),
-                            child: Text(
-                                "¿Ha Terminado todos los formularios de toma de desición?",
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600)
-                            ),
+            child: Column(
+                children: [
+                    Container(
+                        padding: EdgeInsets.only(top: 20, bottom: 30),
+                        child: Text(
+                            "¿Ha Terminado todos los formularios de toma de desición?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                         ),
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 60),
-                            child: RaisedButton.icon(
-                                icon:Icon(Icons.save),
-                                label: Text('Guardar',
-                                    style: Theme.of(context).textTheme
-                                        .headline6!
-                                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
-                                ),
-                                padding:EdgeInsets.all(13),
-                                onPressed:(_guardando) ? null : _submit,
-                                
-                            ),
-                        ),
-                    ],
-                ),
+                    ),
+                    Container(
+                        padding: EdgeInsets.symmetric(horizontal: 60),
+                        child: ButtonMainStyle(
+                            title: 'Guardar',
+                            icon: Icons.save,
+                            press: (_guardando) ? null : _submit,
+                        )
+                    ),
+                ],
             ),
         );
     }
@@ -1567,14 +1018,17 @@ class _DesicionesPageState extends State<DesicionesPage> {
             context,
             Column(
                 children: [
-                    textoCardBody('•	La tabla de composición del piso presenta % cobertura de diferentes tipos de hierbas determinadas por la frecuencia de observación de cada tipo de maleza en relación a número total de pasos realizados en las tres caminatas.'),
-                    textoCardBody('•	En la primera sección se presenta porcentaje de área cubierta con malas hierbas dañinas: Zacate anual, Zacate perenne, Hoja ancha anual, Hoja ancha perenne, Coyolillo y Bejucos en suelo. Se presenta % de cobertura de cada tipo de malas hierbas y la suma de ellas.'),
-                    textoCardBody('•	En la segunda sección se presenta porcentaje de área cubierta con las hierbas de cobertura: Cobertura hoja ancha y Cobertura hoja angosta. Se presenta % de cobertura de cada tipo de malas hierbas y la suma de ellas.'),
-                    textoCardBody('•	En la tercera sección se presenta porcentaje de área cubierta con materia muerta: Hojarasca, Mulch de malezas. También se presenta % de área con suelo desnudo. Se presenta % de cobertura de cada tipo y la suma de ellas.'),
-                    textoCardBody('•	Estos datos sirven para toma de decisión sobre manejo de piso de cacaotal y evaluar el resultado de manejo que se practica en la parcela, siempre con el objetivo de tener un piso cubierto, pero sin competencia'),
+                    textoCardBody('•	Las observaciones sobre la sombra de cacaotal se presentan en dos pantallas.'),
+
+                    textoCardBody('•	En la primera pantalla se indican el :'),
+                    textoCardBody(' 	o	% de cobertura de la sombra de cada uno de los sitios y el promedio de los tres sitios.'),
+                    textoCardBody(' 	o	La riqueza de árboles expresado en número de especies de árboles presentes en el área de observación, para cada uno de los sitios y para el área total de los 3 sitios.'),
+                    textoCardBody(' 	o	La cantidad de árboles presentes en los tres sitios de observación y promedio de los tres sitios.'),
+                    textoCardBody(' 	o	La densidad de árboles expresado en número por ha, para los tres sitios y la parcela.'),
+                    textoCardBody('•	En la segunda pantalla se presenta la dominancia de las diferentes especies, expresado en % de representación de cada una de las especies de árbol en base de las observaciones realizadas en los tres sitios'),
                 ],
             ),
-            'Explicación de la tabla de datos'
+            'Observación sobre sombra de cacaotal'
         );
     }
 

@@ -20,6 +20,18 @@ validateEntero(String? value){
     }
 }
 
+validatePositive(String? value){
+    final isDigitsOnly = int.tryParse(value!);
+    if (isDigitsOnly == null) {
+        return 'Solo números enteros';
+    }
+    if (isDigitsOnly < 0) {
+        return 'Valor invalido';
+    }else{
+        return null;
+    }
+}
+
 validateFloat(String? value){
     
     if (isNumeric(value!)){

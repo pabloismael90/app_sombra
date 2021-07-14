@@ -425,12 +425,12 @@ class DBProvider {
     }
 
     Future<double?> noMusaceaePromedio(String? idTestSombra) async{
-        final db = await (database);        
+        final db = await (database);
+        
         var res = await db!.rawQuery("SELECT SUM(pequeno + mediano + grande)  AS arboles FROM Estacion "+
                     "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
                     "WHERE idTestSombra = '$idTestSombra' AND InventacioPlanta.idPlanta != '11'");
-        double? value = res[0]['arboles'] as double?;
-        
+        int? value = res[0]['arboles'] as int?;
         return value!/3;          
     }
 

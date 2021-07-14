@@ -98,7 +98,7 @@ flutter:
   fonts:
     - family: Museo
       fonts:
-        - asset: assets/fonts/Museo/Museo300.otf
+        - asset: assets/fonts/Museo/Museo300.ttf
           weight: 300
         - asset: assets/fonts/Museo/Museo500.otf
           weight: 500

@@ -5,7 +5,6 @@ import 'package:app_sombra/src/utils/constants.dart';
 import 'package:app_sombra/src/models/selectValue.dart' as selectMap;
 import 'package:app_sombra/src/utils/widget/button.dart';
 import 'package:app_sombra/src/utils/widget/dialogDelete.dart';
-import 'package:app_sombra/src/utils/widget/titulos.dart';
 import 'package:app_sombra/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +53,32 @@ class _ParcelaPageState extends State<ParcelaPage> {
                                     )
                                 )
                                 :
-                                TitulosPages(titulo: 'Lista de parcelas'),
+                                Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                    child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                            Container(
+                                                padding: EdgeInsets.only(bottom: 10),
+                                                child: Text(
+                                                    'Lista de parcelas',
+                                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                                                ),
+                                            ),
+                                            Row(
+                                                children: List.generate(
+                                                    150~/2, (index) => Expanded(
+                                                        child: Container(
+                                                            color: index%2==0?Colors.transparent
+                                                            :kShadowColor2,
+                                                            height: 2,
+                                                        ),
+                                                    )
+                                                ),
+                                            ),
+                                        ],
+                                    ),
+                                ),
                                 Expanded(
                                     child: SingleChildScrollView(child: _listaDeParcelas(parcela, fincaData, size, context))
                                 ),

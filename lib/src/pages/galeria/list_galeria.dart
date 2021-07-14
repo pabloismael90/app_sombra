@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:app_sombra/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 
 class GaleriaImagenes extends StatefulWidget {
@@ -23,7 +21,7 @@ Future _initImages(BuildContext context) async {
     
     List imagePaths = manifestMap.keys
         .where((String? key) => key!.contains('assets/galeria/'))
-        .where((String? key) => key!.contains('.jpg'))
+        .where((String? key) => key!.contains('.jpeg'))
         .toList();
 
     for (var i = 0; i < imagePaths.length; i++) {
@@ -37,7 +35,7 @@ class _GaleriaImagenesState extends State<GaleriaImagenes> {
     @override
     Widget build(BuildContext context) {
         return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(title: Text('Galería de Imágenes'),),
             body: FutureBuilder(
                 future: _initImages(context),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -51,16 +49,18 @@ class _GaleriaImagenesState extends State<GaleriaImagenes> {
                     for (var item in someImages!) {
                         File file = new File(item);
                         name = file.path.split('/').last.split(".")[0];
+                        if (name == 'Jinocuabo') {
+                            name = 'Jiñocuabo';
+                          
+                        }
                         nameList.add(name);
                     }
                     
 
                     return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.all(10),
                         child: Column(
                             children: [
-                                TitulosPages(titulo: 'Galería de Imágenes'),
-                                Divider(),
                                 Expanded(
                                     child: GridView.builder(
                                         itemCount: someImages!.length,

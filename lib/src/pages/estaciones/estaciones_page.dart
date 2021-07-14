@@ -7,7 +7,6 @@ import 'package:app_sombra/src/models/testsombra_model.dart';
 import 'package:app_sombra/src/providers/db_provider.dart';
 import 'package:app_sombra/src/utils/constants.dart';
 import 'package:app_sombra/src/utils/widget/button.dart';
-import 'package:app_sombra/src/utils/widget/titulos.dart';
 import 'package:app_sombra/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -53,7 +52,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                     body: Column(
                         children: [
                             escabezadoEstacion( context, sombra ),
-                            TitulosPages(titulo: 'Lista de sitios'),
+                            _textoExplicacion('Lista de sitios'),
                             Expanded(
                                 child: StreamBuilder(
                                     stream: fincasBloc.comprobarStream,
@@ -118,6 +117,51 @@ class _EstacionesPageState extends State<EstacionesPage> {
         );        
     }
 
+    Widget _textoExplicacion(String? titulo){
+        return Container(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: InkWell(
+                child: Column(
+                    children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                                Container(                                                                    
+                                    child: Text(
+                                        titulo!,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)
+                                    ),
+                                ),
+                                Container(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Icon(
+                                        Icons.info_outline_rounded,
+                                        color: Colors.green,
+                                        size: 20,
+                                    ),
+                                ),
+                            ],
+                        ),
+                        SizedBox(height: 5,),
+                        Row(
+                            children: List.generate(
+                                150~/2, (index) => Expanded(
+                                    child: Container(
+                                        color: index%2==0?Colors.transparent
+                                        :kShadowColor2,
+                                        height: 2,
+                                    ),
+                                )
+                            ),
+                        ),
+                    ],
+                ),
+                onTap: () => _explicacion(context),
+            ),
+        );
+    }
+
     Widget  _listaDeEstaciones( BuildContext context, TestSombra sombra, List<int>? countEspecie){
         
         return ListView.builder(
@@ -165,7 +209,6 @@ class _EstacionesPageState extends State<EstacionesPage> {
         );
     }
    
-
     Widget  _tomarDecisiones(List<Estacion>? estaciones, TestSombra sombra){
 
         
@@ -240,5 +283,19 @@ class _EstacionesPageState extends State<EstacionesPage> {
         );
     }
 
+    Future<void> _explicacion(BuildContext context){
+
+        return dialogText(
+            context,
+            Column(
+                children: [
+                    textoCardBody('•	Realizar un recorrido de la parcela SAF cacao para identificar los 3 sitios para las observaciones. '),
+                    textoCardBody('•	En cada uno de los tres puntos, identificar un cuadro de 10 surcos con 10 plantas de cacao en cada surco, para un total de 100 plantas. Si el distanciamiento de las plantas es 3 x 3 mt, este cuadro debe representar 900 mt2. Se realiza observaciones en el cuadro para completar el inventario de los árboles acompañantes incluyendo musáceas. '),
+                    textoCardBody('•	Seguir los pasos de la aplicación para la toma de datos en los tres puntos. Una vez completado este paso, la aplicación le dirigirá a la pantalla de toma de decisiones. Seguir los pasos revelados por la aplicación, grabando los datos e información como solicita la aplicación.'),
+                ],
+            ),
+            'Metodología aplicación sombra'
+        );
+    }
 
 }
