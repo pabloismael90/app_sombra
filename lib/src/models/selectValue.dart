@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 List<Map<String, dynamic>> dimenciones(){
 
     
@@ -95,358 +97,347 @@ List<Map<String, dynamic>> variedadCacao(){
 
 List<Map<String, dynamic>> especies(){
     final List<Map<String, dynamic>>  especies = [
-        {
-            "value": '1',
-            "label": "Cedro real"
-        },
-        {
-            "value": '2',
-            "label": "Capulín"
-        },
-        {
-            "value": '3',
-            "label": "Laurel"
-        },
-        {
-            "value": '4',
-            "label": "Guacimo"
-        },
-        {
-            "value": '5',
-            "label": "Guayabón"
-        },
-        {
-            "value": '6',
-            "label": "Areno blanco"
-        },
-        {
-            "value": '7',
-            "label": "Cedro rosado"
-        },
-        {
-            "value": '8',
-            "label": "Chilka"
-        },
-        {
-            "value": '9',
-            "label": "Nancitón"
-        },
-        {
-            "value": '10',
-            "label": "Jiñocuabo"
-        },
-        {
-            "value": '11',
-            "label": "Musaceae"
-        },
-        {
-            "value": '12',
-            "label": "Tamarindo"
-        },
-        {
-            "value": '13',
-            "label": "Guarumo"
-        },
-        {
-            "value": '14',
-            "label": "Guaba"
-        },
-        {
-            "value": '15',
-            "label": "Ojoche"
-        },
-        {
-            "value": '16',
-            "label": "Zapote"
-        },
-        {
-            "value": '17',
-            "label": "Castaño"
-        },
-        {
-            "value": '18',
-            "label": "Palo de hule"
-        },
-        {
-            "value": '19',
-            "label": "Chilamate"
-        },
-        {
-            "value": '20',
-            "label": "Matasano"
-        },
-        {
-            "value": '21',
-            "label": "Mamón"
-        },
-        {
-            "value": '22',
-            "label": "Pejibeye"
-        },
-        {
-            "value": '23',
-            "label": "Chaperno"
-        },
-        {
-            "value": '24',
-            "label": "Aguacate canelo"
-        },
-        {
-            "value": '25',
-            "label": "Mango"
-        },
-        {
-            "value": '26',
-            "label": "Quiebra muela"
-        },
-        {
-            "value": '27',
-            "label": "Mandarina"
-        },
-        {
-            "value": '28',
-            "label": "Guanacaste"
-        },
-        {
-            "value": '29',
-            "label": "Naranja"
-        },
-        {
-            "value": '30',
-            "label": "Higuera"
-        },
-        {
-            "value": '31',
-            "label": "Limoncillo"
-        },
-        {
-            "value": '32',
-            "label": "Colapavo"
-        },
-        {
-            "value": '33',
-            "label": "Jobo"
-        },
-        {
-            "value": '34',
-            "label": "Matapalo"
-        },
-        {
-            "value": '35',
-            "label": "Granadillo"
-        },
-        {
-            "value": '36',
-            "label": "Cacaguillo"
-        },
-        {
-            "value": '37',
-            "label": "Guano"
-        },
-        {
-            "value": '38',
-            "label": "Pronto alivio"
-        },
-        {
-            "value": '39',
-            "label": "Madero negro"
-        },
-        {
-            "value": '40',
-            "label": "Mampas"
-        },
-        {
-            "value": '41',
-            "label": "Achiote"
-        },
-        {
-            "value": '42',
-            "label": "Majagua"
-        },
-        {
-            "value": '43',
-            "label": "Aguacate"
-        },
-        {
-            "value": '44',
-            "label": "Limón"
-        },
-        {
-            "value": '45',
-            "label": "Pera de agua"
-        },
-        {
-            "value": '46',
-            "label": "Guayaba"
-        },
-        {
-            "value": '47',
-            "label": "Gavilán"
-        },
-        {
-            "value": '48',
-            "label": "Chinche"
-        },
-        {
-            "value": '49',
-            "label": "Coyote"
-        },
-        {
-            "value": '50',
-            "label": "Guacamaya"
-        },
-        {
-            "value": '51',
-            "label": "Coco"
-        },
-        {
-            "value": '52',
-            "label": "Mamon Chino"
-        },
-        {
-            "value": '53',
-            "label": "Mangle"
-        },
-        {
-            "value": '54',
-            "label": "Elequeme"
-        },
-        {
-            "value": '55',
-            "label": "Tiguilote"
-        },
-        {
-            "value": '56',
-            "label": "Cedro macho"
-        },
-        {
-            "value": '57',
-            "label": "Ceiba"
-        },
-        {
-            "value": '58',
-            "label": "Muñeco"
-        },
-        {
-            "value": '59',
-            "label": "Poró"
-        },
-        {
-            "value": '60',
-            "label": "Plátano"
-        },
-        {
-            "value": '61',
-            "label": "Caoba"
-        },
-        {
-            "value": '62',
-            "label": "Llamarada del bosque"
-        },
-        {
-            "value": '63',
-            "label": "Tuza"
-        },
-        {
-            "value": '64',
-            "label": "Toronja"
-        },
-        {
-            "value": '65',
-            "label": "Anona"
-        },
-        {
-            "value": '66',
-            "label": "Mangostin"
-        },
-        {
-            "value": '67',
-            "label": "Pochote"
-        },
-        {
-            "value": '68',
-            "label": "Carao"
-        },
-        {
-            "value": '69',
-            "label": "Guanabana"
-        },
-        {
-            "value": '70',
-            "label": "Nancite"
-        },
-        {
-            "value": '71',
-            "label": "Melina"
-        },
-        {
-            "value": '72',
-            "label": "Tabacon"
-        },
-        {
-            "value": '73',
-            "label": "Guesito"
-        },
-        {
-            "value": '74',
-            "label": "Kuskano"
-        },
-        {
-            "value": '75',
-            "label": "Acasia"
-        },
-        {
-            "value": '76',
-            "label": "Teca"
-        },
-        {
-            "value": '77',
-            "label": "Genizero"
-        },
-        {
-            "value": '78',
-            "label": "Tambor"
-        },
-        {
-            "value": '79',
-            "label": "Zopilocuabo"
-        },
-        {
-            "value": '80',
-            "label": "Plomo"
-        },
-        {
-            "value": '81',
-            "label": "Macuelizo"
-        },
-        {
-            "value": '82',
-            "label": "Palo de sebo"
-        },
-        {
-            "value": '83',
-            "label": "Guayabillo"
-        },
-        {
-            "value": '84',
-            "label": "Palmera"
-        },
-        {
-            "value": '85',
-            "label": "Corozo"
-        },
-        {
-            "value": '86',
-            "label": "Pimienta"
-        },
-        {
-            "value": '87',
-            "label": "Leucaena"
-        },
-        {
-            "value": '88',
-            "label": "Cacao"
-        }
+       
+    {
+        "value": '1',
+        "label": "Areno blanco / Andira inermis",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '2',
+        "label": "Aguacate Canelo / Ocotea austinii",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '3',
+        "label": "Aceituno / Simarouba glauca",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '4',
+        "label": "Aguacate / Persea americana",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '5',
+        "label": "Arrayan / Psidium friedrichsthalianum",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '6',
+        "label": "Bálsamo / Myroxylon balsamum",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '7',
+        "label": "Barba de jolote / Cojoba arborea",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '8',
+        "label": "Brasil / Haematoxylon brassiletto",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '9',
+        "label": "Búcaro / Erythrina fusca",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '10',
+        "label": "Capulín / Muntingia calabura",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '11',
+        "label": "Cedro real / Cedrela odorata",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '12',
+        "label": "Cedro rosado / Acrocarpus fraxinifolius",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '13',
+        "label": "Chilca / Baccharis latifolia",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '14',
+        "label": "Castaño / Sterculia apetala",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '15',
+        "label": "Chilamate / Ficus insipida ",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '16',
+        "label": "Chaperno / Albizia adinocephala",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '17',
+        "label": "Cola pavo / Trichilia americana",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '18',
+        "label": "Cacaguillo / Herrania nycterodendron",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '19',
+        "label": "Cortez / Tabebuia chrysantha",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '20',
+        "label": "Coyote / Platymiscium pleiostachyum",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '21',
+        "label": "Danto / Sideroxylon capiri",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '22',
+        "label": "Encino / Quercus costaricensis",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '23',
+        "label": "Espavel / Anacardium excelsum",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '24',
+        "label": "Espino / Acacia farnesiana",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '25',
+        "label": "Fúnera / Dalbergia funera",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '26',
+        "label": "Guácimo / Guazuma ulmifolia",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '27',
+        "label": "Guayabón / Terminalia amazonia",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '28',
+        "label": "Guarumo / Cecropia peltata",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '29',
+        "label": "Guaba / Inga coruscans",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '30',
+        "label": "Guanacaste / Enterolobium cyclocarpum",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '31',
+        "label": "Granadillo / Acosmium panamense",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '32',
+        "label": "Guano / Inga punctata",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '33',
+        "label": "Higuera / Ficus carica",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '34',
+        "label": "Helequeme / Erythrina berteroana",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '35',
+        "label": "Hombre grande / Quassia amara",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '36',
+        "label": "Huesillo / Terminalia oblonga",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '37',
+        "label": "Hule / Castilla elástica",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '38',
+        "label": "Jiñocuabo / Bursera simaruba",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '39',
+        "label": "Jobo / Spondias mombin",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '40',
+        "label": "Jícaro / Crescentia alata",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '41',
+        "label": "Laurel / Cordia alliodora",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '42',
+        "label": "Limoncillo / Sapindus saponaria",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '43',
+        "label": "Leucaena / Leucaena salvadorensis",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '44',
+        "label": "Liquidámbar / Liquidambar styraciflua",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '45',
+        "label": "Musáceas / Musa spp",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '46',
+        "label": "Matasano / Casimiroa edulis",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '47',
+        "label": "Matapalo / Ficus urbaniana",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '48',
+        "label": "Madero Negro / Gliricidia sepium",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '49',
+        "label": "Mahogany / Swietenia macrophylla",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '50',
+        "label": "Mamón / Melicoccus bijugatus",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '51',
+        "label": "Mango / Mangifera indica",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '52',
+        "label": "Mandarina / Citrus reticulata",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '53',
+        "label": "María / Calophyllum brasiliense",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '54',
+        "label": "Ñambar / Dalbergia retusa",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '55',
+        "label": "Nancitón / Hyeronima alchorneoides",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '56',
+        "label": "Níspero / Sideroxylon capiri",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '57',
+        "label": "Naranja / Citrus sinensis",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '58',
+        "label": "Ojoche / Brosimum alicastrum",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '59',
+        "label": "Pino Caribe / Pinus caribaea",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '60',
+        "label": "Pejibaye / Bactris gasipaes",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '61',
+        "label": "Prontoalivio / Guarea grandifolia",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '62',
+        "label": "Quebracho / Cojoba arborea",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '63',
+        "label": "Quebramuela / Drimys granadensis",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '64',
+        "label": "Roble blanco / Quercus copeyensis",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '65',
+        "label": "San Juan / Tabebuia donnell-smithii",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '66',
+        "label": "Tamarindo / Cojoba arborea",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '67',
+        "label": "Tambor / Genipa americana",
+        'textStyle': TextStyle(fontSize: 13),
+    },
+    {
+        "value": '68',
+        "label": "Zapote / Pouteria sapota",
+        'textStyle': TextStyle(fontSize: 13),
+    }
     ];
 
     return especies;
