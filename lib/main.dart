@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
                 const Locale('es', 'ES'),
                 // const Locale('en', 'US'),
             ],
-            title: 'Material App',
+            title: 'Herramienta Sombra Cacao',
             initialRoute:'home',
             routes: {
                 'home' : ( BuildContext context ) => HomePage(),
