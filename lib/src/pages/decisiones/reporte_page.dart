@@ -153,12 +153,88 @@ class _ReportePageState extends State<ReportePage> {
                     pageItem.add(_principalData(finca, parcela, sombra, areaEstacion));
                     pageItem.add(_dominanciaEspecie(sombra.id));
                     
-                    pageItem.add( _densidadForma(snapshot.data[0]));
-                    pageItem.add( _competenciaArreglo(snapshot.data[0]));
-                    pageItem.add( _cantidadCalidad(snapshot.data[0]));
-                    pageItem.add( _mejoraDominio(snapshot.data[0]));
-                    pageItem.add( _reduccionAumento(snapshot.data[0]));
-                    pageItem.add( _accionesMeses(snapshot.data[0]));
+                    pageItem.add(
+                        SingleChildScrollView(
+                            child: Column(
+                                children:[
+                                    Column(
+                                        children:_generatePregunta(snapshot.data[0],'Densidad de árboles de sombra', 1, itemDensidad ),
+                                    ),
+                                    Column(
+                                        children:_generatePregunta(snapshot.data[0],'Forma de copa de árboles', 2, itemForma ),
+                                    )
+                                ]
+                            )
+                        ) 
+                    );
+
+                    pageItem.add(
+                        SingleChildScrollView(
+                            child: Column(
+                                children:[
+                                    Column(
+                                        children:_generatePregunta(snapshot.data[0],'Competencia de árboles con cacao', 3, itemCompetencia ),
+                                    ),
+                                    Column(
+                                        children:_generatePregunta(snapshot.data[0],'Arreglo de árboles', 4, itemArreglo ),
+                                    )
+                                ]
+                            )
+                        ) 
+                    );
+                    
+                    pageItem.add(
+                        SingleChildScrollView(
+                            child: Column(
+                                children:[
+                                    Column(
+                                        children:_generatePregunta(snapshot.data[0],'Catidad de hoja rasca', 5, itemCantidad ),
+                                    ),
+                                    Column(
+                                        children:_generatePregunta(snapshot.data[0],'Calidad de hora rasca', 6, itemCalidad ),
+                                    )
+                                ]
+                            )
+                        ) 
+                    );
+                    
+                    pageItem.add(
+                        SingleChildScrollView(
+                            child: Column(
+                                children:[
+                                    Column(
+                                        children:_generatePregunta(snapshot.data[0],'Acciones para mejorar la sombra', 7, itemMejora ),
+                                    ),
+                                    Column(
+                                        children:_generatePregunta(snapshot.data[0],'Dominio de la acción', 8, itemDominio ),
+                                    )
+                                ]
+                            )
+                        ) 
+                    );
+                    
+                    pageItem.add(
+                        SingleChildScrollView(
+                            child: Column(
+                                children:[
+                                    Column(
+                                        children:_generatePregunta(snapshot.data[0],'Acciones para reducción de sombra', 9, itemReduccion ),
+                                    ),
+                                    Column(
+                                        children:_generatePregunta(snapshot.data[0],'Acciones para aumento de sombra', 10, itemAumento ),
+                                    )
+                                ]
+                            )
+                        ) 
+                    );
+
+                    pageItem.add(
+                        SingleChildScrollView(
+                            child: Column(
+                                children:_generatePregunta(snapshot.data[0],'¿Cúando vamos a realizar el manejo de sombra?', 11, itemMeses ),
+                            )
+                        ) 
+                    );
                     
                     return Column(
                         children: [
@@ -341,8 +417,6 @@ class _ReportePageState extends State<ReportePage> {
         );
     }
 
-
-
     Widget _dominanciaEspecie(String? idSombra){
         
         return FutureBuilder(
@@ -427,19 +501,22 @@ class _ReportePageState extends State<ReportePage> {
         
     }
 
-    Widget _densidadForma(List<Decisiones> decisionesList){
-        List<Widget> listPrincipales = [];
+    List<Widget> _generatePregunta(List<Decisiones> decisionesList, String? titulo, int idPregunta, List<Map<String, dynamic>>  listaItem){
+        List<Widget> listWidget = [];
+        List<Decisiones> listDecisiones = decisionesList.where((i) => i.idPregunta == idPregunta).toList();
 
-        listPrincipales.add(
+        listWidget.add(
             Column(
                 children: [
                     Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "Densidad de árboles de sombra",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                titulo as String,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
+                            ),
+                        )
                     ),
                     Divider(),
                 ],
@@ -447,13 +524,11 @@ class _ReportePageState extends State<ReportePage> {
             
         );
         
+        
+        for (var item in listDecisiones) {
+                String? label= listaItem.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
 
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 1) {
-                String? label = itemDensidad.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
+                listWidget.add(
 
                     Container(
                         child: CheckboxListTile(
@@ -465,497 +540,11 @@ class _ReportePageState extends State<ReportePage> {
                             },
                         ),
                     )                  
-                        
+                    
                 );
-            }
-            
-            
-            
         }
-
-        listPrincipales.add(
-            Column(
-                children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "Forma de copa de árboles",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
-                    ),
-                    Divider(),
-                ],
-            )
-            
-        );
-        
-
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 2) {
-                String? label = itemForma.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
-
-                    Container(
-                        child: CheckboxListTile(
-                        title: textoCardBody('$label'),
-                            value: item.repuesta == 1 ? true : false ,
-                            activeColor: Colors.teal[900], 
-                            onChanged: (value) {
-                                
-                            },
-                        ),
-                    )                  
-                        
-                );
-            }
-            
-            
-            
-        }
-        
-        return SingleChildScrollView(
-            child: Column(children:listPrincipales,),
-        );
-        
+        return listWidget;
     }
-
-    Widget _competenciaArreglo(List<Decisiones> decisionesList){
-        List<Widget> listPrincipales = [];
-
-        listPrincipales.add(
-            Column(
-                children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "Competencia de árboles con cacao",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
-                    ),
-                    Divider(),
-                ],
-            )
-            
-        );
-        
-
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 3) {
-                String? label = itemCompetencia.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
-
-                    Container(
-                        child: CheckboxListTile(
-                        title: textoCardBody('$label'),
-                            value: item.repuesta == 1 ? true : false ,
-                            activeColor: Colors.teal[900], 
-                            onChanged: (value) {
-                                
-                            },
-                        ),
-                    )                  
-                        
-                );
-            }
-            
-            
-            
-        }
-
-        listPrincipales.add(
-            Column(
-                children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "Arreglo de árboles",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
-                    ),
-                    Divider(),
-                ],
-            )
-            
-        );
-        
-
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 4) {
-                String? label = itemArreglo.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
-
-                    Container(
-                        child: CheckboxListTile(
-                        title: textoCardBody('$label'),
-                            value: item.repuesta == 1 ? true : false ,
-                            activeColor: Colors.teal[900], 
-                            onChanged: (value) {
-                                
-                            },
-                        ),
-                    )                  
-                        
-                );
-            }
-            
-            
-            
-        }
-        
-        return SingleChildScrollView(
-            child: Column(children:listPrincipales,),
-        );
-        
-    }
-
-    Widget _cantidadCalidad(List<Decisiones> decisionesList){
-        List<Widget> listPrincipales = [];
-
-        listPrincipales.add(
-            Column(
-                children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "Catidad de hoja rasca",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
-                    ),
-                    Divider(),
-                ],
-            )
-            
-        );
-        
-
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 5) {
-                String? label = itemCantidad.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
-
-                    Container(
-                        child: CheckboxListTile(
-                        title: textoCardBody('$label'),
-                            value: item.repuesta == 1 ? true : false ,
-                            activeColor: Colors.teal[900], 
-                            onChanged: (value) {
-                                
-                            },
-                        ),
-                    )                  
-                        
-                );
-            }
-            
-            
-            
-        }
-
-        listPrincipales.add(
-            Column(
-                children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "Calidad de hora rasca",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
-                    ),
-                    Divider(),
-                ],
-            )
-            
-        );
-        
-
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 6) {
-                String? label = itemCalidad.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
-
-                    Container(
-                        child: CheckboxListTile(
-                        title: textoCardBody('$label'),
-                            value: item.repuesta == 1 ? true : false ,
-                            activeColor: Colors.teal[900], 
-                            onChanged: (value) {
-                                
-                            },
-                        ),
-                    )                  
-                        
-                );
-            }
-            
-            
-            
-        }
-        
-        return SingleChildScrollView(
-            child: Column(children:listPrincipales,),
-        );
-        
-    }
-
-    Widget _mejoraDominio(List<Decisiones> decisionesList){
-        List<Widget> listPrincipales = [];
-
-        listPrincipales.add(
-            Column(
-                children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "Acciones para mejorar la sombra",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
-                    ),
-                    Divider(),
-                ],
-            )
-            
-        );
-        
-
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 7) {
-                String? label = itemMejora.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
-
-                    Container(
-                        child: CheckboxListTile(
-                        title: textoCardBody('$label'),
-                            value: item.repuesta == 1 ? true : false ,
-                            activeColor: Colors.teal[900], 
-                            onChanged: (value) {
-                                
-                            },
-                        ),
-                    )                  
-                        
-                );
-            }
-            
-            
-            
-        }
-
-        listPrincipales.add(
-            Column(
-                children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "Dominio de la acción",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
-                    ),
-                    Divider(),
-                ],
-            )
-            
-        );
-        
-
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 8) {
-                String? label = itemDominio.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
-
-                    Container(
-                        child: CheckboxListTile(
-                        title: textoCardBody('$label'),
-                            value: item.repuesta == 1 ? true : false ,
-                            activeColor: Colors.teal[900], 
-                            onChanged: (value) {
-                                
-                            },
-                        ),
-                    )                  
-                        
-                );
-            }
-            
-            
-            
-        }
-        
-        return SingleChildScrollView(
-            child: Column(children:listPrincipales,),
-        );
-        
-    }
-
-    Widget _reduccionAumento(List<Decisiones> decisionesList){
-        List<Widget> listPrincipales = [];
-
-        listPrincipales.add(
-            Column(
-                children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "Acciones para reducción de sombra",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
-                    ),
-                    Divider(),
-                ],
-            )
-            
-        );
-        
-
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 9) {
-                String? label = itemReduccion.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
-
-                    Container(
-                        child: CheckboxListTile(
-                        title: textoCardBody('$label'),
-                            value: item.repuesta == 1 ? true : false ,
-                            activeColor: Colors.teal[900], 
-                            onChanged: (value) {
-                                
-                            },
-                        ),
-                    )                  
-                        
-                );
-            }
-            
-            
-            
-        }
-
-        listPrincipales.add(
-            Column(
-                children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "Acciones para aumento de sombra",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
-                    ),
-                    Divider(),
-                ],
-            )
-            
-        );
-        
-
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 10) {
-                String? label = itemAumento.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
-
-                    Container(
-                        child: CheckboxListTile(
-                        title: textoCardBody('$label'),
-                            value: item.repuesta == 1 ? true : false ,
-                            activeColor: Colors.teal[900], 
-                            onChanged: (value) {
-                                
-                            },
-                        ),
-                    )                  
-                        
-                );
-            }
-            
-            
-            
-        }
-        
-        return SingleChildScrollView(
-            child: Column(children:listPrincipales,),
-        );
-        
-    }
-
-    Widget _accionesMeses(List<Decisiones> decisionesList){
-        List<Widget> listPrincipales = [];
-
-        listPrincipales.add(
-            Column(
-                children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            "¿Cúando vamos a realizar el manejo de sombra?",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        ),
-                    ),
-                    Divider(),
-                ],
-            )
-            
-        );
-        
-
-        for (var item in decisionesList) {
-
-            if (item.idPregunta == 11) {
-                String? label = itemMeses.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-
-                listPrincipales.add(
-
-                    Container(
-                        child: CheckboxListTile(
-                        title: textoCardBody('$label'),
-                            value: item.repuesta == 1 ? true : false ,
-                            activeColor: Colors.teal[900], 
-                            onChanged: (value) {
-                                
-                            },
-                        ),
-                    )                  
-                        
-                );
-            }
-            
-            
-            
-        }
-
-        
-        
-        return SingleChildScrollView(
-            child: Column(children:listPrincipales,),
-        );
-        
-    }
-
 
     Future _crearPdf( TestSombra? sombra, double? areaEstacion) async{
         List dataBySombra = await _dataTableSombra(sombra!.id as String, areaEstacion);
