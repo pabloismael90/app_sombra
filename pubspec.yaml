@@ -33,9 +33,6 @@ dependencies:
   cupertino_icons: ^1.0.3
   #Select y multiselect
   select_form_field: ^2.1.0
-  multiselect_formfield:
-    git:
-      url: https://github.com/hitshydev/multiselect_formfield
   #Slider page
   flutter_swiper_null_safety: ^1.0.2
   #Crear PDF
