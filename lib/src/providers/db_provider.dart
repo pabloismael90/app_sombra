@@ -418,7 +418,7 @@ class DBProvider {
         final db = await (database);        
         var res = await db!.rawQuery("SELECT SUM(pequeno + mediano + grande)  AS arboles FROM Estacion "+
                     "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
-                    "WHERE idTestSombra = '$idTestSombra' AND Nestacion = '$nEstacion' AND InventacioPlanta.idPlanta != '11'");
+                    "WHERE idTestSombra = '$idTestSombra' AND Nestacion = '$nEstacion' AND InventacioPlanta.idPlanta != '45'");
         int? value = res[0]['arboles'] as int?;
         
         return value;          
@@ -429,7 +429,7 @@ class DBProvider {
         
         var res = await db!.rawQuery("SELECT SUM(pequeno + mediano + grande)  AS arboles FROM Estacion "+
                     "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
-                    "WHERE idTestSombra = '$idTestSombra' AND InventacioPlanta.idPlanta != '11'");
+                    "WHERE idTestSombra = '$idTestSombra' AND InventacioPlanta.idPlanta != '45'");
         int? value = res[0]['arboles'] as int?;
         return value!/3;          
     }
