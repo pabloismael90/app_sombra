@@ -48,7 +48,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                 
 
                 return Scaffold(
-                    appBar: AppBar(),
+                    appBar: AppBar(title: Text('Completar datos'),),
                     body: Column(
                         children: [
                             escabezadoEstacion( context, sombra ),
