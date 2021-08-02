@@ -1,4 +1,4 @@
-import 'package:app_sombra/src/pages/PDFView.dart';
+import 'package:app_sombra/src/pages/pdf/PDFView.dart';
 import 'package:app_sombra/src/pages/decisiones/decisiones_form.dart';
 import 'package:app_sombra/src/pages/decisiones/decisiones_page.dart';
 import 'package:app_sombra/src/pages/decisiones/reporte_page.dart';
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
                 const Locale('es', 'ES'),
                 // const Locale('en', 'US'),
             ],
-            title: 'Herramienta Cacao Sombra',
+            title: 'Cacao Sombra',
             initialRoute:'home',
             routes: {
                 'home' : ( BuildContext context ) => HomePage(),

@@ -34,9 +34,7 @@ class DBProvider {
 
         Directory documentsDirectory = await getApplicationDocumentsDirectory();
 
-        final path = join( documentsDirectory.path, 'poda.db' );
-
-        print(path);
+        final path = join( documentsDirectory.path, 'sombra.db' );
 
         return await openDatabase(
             path,
