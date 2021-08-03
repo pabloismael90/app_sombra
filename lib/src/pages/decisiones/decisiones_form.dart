@@ -107,8 +107,6 @@ class _DesicionesPageState extends State<DesicionesPage> {
     }
 
     Future _dataTableSombra( String idSombra, double? areaEstacion ) async{
-        
-
         List<String>? coberturaData = [];
         
         coberturaData.add('Cobertura de sombra % Est');
@@ -143,8 +141,6 @@ class _DesicionesPageState extends State<DesicionesPage> {
         arbolesData.add('${arbolesTotal!.toStringAsFixed(0)}');
 
 
-
-
         List<String>? densidadData = [];
         densidadData.add('Densidad de árboles (#/ha)');
         for (var i = 1; i < 4; i++) {
@@ -154,18 +150,19 @@ class _DesicionesPageState extends State<DesicionesPage> {
         double? densidadTotal = await DBProvider.db.getArbolesPromedio(idSombra);
         densidadData.add('${((densidadTotal!/areaEstacion!)* 10000).toStringAsFixed(0)}');
         
-        
-        
         List<String>? sinMusaceaeData = [];
         sinMusaceaeData.add('Densidad de árboles (#/ha) sin Musaceae');
         for (var i = 1; i < 4; i++) {
             int? sinMusaceae = await DBProvider.db.noMusaceaeByEstacion(idSombra, i);
+            print(sinMusaceae);
+
             sinMusaceaeData.add('${((sinMusaceae!/areaEstacion)* 10000).toStringAsFixed(0)}');
         }
         double? sinMusaceaeTotal = await DBProvider.db.noMusaceaePromedio(idSombra);
         sinMusaceaeData.add('${((sinMusaceaeTotal!/areaEstacion)* 10000).toStringAsFixed(0)}');
     
-        return [coberturaData,riquezaData,arbolesData,densidadData,sinMusaceaeData];
+        // return [coberturaData,riquezaData,arbolesData,densidadData,sinMusaceaeData];
+        return [coberturaData,riquezaData, arbolesData, densidadData, sinMusaceaeData];
     }
 
     final fincasBloc = new FincasBloc();
@@ -195,7 +192,7 @@ class _DesicionesPageState extends State<DesicionesPage> {
             future:  _getdataFinca(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (!snapshot.hasData) {
-                        return CircularProgressIndicator();
+                        return Center(child: CircularProgressIndicator());
                     }
 
                     List<Widget> pageItem = [];

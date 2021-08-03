@@ -417,9 +417,10 @@ class DBProvider {
         var res = await db!.rawQuery("SELECT SUM(pequeno + mediano + grande)  AS arboles FROM Estacion "+
                     "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
                     "WHERE idTestSombra = '$idTestSombra' AND Nestacion = '$nEstacion' AND InventacioPlanta.idPlanta != '45'");
+        
         int? value = res[0]['arboles'] as int?;
         
-        return value;          
+        return value == null ? 0 : value;      
     }
 
     Future<double?> noMusaceaePromedio(String? idTestSombra) async{
