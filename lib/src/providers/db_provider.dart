@@ -430,7 +430,8 @@ class DBProvider {
                     "INNER JOIN InventacioPlanta ON Estacion.id = InventacioPlanta.idEstacion " +
                     "WHERE idTestSombra = '$idTestSombra' AND InventacioPlanta.idPlanta != '45'");
         int? value = res[0]['arboles'] as int?;
-        return value!/3;          
+        
+        return value == null ? 0.0 : value/3;          
     }
 
 
