@@ -272,7 +272,7 @@ class _EstacionesPageState extends State<EstacionesPage> {
                     child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: Text(
-                            "Complete las estaciones",
+                            "Complete los sitios",
                             textAlign: TextAlign.center,
                             style: TextStyle(fontWeight: FontWeight.w900, color: kRedColor, fontSize: 18)
                         ),
