@@ -79,7 +79,7 @@ class _AgregarTestState extends State<AgregarTest> {
                                             children: [
                                                 Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 3),
-                                                    child:textoCardBody('Plantas por estaciones: 100 plantas 10 x 10'),
+                                                    child:textoCardBody('Plantas por sitio: 100 plantas 10 x 10'),
                                                 ),
                                                 Divider(),
                                                 Padding(

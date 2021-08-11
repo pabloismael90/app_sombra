@@ -1,3 +1,4 @@
+import 'package:app_sombra/src/pages/pdf/Manuales.dart';
 import 'package:app_sombra/src/pages/pdf/PDFView.dart';
 import 'package:app_sombra/src/pages/decisiones/decisiones_form.dart';
 import 'package:app_sombra/src/pages/decisiones/decisiones_page.dart';
@@ -70,12 +71,14 @@ class MyApp extends StatelessWidget {
                 'decisiones' : ( BuildContext context ) => DesicionesPage(),
                 'registros' : ( BuildContext context ) => DesicionesList(),
                 'reporte' : ( BuildContext context ) => ReportePage(),
+
+                //PDFs
+                'Manuales' : ( BuildContext context ) => Manuales(),
+                'PDFview' : ( BuildContext context ) => PDFView(),
                 
                 //Galeria de imagenes
                 'galeria' : ( BuildContext context ) => GaleriaImagenes(),
                 'viewImg' : ( BuildContext context ) => ViewImage(),
-                'PDFview' : ( BuildContext context ) => PDFView(),
-                
 
             },
             theme: ThemeData(

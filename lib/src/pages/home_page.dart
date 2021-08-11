@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
                                                             CategoryCard(
                                                                 title: "Instructivo",
                                                                 svgSrc: "assets/icons/manual.svg",
-                                                                press: () => Navigator.pushNamed(context, 'PDFview' ),
+                                                                press: () => Navigator.pushNamed(context, 'Manuales' ),
                                                             ),
                                                             
                                                             
