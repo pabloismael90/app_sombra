@@ -23,7 +23,7 @@ class Manuales extends StatelessWidget {
             child: cardDefault(
                 tituloCard('$titulo'),
             ),
-            onTap: () => Navigator.pushNamed(context, 'PDFview', arguments: ['Instructivo sombra cacao', url]),
+            onTap: () => Navigator.pushNamed(context, 'PDFview', arguments: [titulo, url]),
         );
     }
 
