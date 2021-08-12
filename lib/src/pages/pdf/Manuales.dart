@@ -8,7 +8,7 @@ class Manuales extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         return Scaffold(
-            appBar: AppBar(title: Text('Lista de manuales'),),
+            appBar: AppBar(title: Text('Lista de instructivos'),),
             body: ListView(
                 children: [
                     _card( context, 'Instructivo sombra cacao', 'assets/documentos/Instructivo Sombra.pdf'),
